@@ -17,4 +17,11 @@ class UserMapperTest {
         assertNotNull(userMapper);
         userMapper.list().forEach(System.out::println);
     }
+
+    @Test
+    void get() {
+        assertNotNull(userMapper);
+        var user = userMapper.get(1L);
+        assertNotNull(user);
+    }
 }
