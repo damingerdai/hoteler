@@ -1,18 +1,18 @@
 version: "3"
 services:
-  hoteler-api:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - hoteler-network
-    links:
-      - db
-    depends_on:
-      - db
+#  hoteler-api:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    restart: always
+#    ports:
+#      - 8080:8080
+#    networks:
+#      - hoteler-network
+#    links:
+#      - db
+#    depends_on:
+#      - db
 
   db:
     image: postgres:12
