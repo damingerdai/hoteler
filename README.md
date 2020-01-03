@@ -21,3 +21,7 @@ docker volume create --name=hoteler-volume
 ```bash
 docker network create hoteler-network
 ```
+3. 启动
+```bash
+docker-compose up
+```
