@@ -27,5 +27,5 @@ docker-compose up
 ```
 
 # 使用
-1. graphql
+## graphql
 [http://localhost:8080/graphiq](http://localhost:8080/graphiq)
