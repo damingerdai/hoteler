@@ -85,6 +85,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
 
 <!--			<plugin>-->
 <!--				<groupId>org.flywaydb</groupId>-->
