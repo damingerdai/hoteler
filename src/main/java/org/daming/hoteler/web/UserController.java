@@ -1,5 +1,6 @@
 package org.daming.hoteler.web;
 
+import io.swagger.annotations.ApiOperation;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ public class UserController {
 
     private IUserService userService;
 
+    @ApiOperation(value = "list user", notes = "list all users api")
     @GetMapping("users")
     public ResponseEntity<List<User>> listUser() {
         var users = this.userService.list();
