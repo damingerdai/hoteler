@@ -1,11 +1,14 @@
 package org.daming.hoteler.pojo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.StringJoiner;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 120505218967153077L;
 
+    @ApiModelProperty(value = "user id")
     private long id;
 
     private String username;
