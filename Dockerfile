@@ -11,4 +11,4 @@ COPY --from=build /usr/src/app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
 RUN ln -snf /usr/shar/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 8763
-CMD ["sh", "-c", "exec java -jar app.jar --spring.profiles.active=docker"]
+CMD ["sh", "-c", "exec java -jar app.jar --spring.profiles.active=${profile}"]
