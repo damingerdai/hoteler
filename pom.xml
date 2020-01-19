@@ -120,7 +120,7 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
-                    <url>jdbc:postgresql://db:5432/postgres</url>
+                    <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
                     <user>postgres</user>
                     <password>123456</password>
                 </configuration>
