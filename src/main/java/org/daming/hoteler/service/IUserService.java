@@ -7,4 +7,6 @@ import java.util.List;
 public interface IUserService {
 
     List<User> list();
+
+    User getUserByUsername(String username);
 }
