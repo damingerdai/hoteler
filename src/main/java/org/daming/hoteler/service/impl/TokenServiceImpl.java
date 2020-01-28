@@ -5,6 +5,7 @@ import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Objects;
 
+@Service
 public class TokenServiceImpl implements ITokenService {
 
     private IUserService userService;
