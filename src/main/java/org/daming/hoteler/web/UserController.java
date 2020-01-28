@@ -2,10 +2,13 @@ package org.daming.hoteler.web;
 
 import io.swagger.annotations.ApiOperation;
 import org.daming.hoteler.pojo.User;
+import org.daming.hoteler.pojo.builder.UserBuilder;
+import org.daming.hoteler.pojo.request.CreateUserRequest;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +31,15 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @ApiOperation(value = "create user", notes = "create a new user api")
+    @PostMapping("user")
+    public ResponseEntity<User> create(CreateUserRequest request) {
+        var user = UserBuilder.fromCreateUserRequest(request);
+        this.userService.create(user);
+        return new ResponseEntity(user, HttpStatus.OK);
+    }
+
 
     public UserController(IUserService userService) {
         super();
