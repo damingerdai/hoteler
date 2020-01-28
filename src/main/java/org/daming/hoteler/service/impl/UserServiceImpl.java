@@ -3,7 +3,9 @@ package org.daming.hoteler.service.impl;
 import org.daming.hoteler.dao.jdbc.IUserDao;
 import org.daming.hoteler.dao.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
+import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
+
+    private ISnowflakeService snowflakeService;
 
     private UserMapper userMapper;
 
@@ -27,7 +31,20 @@ public class UserServiceImpl implements IUserService {
         return userDao.getUserByUsername(username).get();
     }
 
-    public UserServiceImpl(UserMapper userMapper,  IUserDao userDao) {
+    @Override
+    public void create(User user) {
+        Assert.notNull(user,"params 'user' is required");
+        var id = snowflakeService.nextId();
+        user.setId(id);
+        this.userMapper.create(user);
+    }
+
+    @Autowired
+    public void setSnowflakeService(ISnowflakeService snowflakeService) {
+        this.snowflakeService = snowflakeService;
+    }
+
+    public UserServiceImpl(UserMapper userMapper, IUserDao userDao) {
         super();
         this.userMapper = userMapper;
     }
