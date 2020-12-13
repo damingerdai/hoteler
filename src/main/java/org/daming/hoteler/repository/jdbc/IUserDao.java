@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface IUserDao {
 
     Optional<User> getUserByUsername(String username);
+
+    Optional<User> get(long id);
 }

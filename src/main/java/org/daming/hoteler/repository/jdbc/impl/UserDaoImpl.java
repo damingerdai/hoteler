@@ -15,7 +15,18 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public Optional<User> getUserByUsername(String username) {
-        return jdbcTemplate.query("select id, username, password from users where username = ? ", new Object[] { username }, rs -> {
+        return jdbcTemplate.query("select id, username, password from users where username = ? limit 1 ", new Object[] { username }, rs -> {
+            while (rs.next()) {
+                var user = new User().setId(rs.getLong("id")).setUsername(rs.getString("username")).setPassword(rs.getString("password"));
+                return Optional.of(user);
+            }
+            return Optional.empty();
+        });
+    }
+
+    @Override
+    public Optional<User> get(long id) {
+        return jdbcTemplate.query("select id, username, password from users where id = ? limit 1 ", new Object[] { id }, rs -> {
             while (rs.next()) {
                 var user = new User().setId(rs.getLong("id")).setUsername(rs.getString("username")).setPassword(rs.getString("password"));
                 return Optional.of(user);

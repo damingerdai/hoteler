@@ -43,7 +43,6 @@ public class JwtUtil {
      * @return
      */
     public static SecretKey generalKey(String key) {
-        System.out.println(key == key.trim());
         var encodeKey = Base64.decodeBase64(key.trim());
         var secretKey = new SecretKeySpec(encodeKey, 0, encodeKey.length, "AES");
         return secretKey;

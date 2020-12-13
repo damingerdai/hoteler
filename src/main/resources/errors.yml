@@ -17,3 +17,5 @@ errors:
     message: JWT signature error.
   - code: 600009
     message: refreshToken due.
+  - code: 600010
+    message: JWT expired error.

@@ -32,6 +32,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User get(long id) {
+        Assert.isTrue(id > 0, "params 'id' is required");
+        return userDao.get(id).get();
+    }
+
+    @Override
     public void create(User user) {
         Assert.notNull(user,"params 'user' is required");
         var id = snowflakeService.nextId();
