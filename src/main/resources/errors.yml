@@ -1,0 +1,19 @@
+errors:
+  - code: 600001
+    message: 系统错误 %s
+  - code: 600002
+    message: 访问拒绝.
+  - code: 600003
+    message: 无权访问.
+  - code: 600004
+    message: 超时，请重试
+  - code: 600005
+    message: 用户名或者密码错误.
+  - code: 600006
+    message: refreshToken错误.
+  - code: 600007
+    message: refreshToken auth error.
+  - code: 600008
+    message: JWT signature error.
+  - code: 600009
+    message: refreshToken due.
