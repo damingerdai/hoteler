@@ -47,5 +47,6 @@ public class UserServiceImpl implements IUserService {
     public UserServiceImpl(UserMapper userMapper, IUserDao userDao) {
         super();
         this.userMapper = userMapper;
+        this.userDao = userDao;
     }
 }

@@ -38,7 +38,7 @@ public class TokenServiceImpl implements ITokenService {
 
         var accessToken = JwtUtil.createJWT(id, subject, ttlMillis, key, claims);
         var refreshToken = JwtUtil.createJWT(id, subject, ttlMillis + Duration.ofHours(23L).toMillis(), key, claims);
-        var exp = Instant.now().getLong(ChronoField.MILLI_OF_SECOND) + ttlMillis;
+        var exp = Instant.now().toEpochMilli() + ttlMillis;
         return new UserToken().setAccessToken(accessToken).setRefreshToken(refreshToken).setExp(exp);
     }
 

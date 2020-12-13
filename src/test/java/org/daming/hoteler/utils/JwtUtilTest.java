@@ -50,8 +50,9 @@ class JwtUtilTest {
 
     @Test
     void generalKey() {
-        var k = "daming";
+        var k = "damingerdai";
         var key = JwtUtil.generalKey(k);
+        System.out.println(key);
         assertNotNull(key);
     }
 }

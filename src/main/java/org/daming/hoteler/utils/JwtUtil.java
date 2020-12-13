@@ -35,8 +35,16 @@ public class JwtUtil {
         return claim;
     }
 
+    /**
+     * if meet ths issue 'Last encoded character (before the paddings if any) is a valid base 64 alphabet but not a possible value'.
+     * please upgrade commons-codec-1.15
+     * more detail: https://issues.apache.org/jira/browse/CODEC-263
+     * @param key
+     * @return
+     */
     public static SecretKey generalKey(String key) {
-        var encodeKey = Base64.decodeBase64(key);
+        System.out.println(key == key.trim());
+        var encodeKey = Base64.decodeBase64(key.trim());
         var secretKey = new SecretKeySpec(encodeKey, 0, encodeKey.length, "AES");
         return secretKey;
     }
