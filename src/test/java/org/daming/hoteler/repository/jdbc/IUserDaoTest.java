@@ -1,4 +1,4 @@
-package org.daming.hoteler.dao.jdbc;
+package org.daming.hoteler.repository.jdbc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package org.daming.hoteler.dao.jdbc.impl;
+package org.daming.hoteler.repository.jdbc.impl;
 
-import org.daming.hoteler.dao.jdbc.IUserDao;
+import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
