@@ -36,7 +36,7 @@ public class UserServiceImpl implements IUserService {
         Assert.notNull(user,"params 'user' is required");
         var id = snowflakeService.nextId();
         user.setId(id);
-        this.userMapper.create(user);
+        this.userMapper.create(user.getId(), user.getUsername(), user.getPassword());
     }
 
     @Autowired
