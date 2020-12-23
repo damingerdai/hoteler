@@ -11,4 +11,6 @@ import org.daming.hoteler.pojo.Room;
 public interface IRoomService {
 
     long create(Room room);
+
+    Room get(long id);
 }

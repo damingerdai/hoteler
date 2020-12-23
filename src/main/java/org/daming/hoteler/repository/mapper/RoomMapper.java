@@ -13,6 +13,6 @@ import org.daming.hoteler.pojo.Room;
 @Mapper
 public interface RoomMapper {
 
-    @Insert("insert into rooms (id, roomname, create_dt, create_user, update_dt, update_user) values (#{id}, #{roomname}, #{status}, statement_timestamp(),'system', statement_timestamp(), 'system')")
+    @Insert("insert into rooms (id, roomname, status, create_dt, create_user, update_dt, update_user) values (#{id}, #{roomname}, #{status, typeHandler=org.daming.hoteler.pojo.handler.RoomStatusTypeHandler}, statement_timestamp(),'system', statement_timestamp(), 'system')")
     void create(Room room);
 }
