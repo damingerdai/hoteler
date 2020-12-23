@@ -2,6 +2,8 @@ package org.daming.hoteler.repository.jdbc;
 
 import org.daming.hoteler.pojo.Room;
 
+import java.util.List;
+
 /**
  * room dao
  *
@@ -11,4 +13,6 @@ import org.daming.hoteler.pojo.Room;
 public interface IRoomDao {
 
     Room get(long id);
+
+    List<Room> list();
 }

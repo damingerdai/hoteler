@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * room controller
  *
@@ -36,6 +38,13 @@ public class RoomController {
     public Room get(@PathVariable(value = "id", required = true)long id) {
         return this.roomService.get(id);
     }
+
+    @ApiOperation(value = "list room", notes = "get all rooms api")
+    @GetMapping("rooms")
+    public List<Room> get() {
+        return this.roomService.list();
+    }
+
 
     public RoomController(IRoomService roomService) {
         super();

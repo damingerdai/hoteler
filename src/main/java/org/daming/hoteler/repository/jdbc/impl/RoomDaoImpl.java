@@ -6,6 +6,8 @@ import org.daming.hoteler.repository.jdbc.IRoomDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * room dao implement
  *
@@ -30,6 +32,15 @@ public class RoomDaoImpl implements IRoomDao {
             }
             return null;
         });
+    }
+
+    @Override
+    public List<Room> list() {
+        var sql = "select id, roomname, status from rooms";
+        return this.jdbcTemplate.query(sql, (rs, i) -> new Room()
+                .setId(rs.getLong("id"))
+                .setRoomname(rs.getString("roomname"))
+                .setStatus(RoomStatus.getInstance(rs.getInt("status"))));
     }
 
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {

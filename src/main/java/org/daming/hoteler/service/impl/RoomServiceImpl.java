@@ -8,6 +8,7 @@ import org.daming.hoteler.service.IRoomService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,6 +40,11 @@ public class RoomServiceImpl implements IRoomService {
     @Override
     public Room get(long id) {
         return this.roomDao.get(id);
+    }
+
+    @Override
+    public List<Room> list() {
+        return this.roomDao.list();
     }
 
     public RoomServiceImpl(ISnowflakeService snowflakeService, RoomMapper roomMapper, IRoomDao roomDao) {

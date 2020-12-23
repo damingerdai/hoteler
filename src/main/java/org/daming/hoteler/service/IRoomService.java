@@ -2,6 +2,8 @@ package org.daming.hoteler.service;
 
 import org.daming.hoteler.pojo.Room;
 
+import java.util.List;
+
 /**
  * room service
  *
@@ -13,4 +15,6 @@ public interface IRoomService {
     long create(Room room);
 
     Room get(long id);
+
+    List<Room> list();
 }
