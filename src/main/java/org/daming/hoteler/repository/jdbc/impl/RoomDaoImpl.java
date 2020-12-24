@@ -21,7 +21,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public Room get(long id) {
-        var sql = "select id, roomname, status from rooms where id = ?";
+        var sql = "select id, roomname, status from rooms where id = ? limit 1";
         var params = new Object[] { id };
         return this.jdbcTemplate.query(sql, params, (rs) -> {
             while (rs.next()) {
@@ -36,7 +36,7 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public List<Room> list() {
-        var sql = "select id, roomname, status from rooms";
+        var sql = "select id, roomname, status from rooms order by create_dt desc, update_dt desc";
         return this.jdbcTemplate.query(sql, (rs, i) -> new Room()
                 .setId(rs.getLong("id"))
                 .setRoomname(rs.getString("roomname"))
