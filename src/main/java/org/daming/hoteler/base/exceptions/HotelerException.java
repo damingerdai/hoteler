@@ -1,4 +1,4 @@
-package org.daming.hoteler.exceptions;
+package org.daming.hoteler.base.exceptions;
 
 import com.google.common.base.MoreObjects;
 
