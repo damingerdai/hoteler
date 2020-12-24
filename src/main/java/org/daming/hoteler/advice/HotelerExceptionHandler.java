@@ -1,6 +1,6 @@
 package org.daming.hoteler.advice;
 
-import org.daming.hoteler.exceptions.HotelerException;
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

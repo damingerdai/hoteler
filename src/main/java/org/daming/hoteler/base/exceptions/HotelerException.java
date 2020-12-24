@@ -1,6 +1,6 @@
 package org.daming.hoteler.base.exceptions;
 
-import com.google.common.base.MoreObjects;
+import java.util.StringJoiner;
 
 public class HotelerException extends RuntimeException {
 
@@ -60,10 +60,10 @@ public class HotelerException extends RuntimeException {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("code", code)
-                .add("message", message)
-                .add("cause", cause)
+        return new StringJoiner(", ", HotelerException.class.getSimpleName() + "[", "]")
+                .add("code=" + code)
+                .add("message='" + message + "'")
+                .add("cause=" + cause)
                 .toString();
     }
 }

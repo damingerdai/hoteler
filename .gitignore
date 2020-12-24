@@ -30,3 +30,6 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/static/
+
+### Others ###
+logs/

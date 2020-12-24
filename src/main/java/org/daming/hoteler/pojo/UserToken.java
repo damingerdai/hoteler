@@ -1,8 +1,7 @@
 package org.daming.hoteler.pojo;
 
-import com.google.common.base.MoreObjects;
-
 import java.io.Serializable;
+import java.util.StringJoiner;
 
 public class UserToken implements Serializable {
 
@@ -43,10 +42,10 @@ public class UserToken implements Serializable {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("accessToken", accessToken)
-                .add("refreshToken", refreshToken)
-                .add("exp", exp)
+        return new StringJoiner(", ", UserToken.class.getSimpleName() + "[", "]")
+                .add("accessToken='" + accessToken + "'")
+                .add("refreshToken='" + refreshToken + "'")
+                .add("exp=" + exp)
                 .toString();
     }
 }

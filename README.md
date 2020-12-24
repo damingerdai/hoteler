@@ -40,4 +40,4 @@ mvn flyway:migrate
 
 ## swagger-ui
 
-[http://127.0.0.1:8080/swagger-ui.html](http://127.0.0.1:8080/swagger-ui.html)
+[http://localhost:8080/swagger-ui/index.html](http://127.0.0.1:8080/swagger-ui.html)
