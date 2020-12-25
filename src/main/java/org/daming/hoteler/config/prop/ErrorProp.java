@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * error property
@@ -27,5 +28,12 @@ public class ErrorProp {
 
     public void setErrors(List<ApiError> errors) {
         this.errors = errors;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ErrorProp.class.getSimpleName() + "[", "]")
+                .add("errors=" + errors)
+                .toString();
     }
 }

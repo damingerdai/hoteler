@@ -19,3 +19,5 @@ errors:
     message: refreshToken due.
   - code: 600010
     message: JWT expired error.
+  - code: 700001
+    message: SQL '%s' error.
