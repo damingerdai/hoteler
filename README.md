@@ -12,17 +12,27 @@
 
 ## 初始化
 
+### 克隆仓库
+
+```shell script
+git clone git@github.com:damingerdai/hoteler.git --recurse-submodules --remote-submodules
+```
+
 ### Docker环境
+
 1. 创建数据卷
-```bash
+
+```shell script
 docker volume create --name=hoteler-volume
 ```
 2. 创建网桥
-```bash
+
+```shell script
 docker network create hoteler-network
 ```
-3. 启动
-```bash
+3. 启动数据库
+
+```shell script
 docker-compose up
 ```
 
@@ -32,12 +42,24 @@ docker-compose up
 mvn flyway:migrate
 ```
 
+### 构建
+
+```shell script
+sh scripts/build.sh
+```
+
 ## 使用
+
+### 浏览器
+
+请访问：[http://localhost:8080](http://localhost:8080)
+
+默认的账号密码： admin/12345
+### swagger-ui
+
+后端支持OpenApi, 请访问: [http://localhost:8080/swagger-ui/index.html](http://127.0.0.1:8080/swagger-ui.html)
 
 ### graphql
 
-[http://localhost:8080/graphiq](http://localhost:8080/graphiq)
-
-## swagger-ui
-
-[http://localhost:8080/swagger-ui/index.html](http://127.0.0.1:8080/swagger-ui.html)
+由于graphql的集成存在bug，因此已经废弃。
+<!-- [http://localhost:8080/graphiq](http://localhost:8080/graphiq) -->
