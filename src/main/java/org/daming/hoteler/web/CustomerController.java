@@ -6,6 +6,7 @@ import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.CreateCustomerRequest;
 import org.daming.hoteler.service.ICustomerService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,7 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "lisst customer", notes = "list all customers api")
-    @PostMapping("customers")
+    @GetMapping("customers")
     public List<Customer> listCustomers() {
         return this.customerService.list();
     }

@@ -1,6 +1,5 @@
 package org.daming.hoteler.repository.jdbc.impl;
 
-import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.ErrorCodeConstants;
