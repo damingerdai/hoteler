@@ -44,7 +44,9 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
     }
 
     private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth()).build();
+        return SecurityContext.builder()
+                .operationSelector(o -> !o.requestMappingPattern().matches("/api/v1/token"))
+                .securityReferences(defaultAuth()).build();
     }
 
     private List<SecurityReference> defaultAuth() {
