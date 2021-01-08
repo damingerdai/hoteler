@@ -44,9 +44,13 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
     }
 
     private SecurityContext securityContext() {
+//        return SecurityContext.builder()
+//                .operationSelector(o -> !o.requestMappingPattern().matches("/api/v1/token"))
+//                .securityReferences(defaultAuth()).build();
         return SecurityContext.builder()
-                .operationSelector(o -> !o.requestMappingPattern().matches("/api/v1/token"))
-                .securityReferences(defaultAuth()).build();
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex("/anyPath.*"))
+                .build();
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -55,6 +59,8 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));
     }
+
+
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()

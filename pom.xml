@@ -47,6 +47,18 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--为了强制使用3.0.0的版本，而不是2.9.2 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-core</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
