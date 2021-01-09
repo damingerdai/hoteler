@@ -1,6 +1,6 @@
 package org.daming.hoteler.config;
 
-import org.daming.hoteler.filter.AuthenticationFilter;
+import org.daming.hoteler.api.filter.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

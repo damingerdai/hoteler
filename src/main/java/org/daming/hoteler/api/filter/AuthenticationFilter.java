@@ -1,4 +1,4 @@
-package org.daming.hoteler.filter;
+package org.daming.hoteler.api.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

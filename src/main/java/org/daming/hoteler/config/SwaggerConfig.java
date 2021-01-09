@@ -34,7 +34,7 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.daming.hoteler.web"))
+                .apis(RequestHandlerSelectors.basePackage("org.daming.hoteler.api.web"))
                 .paths(PathSelectors.any())
                 .build();
     }

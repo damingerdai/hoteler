@@ -1,4 +1,4 @@
-package org.daming.hoteler.web;
+package org.daming.hoteler.api.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

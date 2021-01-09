@@ -1,4 +1,4 @@
-package org.daming.hoteler.interceptor;
+package org.daming.hoteler.api.interceptor;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;

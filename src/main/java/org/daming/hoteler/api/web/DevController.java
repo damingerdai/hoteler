@@ -1,4 +1,4 @@
-package org.daming.hoteler.web;
+package org.daming.hoteler.api.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

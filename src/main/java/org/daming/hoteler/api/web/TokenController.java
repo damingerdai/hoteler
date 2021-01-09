@@ -1,4 +1,4 @@
-package org.daming.hoteler.web;
+package org.daming.hoteler.api.web;
 
 import io.swagger.annotations.ApiOperation;
 import org.daming.hoteler.pojo.UserToken;

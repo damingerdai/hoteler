@@ -1,4 +1,4 @@
-package org.daming.hoteler.advice;
+package org.daming.hoteler.api.advice;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.ApiError;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * common excetpion handler
+ * common exception handler
  *
  * @author gming001
  * @create 2020-12-13 19:06
