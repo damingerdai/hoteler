@@ -1,9 +1,17 @@
 package org.daming.hoteler.api.filter;
 
+import io.jsonwebtoken.Claims;
+import org.daming.hoteler.base.context.ThreadLocalContextHolder;
+import org.daming.hoteler.base.exceptions.ExceptionBuilder;
+import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.HotelerContext;
+import org.daming.hoteler.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -14,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -25,9 +34,12 @@ import java.util.regex.Pattern;
 @Component
 public class AuthenticationFilter extends GenericFilterBean {
 
+    @Value("${secret.key}")
+    private String secretKey;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|images|api-docs).*");
+    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|images|api-docs|html|js|css).*");
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -35,15 +47,46 @@ public class AuthenticationFilter extends GenericFilterBean {
         var response = asHttp(servletResponse);
         var in = Instant.now();
         try {
-            // Todo do filter
+            var accept = request.getHeader("Accept");
+            if (accept.contains("text/html") || accept.contains("image")) {
+                filterChain.doFilter(servletRequest, servletResponse);
+                return;
+            }
+            if (!isFilter(request.getRequestURI())) {
+                verifyHttpHeaders(request);
+                var context = new HotelerContext();
+                ThreadLocalContextHolder.put(context);
+                context.setIn(in);
+                context.setRequestId(UUID.randomUUID().toString());
+                verifyToken(request, context);
+            }
             filterChain.doFilter(servletRequest, servletResponse);
+        } catch (HotelerException ex) {
+            SecurityContextHolder.clearContext();
+            if (logger.isErrorEnabled()) {
+                logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
+            }
+            System.out.println("daming");
+            response.sendRedirect("index.html");
         } catch (Exception ex) {
+            ex.printStackTrace();
             SecurityContextHolder.clearContext();
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         }
+    }
+
+    private void verifyToken(HttpServletRequest httpRequest, HotelerContext context) {
+        var accessToken = httpRequest.getHeader("accessToken");
+        if (StringUtils.isEmpty(accessToken)) {
+            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+        }
+        context.setAccessToken(accessToken);
+        var key = JwtUtil.generalKey(secretKey);
+        Claims claims = JwtUtil.parseJwt(accessToken, key);
+        System.out.println(claims);
     }
 
     private HttpServletRequest asHttp(ServletRequest request) {
