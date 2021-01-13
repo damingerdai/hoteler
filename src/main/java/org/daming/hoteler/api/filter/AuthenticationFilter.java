@@ -66,7 +66,6 @@ public class AuthenticationFilter extends GenericFilterBean {
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
-            System.out.println("daming");
             response.sendRedirect("index.html");
         } catch (Exception ex) {
             ex.printStackTrace();
