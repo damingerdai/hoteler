@@ -1,0 +1,19 @@
+# https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates#about-the-dependabotyml-file
+
+version: 2
+updates:
+  # Maintain dependencies for npm
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    target-branch: "master"
+    reviewers:
+      - "damingerdai"
+    labels:
+      - "maven"
+      - "dependencies"
+    open-pull-requests-limit: 10
