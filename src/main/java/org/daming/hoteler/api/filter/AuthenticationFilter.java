@@ -1,6 +1,7 @@
 package org.daming.hoteler.api.filter;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
@@ -63,6 +64,12 @@ public class AuthenticationFilter extends GenericFilterBean {
                 verifyToken(request, context);
             }
             filterChain.doFilter(servletRequest, servletResponse);
+        } catch (ExpiredJwtException ex) {
+            SecurityContextHolder.clearContext();
+            if (logger.isErrorEnabled()) {
+                logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
+            }
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
         } catch (HotelerException ex) {
             SecurityContextHolder.clearContext();
             if (logger.isErrorEnabled()) {
