@@ -52,12 +52,12 @@ sh scripts/build.sh
 
 ### 浏览器
 
-请访问：[http://localhost:8080](http://localhost:8080)
+请访问：[http://localhost:8443](http://localhost:8080)
 
 默认的账号密码： admin/12345
 ### swagger-ui
 
-后端支持OpenApi, 请访问: [http://localhost:8080/swagger-ui/index.html](http://127.0.0.1:8080/swagger-ui.html)
+后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html](http://localhost:8443/swagger-ui/index.html)
 
 ### graphql
 

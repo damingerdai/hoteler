@@ -35,8 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .authorizeRequests()
                 .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").permitAll()
                 .antMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").permitAll()
@@ -50,15 +48,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images").permitAll()
                 .antMatchers("/api/v1/**").permitAll()
                 .antMatchers("/", "/login").permitAll()
-                .antMatchers("/api/v1/admin").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/")
-                .permitAll()
+                .antMatchers("/api/v1/token").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedEntryPoint());
+                .authenticationEntryPoint(unauthorizedEntryPoint())
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class);
     }

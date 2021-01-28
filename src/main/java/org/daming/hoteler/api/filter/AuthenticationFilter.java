@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -39,19 +40,20 @@ public class AuthenticationFilter extends GenericFilterBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|images|api-docs|html|js|css).*");
+    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|images|api-docs|html|js|css|svg|ico).*");
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         var request = asHttp(servletRequest);
         var response = asHttp(servletResponse);
+        System.out.println(request.getRequestURI());
         var in = Instant.now();
         try {
-            var accept = request.getHeader("Accept");
-            if (accept.contains("text/html") || accept.contains("image")) {
-                filterChain.doFilter(servletRequest, servletResponse);
-                return;
-            }
+//            var accept = request.getHeader("Accept");
+//            if (accept.contains("text/html") || accept.contains("image")) {
+//                filterChain.doFilter(servletRequest, servletResponse);
+//                return;
+//            }
             if (!isFilter(request.getRequestURI())) {
                 verifyHttpHeaders(request);
                 var context = new HotelerContext();
@@ -66,7 +68,8 @@ public class AuthenticationFilter extends GenericFilterBean {
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
-            response.sendRedirect("index.html");
+            // response.sendRedirect("index.html");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
             SecurityContextHolder.clearContext();
@@ -78,14 +81,19 @@ public class AuthenticationFilter extends GenericFilterBean {
     }
 
     private void verifyToken(HttpServletRequest httpRequest, HotelerContext context) {
-        var accessToken = httpRequest.getHeader("accessToken");
+        final String requestTokenHeader = httpRequest.getHeader("Authorization");
+        if (Objects.isNull(requestTokenHeader) || !requestTokenHeader.startsWith("Bearer ")) {
+            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+        }
+        var accessToken = requestTokenHeader.substring(7);
         if (StringUtils.isEmpty(accessToken)) {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
         }
         context.setAccessToken(accessToken);
         var key = JwtUtil.generalKey(secretKey);
-        Claims claims = JwtUtil.parseJwt(accessToken, key);
-        System.out.println(claims);
+        var claims = JwtUtil.parseJwt(accessToken, key);
+        var subject =  claims.getSubject();
+        System.out.println(subject);
     }
 
     private HttpServletRequest asHttp(ServletRequest request) {
