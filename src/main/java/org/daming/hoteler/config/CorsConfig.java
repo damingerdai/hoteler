@@ -16,7 +16,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")    // 允许跨域访问的路径
-                .allowedOrigins("*")    // 允许跨域访问的源
+                .allowedOriginPatterns("*") // 允许跨域访问的源: SpringBoot2.4.0 [allowedOriginPatterns]代替[allowedOrigins]
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")    // 允许请求方法
                 .maxAge(168000)    // 预检间隔时间
                 .allowedHeaders("*")  // 允许头部设置
