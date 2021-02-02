@@ -1,5 +1,6 @@
 package org.daming.hoteler.service.impl;
 
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.IRoomDao;
@@ -27,14 +28,19 @@ public class RoomServiceImpl implements IRoomService {
     private IRoomDao roomDao;
 
     @Override
-    public long create(Room room) {
-        var roomId = this.snowflakeService.nextId();
-        room.setId(roomId);
-        if (Objects.isNull(room.getStatus())) {
-            room.setStatus(RoomStatus.NoUse);
+    public long create(Room room) throws HotelerException {
+        try {
+            var roomId = this.snowflakeService.nextId();
+            room.setId(roomId);
+            if (Objects.isNull(room.getStatus())) {
+                room.setStatus(RoomStatus.NoUse);
+            }
+            this.roomMapper.create(room);
+            return roomId;
+        } catch (HotelerException ex) {
+            throw ex;
         }
-        this.roomMapper.create(room);
-        return roomId;
+
     }
 
     @Override

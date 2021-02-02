@@ -15,12 +15,23 @@ public class CreateRoomRequest implements Serializable {
 
     private String roomname;
 
+    private double price;
+
     public String getRoomname() {
         return roomname;
     }
 
     public CreateRoomRequest setRoomname(String roomname) {
         this.roomname = roomname;
+        return this;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public CreateRoomRequest setPrice(double price) {
+        this.price = price;
         return this;
     }
 
@@ -32,6 +43,7 @@ public class CreateRoomRequest implements Serializable {
     public String toString() {
         return new StringJoiner(", ", CreateRoomRequest.class.getSimpleName() + "[", "]")
                 .add("roomname='" + roomname + "'")
+                .add("price=" + price)
                 .toString();
     }
 }

@@ -1,5 +1,6 @@
 package org.daming.hoteler.service;
 
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  **/
 public interface IRoomService {
 
-    long create(Room room);
+    long create(Room room) throws HotelerException;
 
     Room get(long id);
 

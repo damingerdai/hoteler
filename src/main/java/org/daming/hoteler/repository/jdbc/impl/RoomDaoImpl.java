@@ -6,6 +6,8 @@ import org.daming.hoteler.repository.jdbc.IRoomDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -21,14 +23,11 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public Room get(long id) {
-        var sql = "select id, roomname, status from rooms where id = ? limit 1";
+        var sql = "select id, roomname, status, price from rooms where id = ? limit 1";
         var params = new Object[] { id };
         return this.jdbcTemplate.query(sql, params, (rs) -> {
             while (rs.next()) {
-                return new Room()
-                        .setId(rs.getLong("id"))
-                        .setRoomname(rs.getString("roomname"))
-                        .setStatus(RoomStatus.getInstance(rs.getInt("status")));
+               this.convertRoomFromResultSet(rs);
             }
             return null;
         });
@@ -36,11 +35,16 @@ public class RoomDaoImpl implements IRoomDao {
 
     @Override
     public List<Room> list() {
-        var sql = "select id, roomname, status from rooms order by create_dt desc, update_dt desc";
-        return this.jdbcTemplate.query(sql, (rs, i) -> new Room()
+        var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
+        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
+    }
+
+    private Room convertRoomFromResultSet(ResultSet rs) throws SQLException {
+        return new Room()
                 .setId(rs.getLong("id"))
                 .setRoomname(rs.getString("roomname"))
-                .setStatus(RoomStatus.getInstance(rs.getInt("status"))));
+                .setStatus(RoomStatus.getInstance(rs.getInt("status")))
+                .setPrice(rs.getDouble("price"));
     }
 
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {

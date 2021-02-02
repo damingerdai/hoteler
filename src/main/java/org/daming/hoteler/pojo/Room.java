@@ -21,6 +21,8 @@ public class Room implements Serializable {
 
     private RoomStatus status;
 
+    public double price;
+
     public long getId() {
         return id;
     }
@@ -48,11 +50,21 @@ public class Room implements Serializable {
         return this;
     }
 
-    public Room(long id, String roomname, RoomStatus status) {
+    public double getPrice() {
+        return price;
+    }
+
+    public Room setPrice(double price) {
+        this.price = price;
+        return this;
+    }
+
+    public Room(long id, String roomname, RoomStatus status, double price) {
         super();
         this.id = id;
         this.roomname = roomname;
         this.status = status;
+        this.price = price;
     }
 
     public Room() {

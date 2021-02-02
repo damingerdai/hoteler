@@ -1,0 +1,1 @@
+ALTER TABLE "public"."rooms" ADD COLUMN "price" numeric DEFAULT '0';
