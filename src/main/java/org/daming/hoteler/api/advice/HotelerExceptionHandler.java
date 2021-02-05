@@ -1,7 +1,9 @@
 package org.daming.hoteler.api.advice;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.ApiError;
+import org.daming.hoteler.pojo.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,16 +19,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class HotelerExceptionHandler {
 
     @ExceptionHandler(value = HotelerException.class)
-    public ResponseEntity<ApiError> baseErrorHandler(Exception e) throws Exception {
+    public ErrorResponse baseErrorHandler(Exception e) throws Exception {
         HotelerException de = (HotelerException) e;
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ApiError().setCode("ERR-" + de.getCode()).setMessage(de.getMessage()));
+        var response = new ErrorResponse();
+        var apiError = new ApiError().setCode("ERR-" + de.getCode()).setMessage(de.getMessage());
+        response.setError(apiError);
+
+        return response;
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ApiError> defaultErrorHandler(Exception e) throws Exception {
+    public ErrorResponse defaultErrorHandler(Exception e) throws Exception {
         // LoggerManager.getErrorLogger().error("ERR-" + ErrorCodeConstant.ERR_SYSTEM+ ", " + e.getMessage(),e);
+        var response = new ErrorResponse();
         var error = new ApiError().setCode("ERR-600001").setMessage(e.getMessage());
-        return ResponseEntity.status(HttpStatus.OK).body(error);
+        response.setError(error);
+
+        return response;
     }
 }
