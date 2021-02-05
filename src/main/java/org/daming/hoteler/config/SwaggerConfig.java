@@ -11,12 +11,14 @@ import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.OperationContext;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.SpringfoxWebMvcConfiguration;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Configuration
 @EnableOpenApi
@@ -44,13 +46,17 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
     }
 
     private SecurityContext securityContext() {
-//        return SecurityContext.builder()
-//                .operationSelector(o -> !o.requestMappingPattern().matches("/api/v1/token"))
-//                .securityReferences(defaultAuth()).build();
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/anyPath.*"))
+                .operationSelector(operationContext())
+                // .forPaths(PathSelectors.regex("^/api/v1/(?!token).*$"))
                 .build();
+    }
+
+    private Predicate<OperationContext> operationContext() {
+        return operationContext -> {
+            return operationContext.requestMappingPattern().matches("^/api/v1/(?!token).*$");
+        };
     }
 
     private List<SecurityReference> defaultAuth() {

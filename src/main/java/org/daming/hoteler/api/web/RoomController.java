@@ -1,10 +1,15 @@
 package org.daming.hoteler.api.web;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.CreateRoomRequest;
+import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.service.IRoomService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +49,16 @@ public class RoomController {
     @GetMapping("rooms")
     public List<Room> get() {
         return this.roomService.list();
+    }
+
+    @ApiOperation(value = "delete room", notes = "delete a room api")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "id", required = true, allowEmptyValue = false, paramType = "path", dataType = "long", defaultValue = "0"),
+    })
+    @DeleteMapping("room/{id}")
+    public CommonResponse delete(@PathVariable long id) throws HotelerException {
+        System.out.println(id);
+        return new CommonResponse();
     }
 
 
