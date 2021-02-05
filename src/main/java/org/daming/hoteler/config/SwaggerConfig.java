@@ -54,9 +54,7 @@ public class SwaggerConfig extends SpringfoxWebMvcConfiguration {
     }
 
     private Predicate<OperationContext> operationContext() {
-        return operationContext -> {
-            return operationContext.requestMappingPattern().matches("^/api/v1/(?!token).*$");
-        };
+        return operationContext -> operationContext.requestMappingPattern().matches("^/api/v1/(?!token).*$");
     }
 
     private List<SecurityReference> defaultAuth() {
