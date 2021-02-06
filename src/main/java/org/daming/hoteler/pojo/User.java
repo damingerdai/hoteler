@@ -1,5 +1,6 @@
 package org.daming.hoteler.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -9,6 +10,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 120505218967153077L;
 
     @ApiModelProperty(value = "user id")
+    // 该注解是必须的， long类型前端会有精度损失
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private long id;
 
     private String username;

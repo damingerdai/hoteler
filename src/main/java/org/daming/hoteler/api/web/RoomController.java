@@ -34,7 +34,7 @@ public class RoomController {
     @ApiOperation(value = "create room", notes = "create a new room api")
     @PostMapping("room")
     public long createRoom(@RequestBody CreateRoomRequest request) {
-        var room = new Room().setRoomname(request.getRoomname()).setStatus(RoomStatus.NoUse);
+        var room = new Room().setRoomname(request.getRoomname()).setStatus(RoomStatus.NoUse).setPrice(request.getPrice());
         roomService.create(room);
         return room.getId();
     }
@@ -57,7 +57,7 @@ public class RoomController {
     })
     @DeleteMapping("room/{id}")
     public CommonResponse delete(@PathVariable long id) throws HotelerException {
-        System.out.println(id);
+        this.roomService.delete(id);
         return new CommonResponse();
     }
 

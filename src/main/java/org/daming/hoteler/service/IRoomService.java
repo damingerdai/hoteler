@@ -18,4 +18,6 @@ public interface IRoomService {
     Room get(long id);
 
     List<Room> list();
+
+    void delete(long id) throws HotelerException;
 }

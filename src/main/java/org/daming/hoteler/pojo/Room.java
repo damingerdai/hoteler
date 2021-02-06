@@ -1,5 +1,6 @@
 package org.daming.hoteler.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 
 import java.io.Serializable;
@@ -15,6 +16,8 @@ public class Room implements Serializable {
 
     private static final long serialVersionUID = 5964557657365714040L;
 
+    // 该注解是必须的， long类型前端会有精度损失
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private long id;
 
     private String roomname;
