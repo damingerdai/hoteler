@@ -1,7 +1,6 @@
 package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
-import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.IRoomDao;
@@ -45,13 +44,35 @@ public class RoomServiceImpl implements IRoomService {
             return roomId;
         } catch (HotelerException ex) {
             throw ex;
+        } catch (Exception ex) {
+            throw errorService.createHotelerSystemException(ex.getMessage(), ex);
         }
 
     }
 
     @Override
-    public Room get(long id) {
-        return this.roomDao.get(id);
+    public Room get(long id) throws HotelerException {
+        try {
+            return this.roomDao.get(id);
+        } catch (HotelerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw errorService.createHotelerSystemException(ex.getMessage(), ex);
+        }
+
+    }
+
+    @Override
+    public void update(Room room) throws HotelerException {
+        try {
+            this.roomMapper.update(room);
+        } catch (PersistenceException | DataAccessException ex) {
+            throw errorService.createSqlHotelerException(ex, "update room where id = " + room.getId());
+        } catch (HotelerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw errorService.createHotelerSystemException(ex.getMessage(), ex);
+        }
     }
 
     @Override

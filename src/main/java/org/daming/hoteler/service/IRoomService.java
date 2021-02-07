@@ -15,9 +15,11 @@ public interface IRoomService {
 
     long create(Room room) throws HotelerException;
 
-    Room get(long id);
+    Room get(long id) throws HotelerException;
 
-    List<Room> list();
+    void update(Room room) throws HotelerException;
+
+    List<Room> list() throws HotelerException;
 
     void delete(long id) throws HotelerException;
 }

@@ -1,7 +1,5 @@
 package org.daming.hoteler.pojo.request;
 
-import org.daming.hoteler.pojo.User;
-
 import java.io.Serializable;
 
 public class CreateUserRequest implements Serializable {

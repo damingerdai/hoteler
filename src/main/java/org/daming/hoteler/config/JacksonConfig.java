@@ -16,10 +16,10 @@ import java.io.IOException;
  * @author gming001
  * @create 2021-02-07 15:47
  **/
-@Configuration
+// @Configuration
 public class JacksonConfig {
 
-    @Bean
+    // @Bean
     public Jackson2ObjectMapperBuilderCustomizer enumCustomizer(){
         return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.serializerByType(Enumerator.class, new JsonSerializer<Enumerator>() {
             @Override

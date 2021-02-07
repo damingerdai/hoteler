@@ -1,5 +1,10 @@
 package org.daming.hoteler.pojo.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.StringJoiner;
 
 /**
@@ -8,6 +13,7 @@ import java.util.StringJoiner;
  * @author gming001
  * @create 2020-12-22 22:39
  **/
+@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 public enum RoomStatus implements Enumerator {
 
     NoUse(1, "no used"),
@@ -48,12 +54,24 @@ public enum RoomStatus implements Enumerator {
         throw new RuntimeException("no room status with name " + name);
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static RoomStatus forValues(int id) {
+        for (RoomStatus rs : values()) {
+            if (rs.id() == id) {
+                return rs;
+            }
+        }
+        throw new RuntimeException("no room status with id " + id);
+    }
+
     @Override
+    @JsonValue
     public int id() {
         return id;
     }
 
     @Override
+    //@JsonValue
     public String value() {
         return value;
     }
