@@ -1,12 +1,14 @@
 package org.daming.hoteler.pojo.enums;
 
+import java.util.StringJoiner;
+
 /**
  * room status
  *
  * @author gming001
  * @create 2020-12-22 22:39
  **/
-public enum RoomStatus {
+public enum RoomStatus implements Enumerator {
 
     NoUse(1, "no used"),
     InUsed(2, "in used");
@@ -44,5 +46,23 @@ public enum RoomStatus {
             }
         }
         throw new RuntimeException("no room status with name " + name);
+    }
+
+    @Override
+    public int id() {
+        return id;
+    }
+
+    @Override
+    public String value() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", RoomStatus.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("value='" + value + "'")
+                .toString();
     }
 }
