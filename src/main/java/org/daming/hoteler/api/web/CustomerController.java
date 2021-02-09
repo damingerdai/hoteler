@@ -3,6 +3,8 @@ package org.daming.hoteler.api.web;
 import io.swagger.annotations.ApiOperation;
 import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.pojo.request.CreateCustomerRequest;
+import org.daming.hoteler.pojo.response.CommonResponse;
+import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.service.ICustomerService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +28,15 @@ public class CustomerController {
 
     @ApiOperation(value = "create customer", notes = "create a new customer api")
     @PostMapping("customer")
-    public long createCustomer(@RequestBody CreateCustomerRequest request) {
+    public CommonResponse create(@RequestBody CreateCustomerRequest request) {
         var customer = new Customer().setName(request.getName()).setGender(request.getGender()).setCardId(request.getCardId()).setPhone(request.getPhone());
-        return this.customerService.create(customer);
+        var id =  this.customerService.create(customer);
+        return new DataResponse<>(id);
     }
 
-    @ApiOperation(value = "lisst customer", notes = "list all customers api")
+    @ApiOperation(value = "list customer", notes = "list all customers api")
     @GetMapping("customers")
-    public List<Customer> listCustomers() {
+    public List<Customer> list() {
         return this.customerService.list();
     }
 

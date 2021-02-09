@@ -13,7 +13,25 @@ import java.util.List;
  **/
 public interface ICustomerDao {
 
+    /**
+     * 创建用户
+     * @param customer 用户的基本信息
+     * @throws HotelerException hoteler错误
+     */
+    void create(Customer customer) throws HotelerException;
+
+    /**
+     * 获取指定用户
+     * @param id 用户的唯一凭证
+     * @return 用户信息
+     * @throws HotelerException hoteler错误
+     */
     Customer get(long id) throws HotelerException;
 
+    /**
+     * 获取所有的用户
+     * @return 用户信息集合
+     * @throws HotelerException hoteler错误
+     */
     List<Customer> list() throws HotelerException;
 }

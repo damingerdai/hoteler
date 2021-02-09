@@ -21,3 +21,5 @@ errors:
     message: JWT expired error.
   - code: 700001
     message: SQL '%s' error.
+  - code: 800001
+    message: customer create error.

@@ -2,6 +2,7 @@ package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
+import org.daming.hoteler.constants.CustomerErrorCodeConstants;
 import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.repository.jdbc.ICustomerDao;
 import org.daming.hoteler.repository.mapper.CustomerMapper;
@@ -45,13 +46,14 @@ public class CustomerServiceImpl implements ICustomerService {
         long customerId = this.snowflakeService.nextId();
         customer.setId(customerId);
         try {
-            this.customerMapper.create(customer);
+            // this.customerMapper.create(customer);
+            customerDao.create(customer);
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error("fail to create a customer", he);
             throw he;
         } catch (Exception ex) {
-             // TODO add more error
-            ex.printStackTrace();
+            LoggerManager.getCommonLogger().error("fail to create a customer", ex);
+            throw errorService.createHotelerException(CustomerErrorCodeConstants.CREATE_CUSTOMER_ERROR_CODE, ex);
         }
         return customerId;
     }

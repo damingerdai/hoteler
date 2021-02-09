@@ -37,16 +37,28 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
+    public void create(Customer customer) throws HotelerException {
+        var sql = "insert into customers (id, name, gender, card_id, phone, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
+        var params = new Object[] { customer.getId(), customer.getName(), customer.getGender().name(), customer.getCardId(), customer.getPhone() };
+        try {
+            jdbcTemplate.update(sql, params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to update customer with '" + customer + "', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
+    @Override
     public Customer get(long id) throws HotelerException {
         var sql = "select id, name, gender, card_id, phone from customers where id = ? limit 1";
         var params = new Object[] { id };
         try {
-            return this.jdbcTemplate.query(sql, params, (rs) -> {
+            return this.jdbcTemplate.query(sql, (rs) -> {
                 while (rs.next()) {
                     return new Customer().setId(rs.getLong("id")).setName(rs.getString("name")).setGender(this.getGender(rs.getString("gender"))).setCardId(rs.getString("card_id")).setPhone(rs.getLong("phone"));
                 }
                 return null;
-            });
+            }, params);
         } catch (Exception ex) {
             LoggerManager.getJdbcLogger().error(() -> "fail to get customer with '" + id + "', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
