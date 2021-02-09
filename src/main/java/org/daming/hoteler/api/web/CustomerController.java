@@ -5,6 +5,7 @@ import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.pojo.request.CreateCustomerRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.pojo.response.ListResponse;
 import org.daming.hoteler.service.ICustomerService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +37,9 @@ public class CustomerController {
 
     @ApiOperation(value = "list customer", notes = "list all customers api")
     @GetMapping("customers")
-    public List<Customer> list() {
-        return this.customerService.list();
+    public CommonResponse list() {
+        var list = this.customerService.list();
+        return new ListResponse<>(list);
     }
 
     public CustomerController(ICustomerService customerService) {
