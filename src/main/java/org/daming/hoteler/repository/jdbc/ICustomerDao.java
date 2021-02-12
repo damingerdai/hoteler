@@ -41,4 +41,12 @@ public interface ICustomerDao {
      * @throws HotelerException hoteler错误
      */
     void delete(long id) throws HotelerException;
+
+    /**
+     * 
+     * @param customer
+     * @throws HotelerException
+     */
+    void update(Customer customer) throws HotelerException;
 }
+

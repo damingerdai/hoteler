@@ -7,6 +7,8 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.pojo.request.CreateCustomerRequest;
+import org.daming.hoteler.pojo.request.UpdateCustomerRequest;
+import org.daming.hoteler.pojo.request.UpdateRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.pojo.response.ListResponse;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +45,14 @@ public class CustomerController {
         var customer = new Customer().setName(request.getName()).setGender(request.getGender()).setCardId(request.getCardId()).setPhone(request.getPhone());
         var id =  this.customerService.create(customer);
         return new DataResponse<>(id);
+    }
+
+    @ApiOperation(value = "update customer", notes = "update an exited customer api")
+    @PutMapping("customer")
+    public CommonResponse update(@RequestBody UpdateCustomerRequest request) {
+        var customer = new Customer().setId(request.getId()).setName(request.getName()).setGender(request.getGender()).setCardId(request.getCardId()).setPhone(request.getPhone());
+        this.customerService.update(customer);
+        return new CommonResponse();
     }
 
     @ApiOperation(value = "list customer", notes = "list all customers api")

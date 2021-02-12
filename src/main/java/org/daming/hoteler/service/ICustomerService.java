@@ -15,6 +15,8 @@ public interface ICustomerService {
 
     long create(Customer customer) throws HotelerException;
 
+    void update(Customer customer) throws HotelerException;
+
     Customer get(long id) throws HotelerException;
 
     List<Customer> list() throws HotelerException;

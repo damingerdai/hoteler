@@ -88,6 +88,18 @@ public class CustomerDaoImpl implements ICustomerDao {
         }
     }
 
+    @Override
+    public void update(Customer customer) throws HotelerException {
+        var sql = "update customers set name = ?, gender = ?, card_id = ?, phone = ?, create_dt = statement_timestamp(), create_user = 'system', update_dt = statement_timestamp(), update_user = 'system' where id = ?";
+        var params = new Object[] { customer.getName(), customer.getGender().name(), customer.getCardId(), customer.getPhone(), customer.getId() };
+        try {
+            this.jdbcTemplate.update(sql, params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list customer, err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
     private Gender getGender(String value) {
         return this.map.entrySet().stream()
                 .filter(e -> value.equalsIgnoreCase(e.getValue()))

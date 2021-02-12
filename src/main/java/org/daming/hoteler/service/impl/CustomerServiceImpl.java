@@ -60,6 +60,19 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    public void update(Customer customer) throws HotelerException {
+        try {
+            customerDao.update(customer);
+        } catch (HotelerException he) {
+            LoggerManager.getCommonLogger().error(() -> "fail to update customer:" + customer.getId(), he);
+            throw he;
+        } catch (Exception ex) {
+            LoggerManager.getCommonLogger().error(() -> "fail to update a customer: " + customer.getId() + ", error: " + ex.getMessage(), ex);
+            throw errorService.createHotelerException(CustomerErrorCodeConstants.CREATE_CUSTOMER_ERROR_CODE, ex);
+        }
+    }
+
+    @Override
     public Customer get(long id) throws HotelerException {
         try {
             return this.customerDao.get(id);
