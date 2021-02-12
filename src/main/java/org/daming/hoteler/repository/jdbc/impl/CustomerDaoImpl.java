@@ -76,6 +76,18 @@ public class CustomerDaoImpl implements ICustomerDao {
         }
     }
 
+    @Override
+    public void delete(long id) throws HotelerException {
+        var sql = "delete from customers where id = ?";
+        var params = new Object[] { id };
+        try {
+            this.jdbcTemplate.update(sql, params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list customer, err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
     private Gender getGender(String value) {
         return this.map.entrySet().stream()
                 .filter(e -> value.equalsIgnoreCase(e.getValue()))

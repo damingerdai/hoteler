@@ -34,4 +34,11 @@ public interface ICustomerDao {
      * @throws HotelerException hoteler错误
      */
     List<Customer> list() throws HotelerException;
+
+    /**
+     * 删除指定的customer
+     * @param id customer的id
+     * @throws HotelerException hoteler错误
+     */
+    void delete(long id) throws HotelerException;
 }

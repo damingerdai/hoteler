@@ -3,6 +3,7 @@ package org.daming.hoteler.service.impl;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.CustomerErrorCodeConstants;
+import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.repository.jdbc.ICustomerDao;
 import org.daming.hoteler.repository.mapper.CustomerMapper;
@@ -76,10 +77,24 @@ public class CustomerServiceImpl implements ICustomerService {
             return this.customerDao.list();
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error( "fail to list customer", he);
+            throw he;
         } catch (Exception ex) {
-            // TODO add more error
+            LoggerManager.getCommonLogger().error(() -> "fail to list customer: " + ex.getMessage(), ex);
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
         }
-        return null;
+    }
+
+    @Override
+    public void delete(long id) throws HotelerException {
+        try {
+            this.customerDao.delete(id);
+        } catch (HotelerException he) {
+            LoggerManager.getCommonLogger().error(() -> "fail to delete customer [" + id + "]", he);
+            throw he;
+        } catch (Exception ex) {
+            LoggerManager.getCommonLogger().error(() -> "fail to delete customer [" + id + "]: " + ex.getMessage(), ex);
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
     }
 
     public CustomerServiceImpl(ICustomerDao customerDao, CustomerMapper customerMapper) {

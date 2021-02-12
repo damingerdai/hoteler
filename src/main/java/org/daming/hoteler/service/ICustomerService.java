@@ -18,4 +18,6 @@ public interface ICustomerService {
     Customer get(long id) throws HotelerException;
 
     List<Customer> list() throws HotelerException;
+
+    void delete(long id) throws HotelerException;
 }

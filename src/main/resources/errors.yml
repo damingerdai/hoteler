@@ -19,6 +19,8 @@ errors:
     message: refreshToken due.
   - code: 600010
     message: JWT expired error.
+  - code: 600011
+    message: "Bad request error: '%s'"
   - code: 700001
     message: SQL '%s' error.
   - code: 800001
