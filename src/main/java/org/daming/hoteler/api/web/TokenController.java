@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
-import org.daming.hoteler.pojo.UserToken;
 import org.daming.hoteler.pojo.response.UserTokenResponse;
 import org.daming.hoteler.service.ITokenService;
 import org.springframework.http.HttpStatus;
