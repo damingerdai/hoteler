@@ -62,7 +62,7 @@ public class ControllerInterceptor {
         Object result = pjp.proceed();
 
         // print response param
-        LoggerManager.getApiLogger().info("Request End. requestId: {}, controller class: {}, controller method: {}, response params: {}", requestId, controllerClass, controllerMethod, jsonMapper.writeValueAsString(request));
+        LoggerManager.getApiLogger().info("Request End. requestId: {}, controller class: {}, controller method: {}, response params: {}", requestId, controllerClass, controllerMethod, jsonMapper.writeValueAsString(result));
         ThreadLocalContextHolder.clean();
         return result;
     }
