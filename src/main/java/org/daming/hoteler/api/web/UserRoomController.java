@@ -1,10 +1,12 @@
 package org.daming.hoteler.api.web;
 
+import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.UserRoom;
 import org.daming.hoteler.pojo.request.CreateUserRoomRequest;
 import org.daming.hoteler.pojo.request.UpdateUserRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IUserRoomService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserRoomController {
 
     private IUserRoomService userRoomService;
+    private IErrorService errorService;
 
     @PostMapping("users/rooms")
     public DataResponse<Long> createUserRoomRelationship(@RequestBody CreateUserRoomRequest request) {
@@ -51,15 +54,31 @@ public class UserRoomController {
     }
 
     @GetMapping("users/rooms/:id")
-    public CommonResponse getUserRoomRelationship(@PathVariable("id") long id) {
-        var ur = this.userRoomService.get(id);
-        return new DataResponse<>(ur);
+    public CommonResponse getUserRoomRelationship(@PathVariable("id") long userRoomId) {
+        try {
+            var id = Long.valueOf(userRoomId);
+            var ur = this.userRoomService.get(id);
+            return new DataResponse<>(ur);
+        } catch (NumberFormatException nfe) {
+            var params = new Object[] { nfe.getMessage() };
+            throw errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, params, nfe);
+        } catch (Exception ex) {
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
     }
 
     @DeleteMapping("users/rooms/:id")
-    public CommonResponse deleteUserRoomRelationship(@PathVariable("id") long id) {
-        this.userRoomService.delete(id);
-        return new CommonResponse();
+    public CommonResponse deleteUserRoomRelationship(@PathVariable("id") String userRoomId) {
+        try {
+            var id = Long.valueOf(userRoomId);
+            this.userRoomService.delete(id);
+            return new CommonResponse();
+        } catch (NumberFormatException nfe) {
+            var params = new Object[] { nfe.getMessage() };
+            throw errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, params, nfe);
+        } catch (Exception ex) {
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
     }
 
     public UserRoomController(IUserRoomService userRoomService) {
