@@ -3,6 +3,7 @@ package org.daming.hoteler.repository.jdbc.impl;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.IRoomDao;
+import org.daming.hoteler.service.IErrorService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
