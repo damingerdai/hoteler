@@ -9,6 +9,7 @@ import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.CreateRoomRequest;
 import org.daming.hoteler.pojo.request.UpdateRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
+import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.service.IRoomService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,13 +45,15 @@ public class RoomController {
     @ApiOperation(value = "get room", notes = "get a room api")
     @GetMapping("room/{id}")
     public Room get(@PathVariable(value = "id", required = true)long id) {
+        var rooms = this.roomService.get(id);
         return this.roomService.get(id);
     }
 
     @ApiOperation(value = "list room", notes = "get all rooms api")
     @GetMapping("rooms")
-    public List<Room> list() {
-        return this.roomService.list();
+    public CommonResponse list() {
+        var rooms = this.roomService.list();
+        return new DataResponse<>(rooms);
     }
 
     @ApiOperation(value = "update room", notes = "create a room api")
