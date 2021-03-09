@@ -43,8 +43,9 @@ public class UserRoomServiceImpl implements IUserRoomService {
         this.userRoomDao.delete(id);
     }
 
-    public UserRoomServiceImpl(IUserRoomDao userRoomDao) {
+    public UserRoomServiceImpl(IUserRoomDao userRoomDao,ISnowflakeService snowflakeService) {
         super();
         this.userRoomDao = userRoomDao;
+        this.snowflakeService = snowflakeService;
     }
 }
