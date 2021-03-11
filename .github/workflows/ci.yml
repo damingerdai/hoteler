@@ -38,7 +38,7 @@ jobs:
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
-          rm -Force ~/.gradle/caches/modules-2/modules-2.lock
-          rm -Force ~/.gradle/caches/modules-2/gc.properties
+          rm -Force -Recurse ~/.gradle/caches/modules-2/modules-2.lock
+          rm -Force -Recurse ~/.gradle/caches/modules-2/gc.properties
       - name: Build with Gradle
         run: ./gradlew build
