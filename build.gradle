@@ -26,7 +26,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'commons-codec:commons-codec:1.15'
 	implementation 'org.apache.commons:commons-lang3:3.11'
-	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.0'
     // Runtime, com.sun.xml.bind module
 	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
 	implementation 'org.flywaydb:flyway-core'
