@@ -2,7 +2,7 @@
 
 version: 2
 updates:
-  # Maintain dependencies for npm
+  # Maintain dependencies for maven
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
@@ -15,5 +15,20 @@ updates:
       - "damingerdai"
     labels:
       - "maven"
+      - "dependencies"
+    open-pull-requests-limit: 10
+  # Maintain dependencies for gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    target-branch: "master"
+    reviewers:
+      - "damingerdai"
+    labels:
+      - "gradle"
       - "dependencies"
     open-pull-requests-limit: 10
