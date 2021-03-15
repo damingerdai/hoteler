@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * room dao implement
@@ -26,18 +28,25 @@ public class RoomDaoImpl implements IRoomDao {
     public Room get(long id) {
         var sql = "select id, roomname, status, price from rooms where id = ? limit 1";
         var params = new Object[] { id };
-        return this.jdbcTemplate.query(sql, params, (rs) -> {
+        return this.jdbcTemplate.query(sql, (rs) -> {
             while (rs.next()) {
                this.convertRoomFromResultSet(rs);
             }
             return null;
-        });
+        }, params);
     }
 
     @Override
-    public List<Room> list() {
-        var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
-        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
+    public List<Room> list(Room room) {
+        // var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
+        var sql = "select id, roomname, status, price from rooms ";
+        var params = new ArrayList<Object>();
+        if (Objects.nonNull(room.getStatus())) {
+            sql += " where status = ?";
+            params.add(room.getStatus().getId());
+        }
+        sql += " order by create_dt desc, update_dt desc";
+        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs), params.toArray());
     }
 
     private Room convertRoomFromResultSet(ResultSet rs) throws SQLException {

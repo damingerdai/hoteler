@@ -19,7 +19,7 @@ public interface IRoomService {
 
     void update(Room room) throws HotelerException;
 
-    List<Room> list() throws HotelerException;
+    List<Room> list(Room room) throws HotelerException;
 
     void delete(long id) throws HotelerException;
 }

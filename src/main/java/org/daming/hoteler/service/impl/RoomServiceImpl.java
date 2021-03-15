@@ -76,8 +76,8 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
-    public List<Room> list() {
-        return this.roomDao.list();
+    public List<Room> list(Room room) {
+        return this.roomDao.list(room);
     }
 
     @Override

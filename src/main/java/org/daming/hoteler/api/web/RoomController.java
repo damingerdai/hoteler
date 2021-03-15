@@ -7,6 +7,7 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.CreateRoomRequest;
+import org.daming.hoteler.pojo.request.ListRoomRequest;
 import org.daming.hoteler.pojo.request.UpdateRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
@@ -51,12 +52,13 @@ public class RoomController {
 
     @ApiOperation(value = "list room", notes = "get all rooms api")
     @GetMapping("rooms")
-    public CommonResponse list() {
-        var rooms = this.roomService.list();
+    public CommonResponse list(ListRoomRequest request) {
+        var room = new Room().setStatus(request.getStatus());
+        var rooms = this.roomService.list(room);
         return new DataResponse<>(rooms);
     }
 
-    @ApiOperation(value = "update room", notes = "create a room api")
+    @ApiOperation(value = "update room", notes = "update a room api")
     @PutMapping("room")
     public CommonResponse update(@RequestBody UpdateRoomRequest request) throws HotelerException {
         var room = new Room().setId(request.getId()).setRoomname(request.getRoomname()).setPrice(request.getPrice()).setStatus(request.getStatus());
