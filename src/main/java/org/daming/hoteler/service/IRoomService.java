@@ -2,6 +2,7 @@ package org.daming.hoteler.service;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
+import org.daming.hoteler.pojo.enums.RoomStatus;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface IRoomService {
     List<Room> list(Room room) throws HotelerException;
 
     void delete(long id) throws HotelerException;
+
+    void updateStatus(long id, RoomStatus status)  throws HotelerException;
 }

@@ -93,6 +93,19 @@ public class RoomServiceImpl implements IRoomService {
         }
     }
 
+    @Override
+    public void updateStatus(long id, RoomStatus status) throws HotelerException {
+        try {
+            this.roomMapper.updateStatus(id, status);
+        } catch (PersistenceException | DataAccessException ex) {
+            throw errorService.createSqlHotelerException(ex, "update room where id = " + id);
+        } catch (HotelerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw errorService.createHotelerSystemException(ex.getMessage(), ex);
+        }
+    }
+
     public RoomServiceImpl(
             RoomMapper roomMapper,
             IRoomDao roomDao,

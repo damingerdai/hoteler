@@ -1,10 +1,8 @@
 package org.daming.hoteler.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.daming.hoteler.pojo.Room;
+import org.daming.hoteler.pojo.enums.RoomStatus;
 
 /**
  * room mapper
@@ -24,4 +22,7 @@ public interface RoomMapper {
 
     @Update("update rooms set roomname = #{roomname}, price = #{price}, status = #{status, typeHandler=org.daming.hoteler.pojo.handler.RoomStatusTypeHandler}, update_dt = statement_timestamp(), update_user = 'system' where id = #{id}")
     void update(Room room);
+
+    @Update("update rooms set status = #{status, typeHandler=org.daming.hoteler.pojo.handler.RoomStatusTypeHandler}, update_dt = statement_timestamp(), update_user = 'system' where id = #{id}")
+    void updateStatus(@Param("id") long id, @Param("status") RoomStatus status);
 }
