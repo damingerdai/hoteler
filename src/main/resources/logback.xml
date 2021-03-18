@@ -101,6 +101,26 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
     </appender>
+    <appender name="job.logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${JOB_LOG_PATH}/log_job.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${DY_LOG_PATH}/log-job-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%-5p [%d][%mdc{mdc_userId}] %C:%L - %m %n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <!-- 此日志文件只记录info级别，不记录大于info级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
 
     <appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
         <discardingThreshold >0</discardingThreshold>
@@ -123,5 +143,8 @@
     </logger>
     <logger name="jdbc.logger">
         <appender-ref ref="jdbc.logger"/>
+    </logger>
+    <logger name="job.logger">
+        <appender-ref ref="job.logger"/>
     </logger>
 </configuration>

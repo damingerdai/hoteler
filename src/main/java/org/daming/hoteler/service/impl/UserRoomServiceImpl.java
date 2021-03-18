@@ -7,6 +7,9 @@ import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserRoomService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 /**
  * UserRoomService的默认实现类
  *
@@ -41,6 +44,16 @@ public class UserRoomServiceImpl implements IUserRoomService {
     @Override
     public void delete(long id) throws HotelerException {
         this.userRoomDao.delete(id);
+    }
+
+    @Override
+    public List<UserRoom> list() throws HotelerException {
+        return this.userRoomDao.list();
+    }
+
+    @Override
+    public List<UserRoom> listCurrentDate() throws HotelerException {
+        return this.userRoomDao.list(LocalDate.now());
     }
 
     public UserRoomServiceImpl(IUserRoomDao userRoomDao,ISnowflakeService snowflakeService) {

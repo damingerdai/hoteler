@@ -30,7 +30,7 @@ public class RoomDaoImpl implements IRoomDao {
         var params = new Object[] { id };
         return this.jdbcTemplate.query(sql, (rs) -> {
             while (rs.next()) {
-               this.convertRoomFromResultSet(rs);
+               return this.convertRoomFromResultSet(rs);
             }
             return null;
         }, params);
@@ -50,11 +50,12 @@ public class RoomDaoImpl implements IRoomDao {
     }
 
     private Room convertRoomFromResultSet(ResultSet rs) throws SQLException {
-        return new Room()
+        var room = new Room()
                 .setId(rs.getLong("id"))
                 .setRoomname(rs.getString("roomname"))
                 .setStatus(RoomStatus.getInstance(rs.getInt("status")))
                 .setPrice(rs.getDouble("price"));
+        return room;
     }
 
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {

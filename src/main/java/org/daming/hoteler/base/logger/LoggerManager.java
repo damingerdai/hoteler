@@ -36,6 +36,10 @@ public class LoggerManager {
         return getLogger(CommonConstants.LOGGER_NAME_JDBC);
     }
 
+    public static HotelerLogger getJobLogger() {
+        return getLogger(CommonConstants.LOGGER_NAME_JOB);
+    }
+
     public static HotelerLogger getLogger(String loggerName) {
         return cache.computeIfAbsent(loggerName, LoggerManager::buildLogger);
     }

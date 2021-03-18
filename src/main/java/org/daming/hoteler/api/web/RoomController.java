@@ -45,9 +45,9 @@ public class RoomController {
 
     @ApiOperation(value = "get room", notes = "get a room api")
     @GetMapping("room/{id}")
-    public Room get(@PathVariable(value = "id", required = true)long id) {
+    public Room get(@PathVariable(value = "id")long id) {
         var rooms = this.roomService.get(id);
-        return this.roomService.get(id);
+        return rooms;
     }
 
     @ApiOperation(value = "list room", notes = "get all rooms api")

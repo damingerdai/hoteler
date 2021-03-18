@@ -19,4 +19,6 @@ public final class CommonConstants {
     public static final String LOGGER_NAME_API = "api.logger";
 
     public static final String LOGGER_NAME_JDBC = "jdbc.logger";
+
+    public static final String LOGGER_NAME_JOB = "job.logger";
 }

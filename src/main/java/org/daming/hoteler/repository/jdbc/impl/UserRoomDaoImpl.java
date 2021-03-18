@@ -7,13 +7,13 @@ import org.daming.hoteler.pojo.UserRoom;
 import org.daming.hoteler.repository.jdbc.IUserRoomDao;
 import org.daming.hoteler.service.IErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * UserRoomDao 默认实现
@@ -54,7 +54,7 @@ public class UserRoomDaoImpl implements IUserRoomDao {
 
     @Override
     public UserRoom get(long id) throws HotelerException {
-        var sql = "select id, user_id, room_id, begin_date, end_date from users_rooms where users_rooms id = ?";
+        var sql = "select id, user_id, room_id, begin_date, end_date from users_rooms where id = ?";
         var params = new Object[] { id };
         try {
             return jdbcTemplate.query(sql, rs -> {
@@ -69,13 +69,7 @@ public class UserRoomDaoImpl implements IUserRoomDao {
         }
     }
 
-    private UserRoom getUserRoom(ResultSet rs) throws SQLException {
-        return new UserRoom()
-                .setId(rs.getLong("id"))
-                .setRoomId(rs.getLong("room_id"))
-                .setBeginDate(rs.getTimestamp("begin_date").toLocalDateTime())
-                .setEndDate(rs.getTimestamp("end_date").toLocalDateTime());
-    }
+
 
     @Override
     public void delete(long id) throws HotelerException {
@@ -87,6 +81,38 @@ public class UserRoomDaoImpl implements IUserRoomDao {
             LoggerManager.getJdbcLogger().error(() -> "fail to delete userRoom with id'" + id + "', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
+    }
+
+    @Override
+    public List<UserRoom> list() throws HotelerException {
+        var sql = " select id, user_id, room_id, begin_date, end_date from users_rooms order by create_dt desc, update_dt desc";
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> getUserRoom(rs));
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list userRoom', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
+    @Override
+    public List<UserRoom> list(LocalDate date) throws HotelerException {
+        var sql = "select id, user_id, room_id, begin_date, end_date from users_rooms where begin_date <= ? and ? <= end_date order by create_dt desc, update_dt desc";
+        var params = new Object[] { date, date };
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> getUserRoom(rs), params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list userRoom', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
+    private UserRoom getUserRoom(ResultSet rs) throws SQLException {
+        return new UserRoom()
+                .setId(rs.getLong("id"))
+                .setUserId(rs.getLong("user_id"))
+                .setRoomId(rs.getLong("room_id"))
+                .setBeginDate(rs.getTimestamp("begin_date").toLocalDateTime())
+                .setEndDate(rs.getTimestamp("end_date").toLocalDateTime());
     }
 
     public UserRoomDaoImpl(JdbcTemplate jdbcTemplate) {
