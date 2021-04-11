@@ -3,6 +3,7 @@ package org.daming.hoteler.service;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.UserRoom;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,4 +25,6 @@ public interface IUserRoomService {
     List<UserRoom> list() throws HotelerException;
 
     List<UserRoom> listCurrentDate() throws HotelerException;
+
+    List<UserRoom> listByRoomIdAndDate(long roomId, LocalDate date);
 }

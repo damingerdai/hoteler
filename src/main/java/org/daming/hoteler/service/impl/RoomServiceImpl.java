@@ -81,6 +81,11 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    public List<Room> list() throws HotelerException {
+        return this.roomDao.list();
+    }
+
+    @Override
     public void delete(long id) throws HotelerException {
         try {
             this.roomMapper.delete(id);

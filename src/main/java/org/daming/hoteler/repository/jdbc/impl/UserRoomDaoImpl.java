@@ -106,6 +106,18 @@ public class UserRoomDaoImpl implements IUserRoomDao {
         }
     }
 
+    @Override
+    public List<UserRoom> listByRoom(long roomId, LocalDate date) throws HotelerException {
+        var sql = "select id, user_id, room_id, begin_date, end_date from users_rooms where room_id = ? and begin_date <= ? and ? <= end_date order by create_dt desc, update_dt desc";
+        var params = new Object[] { roomId, date, date };
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> getUserRoom(rs), params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list userRoom', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
     private UserRoom getUserRoom(ResultSet rs) throws SQLException {
         return new UserRoom()
                 .setId(rs.getLong("id"))

@@ -49,6 +49,12 @@ public class RoomDaoImpl implements IRoomDao {
         return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs), params.toArray());
     }
 
+    @Override
+    public List<Room> list() {
+        var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
+        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
+    }
+
     private Room convertRoomFromResultSet(ResultSet rs) throws SQLException {
         var room = new Room()
                 .setId(rs.getLong("id"))

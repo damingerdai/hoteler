@@ -15,4 +15,6 @@ public interface IRoomDao {
     Room get(long id);
 
     List<Room> list(Room room);
+
+    List<Room> list();
 }

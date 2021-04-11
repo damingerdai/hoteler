@@ -23,4 +23,6 @@ public interface IUserRoomDao {
     List<UserRoom> list() throws HotelerException;
 
     List<UserRoom> list(LocalDate date) throws HotelerException;
+
+    List<UserRoom> listByRoom(long roomId, LocalDate date) throws HotelerException;
 }

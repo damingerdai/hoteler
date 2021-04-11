@@ -2,12 +2,14 @@ package org.daming.hoteler.task;
 
 import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
+import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.service.IRoomService;
 import org.daming.hoteler.service.IUserRoomService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Component
@@ -19,20 +21,23 @@ public class RoomStatusTask {
 
     private IRoomService roomService;
 
-    // @Scheduled(cron = "0 0 1 * * ?")
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
+    // @Scheduled(cron = "*/5 * * * * ?")
     public void updateRoomStatus() {
-        logger.info("当前时间：{}\t\t任务：cron task，每5秒执行一次", System.currentTimeMillis());
-        var userRooms = this.userRoomService.listCurrentDate();
-        if (Objects.isNull(userRooms) && userRooms.size() == 0) {
-            logger.warn("no user rooms");
+        logger.info("开始更新房间的状态");
+        var rooms = this.roomService.list();
+        if (Objects.isNull(rooms) && rooms.size() == 0) {
+            logger.warn("no rooms");
             return;
         }
-
-        userRooms.forEach(userRoom -> {
-            var roomId = userRoom.getRoomId();
+        rooms.stream().map(Room::getId).filter(roomId -> {
+            var userRooms = this.userRoomService.listByRoomIdAndDate(roomId, LocalDate.now());
+            return !userRooms.isEmpty();
+        }).forEach(roomId -> {
             roomService.updateStatus(roomId, RoomStatus.InUsed);
         });
+
+
     }
 
     public RoomStatusTask(

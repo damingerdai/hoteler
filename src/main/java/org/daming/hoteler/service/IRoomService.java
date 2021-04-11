@@ -22,6 +22,8 @@ public interface IRoomService {
 
     List<Room> list(Room room) throws HotelerException;
 
+    List<Room> list() throws HotelerException;
+
     void delete(long id) throws HotelerException;
 
     void updateStatus(long id, RoomStatus status)  throws HotelerException;

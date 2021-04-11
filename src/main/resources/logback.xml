@@ -101,6 +101,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
     </appender>
+
     <appender name="job.logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${JOB_LOG_PATH}/log_job.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

@@ -56,6 +56,11 @@ public class UserRoomServiceImpl implements IUserRoomService {
         return this.userRoomDao.list(LocalDate.now());
     }
 
+    @Override
+    public List<UserRoom> listByRoomIdAndDate(long roomId, LocalDate date) {
+        return this.userRoomDao.listByRoom(roomId, date);
+    }
+
     public UserRoomServiceImpl(IUserRoomDao userRoomDao,ISnowflakeService snowflakeService) {
         super();
         this.userRoomDao = userRoomDao;
