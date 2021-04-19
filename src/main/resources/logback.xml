@@ -5,6 +5,7 @@
     <property name="API_LOG_PATH" value="./logs" />
     <property name="JDBC_LOG_PATH" value="./logs" />
     <property name="JOB_LOG_PATH" value="./logs"/>
+    <property name="DY_LOG_PATH" value="./logs"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <!-- On Windows machines setting withJansi to true enables ANSI
