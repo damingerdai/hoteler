@@ -44,3 +44,9 @@ test {
 bootJar {
 	mainClass = 'org.daming.hoteler.HotelerApplication'
 }
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(16)
+  }
+}
