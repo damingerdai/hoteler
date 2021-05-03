@@ -28,7 +28,7 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.0'
     // Runtime, com.sun.xml.bind module
-	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.0'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'org.flywaydb:flyway-core'
 
