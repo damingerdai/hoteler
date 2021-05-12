@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "org.flywaydb.flyway" version "7.8.2"
 	id 'java'
 }
 
@@ -31,11 +32,17 @@ dependencies {
     // Runtime, com.sun.xml.bind module
 	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-core:7.8.2'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+flyway {
+	url = 'jdbc:postgresql://127.0.0.1:5432/postgres'
+	user = 'postgres'
+	password = '123456'
 }
 
 test {

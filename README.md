@@ -33,13 +33,14 @@ docker network create hoteler-network
 3. 启动数据库
 
 ```shell script
-docker-compose up db
+docker compose up
 ```
 
 ### 数据库迁移
 
 ```shell script
 mvn flyway:migrate
+gradle flywayMigrate
 ```
 
 ### 构建
