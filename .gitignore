@@ -34,3 +34,4 @@ src/main/resources/static/
 
 ### Others ###
 logs/
+.DS_Store
