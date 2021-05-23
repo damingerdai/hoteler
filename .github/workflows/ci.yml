@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [11, 15]
+        java-version: [11, 16]
         os: [windows-latest, macos-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build  --stacktrace
       # - name: Cleanup Gradle Cache
         # if: matrix.os != 'windows-latest'
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.

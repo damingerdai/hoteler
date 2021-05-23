@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.5'
+	id 'org.springframework.boot' version '2.5.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -10,7 +10,8 @@ sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
-	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+	// maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+	maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 }
 
 dependencies {
@@ -44,3 +45,4 @@ test {
 bootJar {
 	mainClass = 'org.daming.hoteler.HotelerApplication'
 }
+
