@@ -46,3 +46,8 @@ bootJar {
 	mainClass = 'org.daming.hoteler.HotelerApplication'
 }
 
+jar {
+	// https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#packaging-executable.and-plain-archives
+	enabled = false
+}
+
