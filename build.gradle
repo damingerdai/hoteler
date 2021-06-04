@@ -20,7 +20,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
@@ -32,6 +33,7 @@ dependencies {
     // Runtime, com.sun.xml.bind module
 	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+	implementation 'com.github.ben-manes.caffeine:caffeine'
 	implementation 'org.flywaydb:flyway-core:7.9.1'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

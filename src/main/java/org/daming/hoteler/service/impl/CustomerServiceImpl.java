@@ -11,6 +11,10 @@ import org.daming.hoteler.service.ICustomerService;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +26,7 @@ import java.util.List;
  * @create 2020-12-25 21:59
  **/
 @Service
+@CacheConfig(cacheNames = {"CustomerCache"})
 public class CustomerServiceImpl implements ICustomerService {
 
     private ICustomerDao customerDao;
@@ -43,6 +48,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    // @CachePut(cacheNames = { "customer" }, key = "#customer.id")//写入缓存，key为user.id,一般该注解标注在新增方法上
     public long create(Customer customer) throws HotelerException {
         long customerId = this.snowflakeService.nextId();
         customer.setId(customerId);
@@ -60,6 +66,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    @CacheEvict(cacheNames = { "customer" }, key = "#customer.id", allEntries = true)//根据key清除缓存，一般该注解标注在修改和删除方法上
     public void update(Customer customer) throws HotelerException {
         try {
             customerDao.update(customer);
@@ -73,6 +80,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    @Cacheable(cacheNames = { "customer" }, key = "#id")//如果缓存存在，直接读取缓存值；如果缓存不存在，则调用目标方法，并将结果放入缓存
     public Customer get(long id) throws HotelerException {
         try {
             return this.customerDao.get(id);
@@ -85,6 +93,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    @Cacheable("customerList") // 标志读取缓存操作，如果缓存不存在，则调用目标方法，并将结果放入缓存
     public List<Customer> list() throws HotelerException {
         try {
             return this.customerDao.list();
