@@ -9,6 +9,9 @@ import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IRoomService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ import java.util.Objects;
  * @create 2020-12-22 23:29
  **/
 @Service
+@CacheConfig(cacheNames = {"RoomCache"})
 public class RoomServiceImpl implements IRoomService {
 
     private RoomMapper roomMapper;
@@ -51,6 +55,7 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @Cacheable(cacheNames = { "room" }, key = "#id")
     public Room get(long id) throws HotelerException {
         try {
             return this.roomDao.get(id);
@@ -63,6 +68,7 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @CacheEvict(cacheNames = { "room" }, key = "#room.id", allEntries = true)
     public void update(Room room) throws HotelerException {
         try {
             this.roomMapper.update(room);
@@ -76,11 +82,13 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @Cacheable(cacheNames = { "rooms" }, key = "#room")
     public List<Room> list(Room room) {
         return this.roomDao.list(room);
     }
 
     @Override
+    @Cacheable("roomList")
     public List<Room> list() throws HotelerException {
         return this.roomDao.list();
     }
