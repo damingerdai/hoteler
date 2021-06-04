@@ -33,7 +33,7 @@ docker network create hoteler-network
 3. 启动数据库
 
 ```shell script
-docker compose up
+docker compose up db
 ```
 
 ### 数据库迁移
