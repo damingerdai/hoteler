@@ -7,12 +7,12 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [11, 16]
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        java-version: [11]
+        os: [ubuntu-latest]
     services:
       postgres:
         image: postgres:13.1
@@ -45,3 +45,26 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
         run: ./gradlew flywayMigrate && ./gradlew build
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        java-version: [ 11, 16 ]
+        os: [ windows-latest, macos-latest ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build with Gradle
+        run: ./gradlew build
