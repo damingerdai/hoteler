@@ -93,7 +93,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
         }
         var accessToken = requestTokenHeader.substring(7);
-        if (StringUtils.hasText(accessToken)) {
+        if (!StringUtils.hasText(accessToken)) {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
         }
         context.setAccessToken(accessToken);
