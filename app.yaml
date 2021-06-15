@@ -2,3 +2,98 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: hoteler-namespace
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+  # namespace: hoteler-namespace
+data:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: '123456'
+  POSTGRES_DB: postgres
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv-volume
+  labels:
+    app: postgres
+    type: local
+  # namespace: hoteler-namespace
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: postgres
+  # namespace: hoteler-namespace
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  # namespace: hoteler-namespace
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13.1
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          ports:
+            - containerPort: 5432
+              name: postgredb
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+              # subPath: postgres
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  # namespace: hoteler-namespace
+  labels:
+    app: postgres
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: NodePort
+  selector:
+    app: postgres
