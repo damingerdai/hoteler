@@ -6,12 +6,16 @@ import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = {"UserCache"})
 public class UserServiceImpl implements IUserService {
 
     private ISnowflakeService snowflakeService;
@@ -26,12 +30,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Cacheable(cacheNames = { "user" }, key = "#username")
     public User getUserByUsername(String username) {
         Assert.hasText("username", "params 'username' is required");
         return userDao.getUserByUsername(username).get();
     }
 
     @Override
+    @Cacheable(cacheNames = { "user" }, key = "#id")
     public User get(long id) {
         Assert.isTrue(id > 0, "params 'id' is required");
         return userDao.get(id).get();
