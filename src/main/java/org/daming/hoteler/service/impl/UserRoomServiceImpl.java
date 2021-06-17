@@ -8,6 +8,8 @@ import org.daming.hoteler.service.IUserRoomService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -27,12 +29,14 @@ public class UserRoomServiceImpl implements IUserRoomService {
     public long create(UserRoom userRoom) throws HotelerException {
         var id  = this.snowflakeService.nextId();
         userRoom.setId(id);
+        this.processBeginDateAndEndDate(userRoom);
         this.userRoomDao.create(userRoom);
         return id;
     }
 
     @Override
     public void update(UserRoom userRoom) throws HotelerException {
+        this.processBeginDateAndEndDate(userRoom);
         this.userRoomDao.update(userRoom);
     }
 
@@ -44,6 +48,13 @@ public class UserRoomServiceImpl implements IUserRoomService {
     @Override
     public void delete(long id) throws HotelerException {
         this.userRoomDao.delete(id);
+    }
+
+    private void processBeginDateAndEndDate(UserRoom userRoom) {
+        var beginDate = userRoom.getBeginDate();
+        userRoom.setBeginDate(LocalDateTime.of(beginDate.toLocalDate(), LocalTime.of(12, 0)));
+        var endDate = userRoom.getEndDate();
+        userRoom.setEndDate(LocalDateTime.of(endDate.toLocalDate(), LocalTime.of(12, 0)));
     }
 
     @Override
