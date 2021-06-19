@@ -2,7 +2,6 @@ package org.daming.hoteler.utils;
 
 import org.daming.hoteler.pojo.time.WeekDuration;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 /**

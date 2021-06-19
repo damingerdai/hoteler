@@ -51,12 +51,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         var in = Instant.now();
         try {
             var requestUrl = request.getRequestURI();
-//            var accept = request.getHeader("Accept");
-//            if (accept.contains("text/html") || accept.contains("image")) {
-//                filterChain.doFilter(servletRequest, servletResponse);
-//                return;
-//            }
-            if (!isFilter(request.getRequestURI())) {
+            if (!isFilter(requestUrl)) {
                 verifyHttpHeaders(request);
                 var context = new HotelerContext();
                 ThreadLocalContextHolder.put(context);
