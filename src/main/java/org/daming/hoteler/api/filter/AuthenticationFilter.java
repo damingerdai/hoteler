@@ -50,6 +50,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         System.out.println(request.getRequestURI());
         var in = Instant.now();
         try {
+            var requestUrl = request.getRequestURI();
 //            var accept = request.getHeader("Accept");
 //            if (accept.contains("text/html") || accept.contains("image")) {
 //                filterChain.doFilter(servletRequest, servletResponse);
@@ -117,7 +118,11 @@ public class AuthenticationFilter extends GenericFilterBean {
 
     private boolean isFilter(String url) {
         // Environment environment =
-        return ignoreUrlPattern.matcher(url).matches();
+        if ("/".equals(url)) {
+            return true;
+        }
+        // return ignoreUrlPattern.matcher(url).matches();
+        return !Pattern.compile("^/(api|dev|ping)").matcher(url).matches();
     }
 
     private Exception buildException(String message) {
