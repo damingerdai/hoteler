@@ -15,6 +15,6 @@ import java.time.LocalDateTime;
 @Mapper
 public interface UserRoomMapper {
 
-    @Select("select count(*) from users_rooms where #{beginDate} <= begin_date and begin_date <= #{endDate} end_date <= #{endDate}")
+    @Select("select count(*) from users_rooms where #{beginDate} <= begin_date and begin_date <= #{endDate} and end_date <= #{endDate}")
     int getUserRoomCounts(@Param("beginDate") LocalDateTime beginDate, @Param("endDate")LocalDateTime endDate);
 }
