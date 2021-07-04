@@ -1,6 +1,8 @@
 package org.daming.hoteler.api.web;
 
 import io.swagger.annotations.ApiOperation;
+import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.builder.UserBuilder;
 import org.daming.hoteler.pojo.request.CreateUserRequest;
@@ -24,12 +26,21 @@ public class UserController {
     @ApiOperation(value = "list user", notes = "list all users api")
     @GetMapping("users")
     public ResponseEntity<List<User>> listUser() {
-        var users = this.userService.list();
-        if (Objects.nonNull(users) && !users.isEmpty()) {
-            return new ResponseEntity(users, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            var users = this.userService.list();
+            if (Objects.nonNull(users) && !users.isEmpty()) {
+                return new ResponseEntity(users, HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        } catch (HotelerException ex) {
+            LoggerManager.getApiLogger().error("HotelerException: " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LoggerManager.getApiLogger().error("Exception: " + ex.getMessage());
+            throw ex;
         }
+
     }
 
     @ApiOperation(value = "create user", notes = "create a new user api")
