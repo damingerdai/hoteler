@@ -71,7 +71,6 @@ public class AuthenticationFilter extends GenericFilterBean {
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
-            // response.sendRedirect("index.html");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
