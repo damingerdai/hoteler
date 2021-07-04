@@ -10,6 +10,8 @@ import org.daming.hoteler.repository.mapper.RoomMapper;
 import org.daming.hoteler.service.stat.IRoomStatusStatService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +36,10 @@ public class RoomStatusStatServiceImpl implements IRoomStatusStatService {
     public RoomNumsStat countRoomNumStatistics() throws HotelerException {
         var rooms = this.roomDao.list();
         var groups = rooms.stream().collect(Collectors.groupingBy(Room::getStatus));
-        return new RoomNumsStat(groups.get(RoomStatus.InUsed).size(), groups.get(RoomStatus.NoUse).size());
+        return new RoomNumsStat(
+                Optional.ofNullable(groups.get(RoomStatus.InUsed)).orElseGet(List::of).size(),
+                Optional.ofNullable(groups.get(RoomStatus.NoUse)).orElseGet(List::of).size()
+        );
     }
 
     public RoomStatusStatServiceImpl(IRoomDao roomDao, RoomMapper roomMapper) {
