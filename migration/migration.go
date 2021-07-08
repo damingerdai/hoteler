@@ -14,7 +14,7 @@ func main() {
 	flag.Parse()
 	fmt.Fprintln(os.Stdout, "migrate db scripts")
 	// m, err := migrate.New(
-	// 	"file://./migrations",
+	// 	"file://./db/migrations",
 	// 	fmt.Sprintf(
 	// 		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 	// 		"postgres",

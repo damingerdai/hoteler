@@ -14,7 +14,7 @@ func CreateCmd(filename string) error {
 	if err != nil {
 		return err
 	}
-	mirgationPath := path.Join(dir, "migrations")
+	mirgationPath := path.Join(dir, "db", "migrations")
 	tv := times.TimeVersion(time.Now())
 	upSqlFile := tv + "_" + files.Kebabcase(filename) + ".up.sql"
 	downSqlFile := tv + "_" + files.Kebabcase(filename) + ".down.sql"
