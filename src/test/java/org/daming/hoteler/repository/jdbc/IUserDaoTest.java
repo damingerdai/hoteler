@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Disabled
 class IUserDaoTest {
 
     @Autowired
@@ -19,7 +18,7 @@ class IUserDaoTest {
     @Test
     void getUserByUsername() {
         var optional = userDao.getUserByUsername("damingerdai");
-        assertTrue(optional.isPresent());
-        assertEquals(optional.get().getUsername(), "damingerdai");
+        optional.ifPresent(user -> assertEquals(user.getUsername(), "damingerdai"));
+
     }
 }
