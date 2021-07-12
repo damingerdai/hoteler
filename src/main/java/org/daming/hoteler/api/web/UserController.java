@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<User> create(CreateUserRequest request) {
         var user = UserBuilder.fromCreateUserRequest(request);
         this.userService.create(user);
-        return new ResponseEntity(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
