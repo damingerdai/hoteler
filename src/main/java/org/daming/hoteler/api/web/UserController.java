@@ -29,9 +29,9 @@ public class UserController {
         try {
             var users = this.userService.list();
             if (Objects.nonNull(users) && !users.isEmpty()) {
-                return new ResponseEntity(users, HttpStatus.OK);
+                return new ResponseEntity<>(users, HttpStatus.OK);
             } else {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (HotelerException ex) {
             LoggerManager.getApiLogger().error("HotelerException: " + ex.getMessage());
