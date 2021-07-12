@@ -42,7 +42,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'com.github.ben-manes.caffeine:caffeine'
-	implementation 'org.flywaydb:flyway-core:7.11.0'
+	implementation 'org.flywaydb:flyway-core:7.11.1'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
