@@ -20,17 +20,20 @@ func main() {
 		m, err := cmd.FetchMigrate()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
+			os.Exit(0)
 		}
 		defer m.Close()
 		err = m.Up()
 		if err != nil && err.Error() != "no change" {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
+			os.Exit(0)
 		}
 		os.Exit(0)
 	case "down":
 		m, err := cmd.FetchMigrate()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
+			os.Exit(0)
 		}
 		defer m.Close()
 		err = m.Down()
@@ -43,10 +46,12 @@ func main() {
 		version, err := strconv.Atoi(versionStr)
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
+			os.Exit(0)
 		}
 		m, err := cmd.FetchMigrate()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
+			os.Exit(0)
 		}
 		defer m.Close()
 		err = m.Force(version)
