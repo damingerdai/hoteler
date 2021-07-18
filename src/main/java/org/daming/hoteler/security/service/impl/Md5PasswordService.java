@@ -9,6 +9,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * MD5(Message Digest Algorithm)加密算法
+ * 是一种单向加密算法，只能加密不能解密
+ */
 @Service
 public class Md5PasswordService implements IPasswordService {
 
