@@ -86,7 +86,7 @@ jobs:
     strategy:
       matrix:
         java-version: [ 11, 16 ]
-        os: [ windows-latest, macos-latest, ubuntu-latest ]
+        os: [ macos-latest, ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
