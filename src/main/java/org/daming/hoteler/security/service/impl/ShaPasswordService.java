@@ -3,6 +3,7 @@ package org.daming.hoteler.security.service.impl;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
+import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * SHA(Secure Hash Algorithm，安全散列算法)
  * 数字签名等密码学应用中重要的工具，被广泛地应用于电子商务等信息安全领域
  */
+@Service
 public class ShaPasswordService implements IPasswordService {
 
     private static final String ALGORITHM = "SHA";
@@ -27,7 +29,7 @@ public class ShaPasswordService implements IPasswordService {
     @Override
     public String decrypt(String encoderContent) throws HotelerException {
         throw this.errorService.createHotelerSystemException(
-                "md5 algorithm encrypt is not supported",
+                "SHA algorithm encrypt is not supported",
                 new RuntimeException("org.daming.hoteler.security.service.impl.ShaPasswordService#encrypt method is not supported"));
     }
 
