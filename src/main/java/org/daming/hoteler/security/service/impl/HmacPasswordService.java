@@ -63,8 +63,6 @@ public class HmacPasswordService implements IPasswordService {
         } catch (NoSuchAlgorithmException | InvalidKeyException ex) {
             throw this.errorService.createHotelerSystemException(ALGORITHM +" algorithm is not supported", ex);
         }
-
-        return null;
     }
 
     @PostConstruct
