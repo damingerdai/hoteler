@@ -81,3 +81,24 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
         run: ./gradlew build -x test
+  build-maven:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        java-version: [ 11, 16 ]
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java-version }}
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build with Gradle
+        run: ./mvnw package -Dmaven.test.skip=true
