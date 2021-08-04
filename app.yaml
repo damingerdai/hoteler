@@ -8,12 +8,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-config
+  namespace: hoteler-namespace
   labels:
     app: postgres
-  # namespace: hoteler-namespace
 data:
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: '123456'
+  POSTGRES_PASSWR0D: '123456'
   POSTGRES_DB: postgres
 
 ---
@@ -21,10 +21,9 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv-volume
+  namespace: hoteler-namespace
   labels:
-    app: postgres
     type: local
-  # namespace: hoteler-namespace
 spec:
   storageClassName: manual
   capacity:
@@ -38,9 +37,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
-  labels:
-    app: postgres
-  # namespace: hoteler-namespace
+  namespace: hoteler-namespace
 spec:
   storageClassName: manual
   accessModes:
@@ -53,7 +50,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  # namespace: hoteler-namespace
+  namespace: hoteler-namespace
 spec:
   serviceName: "postgres"
   replicas: 1
@@ -67,17 +64,16 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:13.1
+          image: postgres:13.3
           envFrom:
             - configMapRef:
                 name: postgres-config
           ports:
             - containerPort: 5432
-              name: postgredb
+              name: postgres
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
-              # subPath: postgres
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
@@ -87,7 +83,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  # namespace: hoteler-namespace
+  namespace: hoteler-namespace
   labels:
     app: postgres
 spec:
