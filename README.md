@@ -38,9 +38,30 @@ docker compose up db
 
 ### 数据库迁移
 
+基于flyway的maven插件
+```shell script
+mvn flyway:migrate
+```
+
+基于flyway的gradle插件
 ```shell script
 mvn flyway:migrate
 gradle flywayMigrate
+```
+
+基于golang
+在migration目录中添加`.env`文件，并写入以下内容：
+```shell
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=123456
+POSTGRES_DB=postgres
+```
+
+然后执行migrate命令
+```shell script
+cd migration && go build -o migrate migration.go && ./migrate up
 ```
 
 ### 构建
