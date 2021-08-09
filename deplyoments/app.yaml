@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoteler-api
+  namespace: hoteler-namespace
+  labels:
+    app:  hoteler-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hoteler-api
+  template:
+    metadata:
+      labels:
+        app: hoteler-api
+      name: hoteler-api
+    spec:
+      # imagePullSecrets:
+      #   - name: regcred
+      containers:
+        - name: hoteler-api
+          image: hoteler-api
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hoteler-api
+  namespace: hoteler-namespace
+  labels:
+    app:  hoteler-api
+spec:
+  ports:
+    - port: 8443
+      targetPort: 8443
+  type: NodePort
+  selector:
+    app: hoteler-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoteler-web
+  namespace: hoteler-namespace
+  labels:
+    app:  hoteler-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hoteler-web
+  template:
+    metadata:
+      labels:
+        app: hoteler-web
+      name: hoteler-web
+    spec:
+      # imagePullSecrets:
+      #   - name: regcred
+      containers:
+        - name: hoteler-web
+          image: hoteler-web
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hoteler-web
+  namespace: hoteler-namespace
+  labels:
+    app:  hoteler-web
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  type: NodePort
+  selector:
+    app: hoteler-web

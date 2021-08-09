@@ -13,38 +13,39 @@ metadata:
     app: postgres
 data:
   POSTGRES_USER: postgres
-  POSTGRES_PASSWR0D: '123456'
+  POSTGRES_PASSWORD: '123456'
   POSTGRES_DB: postgres
-
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv-volume
-  namespace: hoteler-namespace
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 20Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
   namespace: hoteler-namespace
+  # labels:
+  #   type: local
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv-volume
+  namespace: hoteler-namespace
+  # labels:
+  #   type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
 ---
 apiVersion: apps/v1
 kind: StatefulSet

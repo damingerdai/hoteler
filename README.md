@@ -85,3 +85,16 @@ sh scripts/build.sh
 
 由于graphql的集成存在bug，因此已经废弃。
 <!-- [http://localhost:8080/graphiq](http://localhost:8080/graphiq) -->
+
+## K8S
+
+构建数据库
+```
+kubectl delete namespaces hoteler-namespace
+kubectl delete persistentvolumeclaim --all -n hoteler-namespace
+kubectl delete persistentvolume --all -n hoteler-namespace
+kubectl apply -f db.yaml
+kubectl apply -f app.yaml
+kubectl port-forward --namespace hoteler-namespace service/postgres 5432:5432 --insecure-skip-tls-verify
+kubectl port-forward --namespace hoteler-namespace service/hoteler-web 4200:80 --insecure-skip-tls-verify
+```
