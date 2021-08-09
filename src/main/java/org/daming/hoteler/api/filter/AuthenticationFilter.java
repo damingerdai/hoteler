@@ -51,6 +51,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         var in = Instant.now();
         try {
             var requestUrl = request.getRequestURI();
+            System.out.println("url: " + requestUrl + "\t" + isFilter(requestUrl));
             if (!isFilter(requestUrl) && !requestUrl.contains("token")) {
                 verifyHttpHeaders(request);
                 var context = new HotelerContext();
@@ -60,6 +61,7 @@ public class AuthenticationFilter extends GenericFilterBean {
                 verifyToken(request, context);
             } else {
                 logger.info("url: " + requestUrl + " is ignored");
+                System.out.println("url: " + requestUrl + " is ignored");
             }
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (ExpiredJwtException ex) {
@@ -117,8 +119,8 @@ public class AuthenticationFilter extends GenericFilterBean {
         if ("/".equals(url)) {
             return true;
         }
-        // return ignoreUrlPattern.matcher(url).matches();
-        return Pattern.compile("^/(api|dev|ping)").matcher(url).matches();
+        // return Pattern.compile("^/(api|dev|ping)").matcher(url).matches();
+        return ignoreUrlPattern.matcher(url).matches();
     }
 
     private Exception buildException(String message) {
