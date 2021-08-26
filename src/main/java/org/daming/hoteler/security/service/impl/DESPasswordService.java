@@ -31,8 +31,8 @@ public class DESPasswordService implements IPasswordService {
     private static String CHARSETNAME = "UTF-8";
     private static String ALGORITHM = "DES";
 
-    @Value("${secret.key}")
-    private String secretKey;
+    // @Value("${secret.key}")
+    private String secretKey = "daming";
 
     private Key key;
 
