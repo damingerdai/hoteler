@@ -20,8 +20,8 @@ public class TokenServiceImpl implements ITokenService {
 
     private IUserService userService;
 
-    // @Value("${secret.key}")
-    private String secretKey = "daming";
+    @Value("${secret.key}")
+    private String secretKey;
 
     @Override
     public UserToken createToken(String username, String password) {

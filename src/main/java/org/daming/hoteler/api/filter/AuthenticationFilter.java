@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 @Component
 public class AuthenticationFilter extends GenericFilterBean {
 
-    // @Value("${secret.key}")
-    private String secretKey = "daming";
+    @Value("${secret.key}")
+    private String secretKey;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
