@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/postgres
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+  config:
+    activate:
+      on-profile: test
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+secret:
+  key: damingerdai

@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+// @SpringBootTest
+@SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
 class ICustomerStatServiceTest {
 
     @Autowired
