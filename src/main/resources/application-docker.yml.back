@@ -6,11 +6,12 @@ spring:
     driver-class-name: org.postgresql.Driver
   main:
     allow-bean-definition-overriding: true
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
   config:
     activate:
-      on-profile: test
-main:
-  allow-bean-definition-overriding: true
+      on-profile: docker
 
 server:
   port: 8080

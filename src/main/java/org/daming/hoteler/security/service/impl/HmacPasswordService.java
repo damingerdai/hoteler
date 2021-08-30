@@ -24,8 +24,8 @@ public class HmacPasswordService implements IPasswordService {
 
     private IErrorService errorService;
 
-   // @Value("${secret.key}")
-   private String secretKey = "daming";
+   @Value("${secret.key}")
+   private String secretKey;
 
     private SecretKey key;
 

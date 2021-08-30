@@ -11,9 +11,7 @@ spring:
     baseline-on-migrate: true
   config:
     activate:
-      on-profile: docker
-main:
-  allow-bean-definition-overriding: true
+      on-profile: test
 
 server:
   port: 8080
