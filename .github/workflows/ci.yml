@@ -62,7 +62,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 11, 16 ]
+        java-version: [ 11, 17 ]
         os: [ windows-latest, macos-latest, ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 11, 16 ]
+        java-version: [ 11, 17 ]
         os: [ macos-latest, ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
