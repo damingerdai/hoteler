@@ -199,4 +199,27 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>standalone</id>
+            <build>
+                <finalName>${project.artifactId}-standalone</finalName>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <includes>
+                            <include>**/*.properties</include>
+                            <include>**/*.txt</include>
+                            <include>**/*.yml</include>
+                            <include>db/**</include>
+                            <include>static/**</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/application*.yml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 </project>
