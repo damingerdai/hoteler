@@ -12,6 +12,10 @@ cd src/main/resources/static \
   && cp index.html error/404.html \
   && cd ../../../../
 
-echo "build java application"
+# echo "build java application"
 
-mvn clean install package -Dmaven.test.skip=true -Pstandalone
+# mvn clean install package -Dmaven.test.skip=true -Pstandalone
+
+echo "build java application with gradle"
+
+gradle build -Pstandalone -x test 

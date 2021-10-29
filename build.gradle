@@ -9,7 +9,7 @@ buildscript {
 plugins {
 	id 'org.springframework.boot' version '2.5.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "org.flywaydb.flyway" version "8.0.1"
+	id 'org.flywaydb.flyway' version '8.0.1'
 	id 'java'
 }
 
@@ -69,3 +69,17 @@ jar {
 	enabled = false
 }
 
+if (project.hasProperty('standalone')) {
+	sourceSets {
+		main {
+			resources {
+				exclude  '**/application*.yml'
+				exclude  '**/*.yml.back'
+			}
+		}
+	}
+	bootJar {
+		archiveName = "hoteler-standalone.jar"
+		mainClass = 'org.daming.hoteler.HotelerApplication'
+	}
+}
