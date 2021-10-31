@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
+    <springProperty scope="context" name="LOGGER_LEVEL" source="logger.level"/>
+
     <property name="COMMON_LOG_PATH" value="./logs" />
     <property name="ERROR_LOG_PATH" value="./logs" />
     <property name="API_LOG_PATH" value="./logs" />
@@ -130,7 +132,7 @@
         <appender-ref ref ="console"/>
     </appender>
 
-    <root level="debug">
+    <root level="${LOGGER_LEVEL}">
         <appender-ref ref="ASYNC" />
     </root>
 
