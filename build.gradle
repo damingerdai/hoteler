@@ -33,7 +33,7 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
-	implementation 'org.postgresql:postgresql:42.3.0'
+	implementation 'org.postgresql:postgresql:42.3.1'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'commons-codec:commons-codec:1.15'
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
