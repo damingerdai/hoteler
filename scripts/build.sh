@@ -18,4 +18,4 @@ cd src/main/resources/static \
 
 echo "build java application with gradle"
 
-gradle build -Pstandalone -x test 
+gradle build -Pstandalone -x test
