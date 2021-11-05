@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toMap;
+
 @Component
 public class RoomStatusTask {
 
@@ -30,14 +32,13 @@ public class RoomStatusTask {
             logger.warn("no rooms");
             return;
         }
-        rooms.stream().map(Room::getId).filter(roomId -> {
+        rooms.stream().collect(toMap(Room::getId, room -> {
+            var roomId = room.getId();
             var userRooms = this.userRoomService.listByRoomIdAndDate(roomId, LocalDate.now());
-            return !userRooms.isEmpty();
-        }).forEach(roomId -> {
-            roomService.updateStatus(roomId, RoomStatus.InUsed);
+            return !userRooms.isEmpty() ? RoomStatus.InUsed : RoomStatus.NoUse ;
+        })).forEach((roomId, roomStatus) -> {
+            roomService.updateStatus(roomId, roomStatus);
         });
-
-
     }
 
     public RoomStatusTask(
