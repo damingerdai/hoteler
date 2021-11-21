@@ -77,6 +77,11 @@ sh scripts/build.sh
 请访问：[http://localhost:8443](http://localhost:8080)
 
 默认的账号密码： admin/12345
+
+![登录](https://raw.githubusercontent.com/damingerdai/hoteler-web/master/screenshots/login.png)
+![仪表盘](https://raw.githubusercontent.com/damingerdai/hoteler-web/master/screenshots/dashboard.png)
+![暗黑模式](https://raw.githubusercontent.com/damingerdai/hoteler-web/master/screenshots/dark-mode.png)
+
 ### swagger-ui
 
 后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html](http://localhost:8443/swagger-ui/index.html)
