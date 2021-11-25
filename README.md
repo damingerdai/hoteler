@@ -34,6 +34,8 @@ docker network create hoteler-network
 
 ```shell script
 docker compose up db
+# db uses on image, skipping
+# docker-compose up --force-recreate db
 ```
 
 ### 数据库迁移
@@ -45,7 +47,6 @@ mvn flyway:migrate
 
 基于flyway的gradle插件
 ```shell script
-mvn flyway:migrate
 gradle flywayMigrate
 ```
 
