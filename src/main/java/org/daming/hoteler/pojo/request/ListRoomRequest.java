@@ -1,10 +1,8 @@
 package org.daming.hoteler.pojo.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModelProperty;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.enums.deserializer.JacksonRoomStatusDeserializer;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.Serializable;
 import java.util.StringJoiner;
@@ -18,7 +16,6 @@ import java.util.StringJoiner;
 public class ListRoomRequest implements Serializable {
     private static final long serialVersionUID = -182082371339657685L;
 
-    @ApiModelProperty(name = "room status", notes = "status for room", dataType="Integer")
     @JsonDeserialize(using = JacksonRoomStatusDeserializer.class)
     private RoomStatus status;
 

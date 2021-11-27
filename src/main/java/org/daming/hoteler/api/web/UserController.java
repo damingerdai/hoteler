@@ -1,6 +1,8 @@
 package org.daming.hoteler.api.web;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.User;
@@ -17,13 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Objects;
 
+@Tag(name = "用户controller")
 @RestController()
 @RequestMapping("api/v1")
 public class UserController {
 
     private IUserService userService;
 
-    @ApiOperation(value = "list user", notes = "list all users api")
+    @Operation(summary = "获取所有的用户",security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("users")
     public ResponseEntity<List<User>> listUser() {
         try {
@@ -43,7 +46,7 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "create user", notes = "create a new user api")
+    @Operation(summary = "创建用户",security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("user")
     public ResponseEntity<User> create(CreateUserRequest request) {
         var user = UserBuilder.fromCreateUserRequest(request);

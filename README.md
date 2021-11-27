@@ -34,6 +34,8 @@ docker network create hoteler-network
 
 ```shell script
 docker compose up db
+# db uses on image, skipping
+# docker-compose up --force-recreate db
 ```
 
 ### 数据库迁移
@@ -45,7 +47,6 @@ mvn flyway:migrate
 
 基于flyway的gradle插件
 ```shell script
-mvn flyway:migrate
 gradle flywayMigrate
 ```
 
@@ -84,7 +85,7 @@ sh scripts/build.sh
 
 ### swagger-ui
 
-后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html](http://localhost:8443/swagger-ui/index.html)
+后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html?url=/v3/api-docs](http://localhost:8443/swagger-ui/index.html?url=/v3/api-docsl)
 
 ### graphql
 

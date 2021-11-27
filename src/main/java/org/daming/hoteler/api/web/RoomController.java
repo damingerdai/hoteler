@@ -1,8 +1,8 @@
 package org.daming.hoteler.api.web;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
@@ -29,13 +29,14 @@ import java.util.List;
  * @author gming001
  * @create 2020-12-22 23:40
  **/
+@Tag(name = "房间 controller")
 @RestController
 @RequestMapping("api/v1")
 public class RoomController {
 
     private IRoomService roomService;
 
-    @ApiOperation(value = "create room", notes = "create a new room api")
+    @Operation(summary = "创建房间", security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("room")
     public long create(@RequestBody CreateRoomRequest request) {
         var room = new Room().setRoomname(request.getRoomname()).setStatus(RoomStatus.NoUse).setPrice(request.getPrice());
@@ -43,14 +44,14 @@ public class RoomController {
         return room.getId();
     }
 
-    @ApiOperation(value = "get room", notes = "get a room api")
+    @Operation(summary = "获取房间", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("room/{id}")
     public Room get(@PathVariable(value = "id")long id) {
         var rooms = this.roomService.get(id);
         return rooms;
     }
 
-    @ApiOperation(value = "list room", notes = "get all rooms api")
+    @Operation(summary = "获取所有的房间", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("rooms")
     public CommonResponse list(ListRoomRequest request) {
         var room = new Room().setStatus(request.getStatus());
@@ -58,7 +59,7 @@ public class RoomController {
         return new DataResponse<>(rooms);
     }
 
-    @ApiOperation(value = "update room", notes = "update a room api")
+    @Operation(summary = "更新房间", security = { @SecurityRequirement(name = "bearer-key") })
     @PutMapping("room")
     public CommonResponse update(@RequestBody UpdateRoomRequest request) throws HotelerException {
         var room = new Room().setId(request.getId()).setRoomname(request.getRoomname()).setPrice(request.getPrice()).setStatus(request.getStatus());
@@ -66,10 +67,7 @@ public class RoomController {
         return new CommonResponse();
     }
 
-    @ApiOperation(value = "delete room", notes = "delete a room api")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "id", required = true, allowEmptyValue = false, paramType = "path", dataType = "long", defaultValue = "0"),
-    })
+    @Operation(summary = "删除", security = { @SecurityRequirement(name = "bearer-key") })
     @DeleteMapping("room/{id}")
     public CommonResponse delete(@PathVariable long id) throws HotelerException {
         this.roomService.delete(id);
