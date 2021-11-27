@@ -1,5 +1,6 @@
 package org.daming.hoteler.pojo.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.daming.hoteler.pojo.enums.Gender;
 
 import java.io.Serializable;
@@ -11,10 +12,12 @@ import java.util.StringJoiner;
  * @author gming001
  * @create 2020-12-25 22:15
  **/
+@Schema(name = "创建客户请求")
 public class CreateCustomerRequest implements Serializable {
 
     private static final long serialVersionUID = -7819607546063963266L;
 
+    @Schema(name = "名字")
     private String name;
 
     private Gender gender;

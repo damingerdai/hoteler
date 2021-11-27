@@ -41,7 +41,7 @@ public class AuthenticationFilter extends GenericFilterBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|images|api-docs|html|js|css|svg|ico).*");
+    private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|dev|ping|images|api-docs|html|js|css|svg|ico).*");
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -50,8 +50,9 @@ public class AuthenticationFilter extends GenericFilterBean {
         var in = Instant.now();
         try {
             var requestUrl = request.getRequestURI();
-            System.out.println("url: " + requestUrl + "\t" + isFilter(requestUrl));
+           logger.debug("url: " + requestUrl + "\t" + isFilter(requestUrl));
             if (!isFilter(requestUrl) && !requestUrl.contains("token")) {
+                logger.info("verify url: " + requestUrl );
                 verifyHttpHeaders(request);
                 var context = new HotelerContext();
                 ThreadLocalContextHolder.put(context);
@@ -97,7 +98,6 @@ public class AuthenticationFilter extends GenericFilterBean {
         var key = JwtUtil.generalKey(secretKey);
         var claims = JwtUtil.parseJwt(accessToken, key);
         var subject =  claims.getSubject();
-        System.out.println(subject);
     }
 
     private HttpServletRequest asHttp(ServletRequest request) {
@@ -117,8 +117,7 @@ public class AuthenticationFilter extends GenericFilterBean {
         if ("/".equals(url)) {
             return true;
         }
-        return !Pattern.compile("^/(api|dev|ping)").matcher(url).matches();
-        // return ignoreUrlPattern.matcher(url).matches();
+        return ignoreUrlPattern.matcher(url).matches();
     }
 
     private Exception buildException(String message) {

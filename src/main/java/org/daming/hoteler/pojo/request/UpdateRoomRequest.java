@@ -1,7 +1,6 @@
 package org.daming.hoteler.pojo.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 
 import java.io.Serializable;
@@ -17,17 +16,13 @@ public class UpdateRoomRequest implements Serializable {
 
     private static final long serialVersionUID = -157882609205230197L;
 
-    @ApiModelProperty(name = "room id", notes = "id for room", position = 0)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private long id;
 
-    @ApiModelProperty(name = "room name", notes = "name for room", position = 1)
     private String roomname;
 
-    @ApiModelProperty(name = "room price", notes = "price for room", position = 2)
     private double price;
 
-    @ApiModelProperty(name = "room status", notes = "status for room", position = 3, value = "1")
     private RoomStatus status;
 
     public long getId() {

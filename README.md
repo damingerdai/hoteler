@@ -85,7 +85,7 @@ sh scripts/build.sh
 
 ### swagger-ui
 
-后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html](http://localhost:8443/swagger-ui/index.html)
+后端支持OpenApi, 请访问: [http://localhost:8443/swagger-ui/index.html?url=/v3/api-docs](http://localhost:8443/swagger-ui/index.html?url=/v3/api-docsl)
 
 ### graphql
 

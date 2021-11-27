@@ -48,26 +48,14 @@
             <version>2.2.0</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.springfox</groupId>
-                    <artifactId>springfox-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--为了强制使用3.0.0的版本，而不是2.9.2 -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-core</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.12</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.graphql-java</groupId>-->

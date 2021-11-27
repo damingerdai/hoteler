@@ -24,3 +24,8 @@ secret:
 
 logger:
   level: debug
+
+springdoc:
+  packagesToScan: org.daming.hoteler.api.web
+  swagger-ui:
+    path: /swagger-ui.html
