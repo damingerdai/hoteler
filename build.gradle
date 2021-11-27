@@ -72,12 +72,12 @@ jar {
 
 if (project.hasProperty('standalone')) {
 	sourceSets {
-		main(({
+		main {
 			resources {
 				exclude '**/application*.yml'
 				exclude '**/*.yml.back'
 			}
-		} as String))
+		}
 	}
 	bootJar {
 		archiveName = "hoteler-standalone.jar"
