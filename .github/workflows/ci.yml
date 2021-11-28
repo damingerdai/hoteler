@@ -57,8 +57,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        run: ./gradlew flywayMigrate && ./gradlew build
+      - name: Unit Test with Gradle
+        # run: ./gradlew flywayMigrate && ./gradlew build
+        run: ./gradlew test
   build:
     runs-on: ${{ matrix.os }}
     strategy:
