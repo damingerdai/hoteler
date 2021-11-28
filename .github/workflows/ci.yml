@@ -12,11 +12,11 @@ jobs:
     strategy:
       matrix:
         java-version: [17]
-        go-version: [1.16]
+        go-version: [1.17]
         os: [ubuntu-latest]
     services:
       postgres:
-        image: postgres:13.1
+        image: postgres:14
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456

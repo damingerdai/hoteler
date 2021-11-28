@@ -18,9 +18,10 @@ func FetchMigrate() (*migrate.Migrate, error) {
 		os.Getenv("POSTGRES_DB"),
 	)
 	sslmode := os.Getenv("POSTGRES_SSLMODE")
-	if sslmode == "" {
+	if sslmode != "" {
 		dbUrl += "?sslmode=" + sslmode
 	}
+
 	return migrate.New(
 		"file://./db/migrations",
 		dbUrl,
