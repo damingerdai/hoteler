@@ -28,7 +28,7 @@ jobs:
           --health-retries 5
         ports:
           # Maps tcp port 5432 on service container to the host
-          - 5432:5432
+          - 5432/tcp
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
@@ -42,8 +42,8 @@ jobs:
       - name: Run db migration
         run: cd migration && go build -o migrate migration.go && ./migrate up
         env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456
           POSTGRES_DB: postgres
