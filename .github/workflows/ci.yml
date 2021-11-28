@@ -47,6 +47,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456
           POSTGRES_DB: postgres
+          POSTGRES_SSLMODE: disable
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
