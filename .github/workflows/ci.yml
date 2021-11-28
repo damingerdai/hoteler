@@ -39,10 +39,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Verify POSTGRES connection name resolution
-        run: |
-          ping postgres -n 3
-          echo ${{ job.services.postgres.ports['5432'] }}
       - name: Run db migration
         run: cd migration && go build -o migrate migration.go && ./migrate up
         env:
