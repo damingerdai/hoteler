@@ -14,6 +14,7 @@ jobs:
         java-version: [17]
         go-version: [1.17]
         os: [ubuntu-latest]
+    # https://github.com/actions/example-services/blob/master/.github/workflows/postgres-service.yml
     services:
       postgres:
         image: postgres:14
@@ -28,7 +29,7 @@ jobs:
           --health-retries 5
         ports:
           # Maps tcp port 5432 on service container to the host
-          - 5432:5432
+          - 5432/tcp
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
@@ -39,18 +40,15 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Verify POSTGRES connection name resolution
-        run: |
-          ping postgres -n 3
-          echo ${{ job.services.postgres.ports['5432'] }}
       - name: Run db migration
         run: cd migration && go build -o migrate migration.go && ./migrate up
         env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456
           POSTGRES_DB: postgres
+          POSTGRES_SSLMODE: disable
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
@@ -60,8 +58,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        run: ./gradlew flywayMigrate && ./gradlew build
+      - name: Unit Test with Gradle
+        # run: ./gradlew flywayMigrate && ./gradlew build
+        run: ./gradlew test
   build:
     runs-on: ${{ matrix.os }}
     strategy:
