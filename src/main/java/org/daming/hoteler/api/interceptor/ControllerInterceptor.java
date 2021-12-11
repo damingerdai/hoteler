@@ -68,9 +68,9 @@ public class ControllerInterceptor {
     }
 
     private String getMethodArgs(Object[] args) throws JsonProcessingException {
-        StringBuffer sb = new StringBuffer();
+        var sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
-            sb.append("arg[" + i + "]: " + jsonMapper.writeValueAsString(args[i]) + ",");
+            sb.append("arg[").append(i).append("]: ").append(jsonMapper.writeValueAsString(args[i])).append(",");
         }
         if (args.length > 0) {
             sb.deleteCharAt(sb.length() - 1);
