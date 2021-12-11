@@ -117,7 +117,9 @@ public class AuthenticationFilter extends GenericFilterBean {
         if ("/".equals(url)) {
             return true;
         }
-        return ignoreUrlPattern.matcher(url).matches();
+        var pattern = "^/api/v\\d/(?!.*?token).*$";
+        var r = Pattern.compile(pattern);
+        return !r.matcher(url).matches();
     }
 
     private Exception buildException(String message) {
