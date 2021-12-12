@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author gming001
  * @create 2020-12-25 22:13
  **/
-@Tag(name = "user", description = "the user API")
+@Tag(name = "客户", description = "客户 API")
 @RestController
 @RequestMapping("api/v1")
 public class CustomerController {

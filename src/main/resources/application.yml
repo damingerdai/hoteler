@@ -27,5 +27,5 @@ logger:
 
 springdoc:
   packagesToScan: org.daming.hoteler.api.web
-  swagger-ui:
-    path: /swagger-ui.html
+#  swagger-ui:
+#    path: /swagger-ui.html
