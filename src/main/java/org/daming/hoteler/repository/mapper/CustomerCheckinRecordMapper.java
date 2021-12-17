@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
  * @create 2021-06-17 23:08
  **/
 @Mapper
-public interface UserRoomMapper {
+public interface CustomerCheckinRecordMapper {
 
-    @Select("select count(*) from users_rooms where #{beginDate} <= begin_date and begin_date <= #{endDate} and end_date <= #{endDate}")
+    @Select("select count(*) from customer_checkin_record where #{beginDate} <= begin_date and begin_date <= #{endDate} and end_date <= #{endDate}")
     int getUserRoomCounts(@Param("beginDate") LocalDateTime beginDate, @Param("endDate")LocalDateTime endDate);
 }

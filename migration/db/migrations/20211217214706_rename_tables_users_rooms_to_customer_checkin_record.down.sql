@@ -1,0 +1,1 @@
+ALTER TABLE customer_checkin_record TO users_rooms;

@@ -1,13 +1,13 @@
 package org.daming.hoteler.api.web;
 
 import org.daming.hoteler.constants.ErrorCodeConstants;
-import org.daming.hoteler.pojo.UserRoom;
-import org.daming.hoteler.pojo.request.CreateUserRoomRequest;
-import org.daming.hoteler.pojo.request.UpdateUserRoomRequest;
+import org.daming.hoteler.pojo.CustomerCheckinRecord;
+import org.daming.hoteler.pojo.request.CreateCustomerCheckinRecordRequest;
+import org.daming.hoteler.pojo.request.UpdateCustomerCheckinRecordRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.service.IErrorService;
-import org.daming.hoteler.service.IUserRoomService;
+import org.daming.hoteler.service.ICustomerCheckinRecordService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping("api/v1")
-public class UserRoomController {
+public class CustomerCheckinRecordController {
 
-    private IUserRoomService userRoomService;
+    private ICustomerCheckinRecordService userRoomService;
     private IErrorService errorService;
 
     @PostMapping("users/rooms")
-    public DataResponse<Long> createUserRoomRelationship(@RequestBody CreateUserRoomRequest request) {
-        var ur = new UserRoom()
+    public DataResponse<Long> createUserRoomRelationship(@RequestBody CreateCustomerCheckinRecordRequest request) {
+        var ur = new CustomerCheckinRecord()
                 .setUserId(request.getUserId())
                 .setRoomId(request.getRoomId())
                 .setBeginDate(request.getBeginDate())
@@ -42,8 +42,8 @@ public class UserRoomController {
     }
 
     @PutMapping("users/rooms")
-    public CommonResponse updateUserRoomRelationship(@RequestBody UpdateUserRoomRequest request) {
-        var ur = new UserRoom()
+    public CommonResponse updateUserRoomRelationship(@RequestBody UpdateCustomerCheckinRecordRequest request) {
+        var ur = new CustomerCheckinRecord()
                 .setId(request.getId())
                 .setUserId(request.getUserId())
                 .setRoomId(request.getRoomId())
@@ -81,7 +81,7 @@ public class UserRoomController {
         }
     }
 
-    public UserRoomController(IUserRoomService userRoomService) {
+    public CustomerCheckinRecordController(ICustomerCheckinRecordService userRoomService) {
         super();
         this.userRoomService = userRoomService;
     }

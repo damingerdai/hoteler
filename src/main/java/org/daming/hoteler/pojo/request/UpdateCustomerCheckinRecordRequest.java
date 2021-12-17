@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  * @author gming001
  * @create 2021-03-06 23:40
  **/
-public class UpdateUserRoomRequest implements Serializable {
+public class UpdateCustomerCheckinRecordRequest implements Serializable {
 
     private static final long serialVersionUID = 6530878491216149931L;
 
@@ -69,11 +69,11 @@ public class UpdateUserRoomRequest implements Serializable {
         this.endDate = endDate;
     }
 
-    public UpdateUserRoomRequest() {
+    public UpdateCustomerCheckinRecordRequest() {
         super();
     }
 
-    public UpdateUserRoomRequest(long id, long userId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
+    public UpdateCustomerCheckinRecordRequest(long id, long userId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
         super();
         this.id = id;
         this.userId = userId;
@@ -84,7 +84,7 @@ public class UpdateUserRoomRequest implements Serializable {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", UpdateUserRoomRequest.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", UpdateCustomerCheckinRecordRequest.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("userId=" + userId)
                 .add("roomId=" + roomId)
