@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  * @author gming001
  * @create 2021-03-05 15:39
  **/
-public class UserRoom  implements Serializable {
+public class CustomerCheckinRecord implements Serializable {
 
     private static final long serialVersionUID = -314732081658919026L;
 
@@ -33,7 +33,7 @@ public class UserRoom  implements Serializable {
         return id;
     }
 
-    public UserRoom setId(long id) {
+    public CustomerCheckinRecord setId(long id) {
         this.id = id;
         return this;
     }
@@ -42,7 +42,7 @@ public class UserRoom  implements Serializable {
         return userId;
     }
 
-    public UserRoom setUserId(long userId) {
+    public CustomerCheckinRecord setUserId(long userId) {
         this.userId = userId;
         return this;
     }
@@ -51,7 +51,7 @@ public class UserRoom  implements Serializable {
         return roomId;
     }
 
-    public UserRoom setRoomId(long roomId) {
+    public CustomerCheckinRecord setRoomId(long roomId) {
         this.roomId = roomId;
         return this;
     }
@@ -60,7 +60,7 @@ public class UserRoom  implements Serializable {
         return beginDate;
     }
 
-    public UserRoom setBeginDate(LocalDateTime beginDate) {
+    public CustomerCheckinRecord setBeginDate(LocalDateTime beginDate) {
         this.beginDate = beginDate;
         return this;
     }
@@ -69,16 +69,16 @@ public class UserRoom  implements Serializable {
         return endDate;
     }
 
-    public UserRoom setEndDate(LocalDateTime endDate) {
+    public CustomerCheckinRecord setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
         return this;
     }
 
-    public UserRoom() {
+    public CustomerCheckinRecord() {
         super();
     }
 
-    public UserRoom(long id, long userId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
+    public CustomerCheckinRecord(long id, long userId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
         super();
         this.id = id;
         this.userId = userId;
@@ -89,7 +89,7 @@ public class UserRoom  implements Serializable {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", UserRoom.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", CustomerCheckinRecord.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("userId=" + userId)
                 .add("roomId=" + roomId)
