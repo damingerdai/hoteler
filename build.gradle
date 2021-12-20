@@ -44,7 +44,7 @@ dependencies {
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'com.github.ben-manes.caffeine:caffeine'
 	implementation 'org.yaml:snakeyaml:1.29'
-	implementation 'org.flywaydb:flyway-core:8.2.1'
+	implementation 'org.flywaydb:flyway-core:8.2.2'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
