@@ -43,7 +43,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'com.github.ben-manes.caffeine:caffeine'
-	implementation 'org.yaml:snakeyaml:1.29'
+	implementation 'org.yaml:snakeyaml:1.30'
 	implementation 'org.flywaydb:flyway-core:8.2.1'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
