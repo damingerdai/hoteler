@@ -27,37 +27,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1")
 public class CustomerCheckinRecordController {
 
-    private ICustomerCheckinRecordService userRoomService;
+    private ICustomerCheckinRecordService customerCheckinRecordService;
     private IErrorService errorService;
 
-    @PostMapping("users/rooms")
-    public DataResponse<Long> createUserRoomRelationship(@RequestBody CreateCustomerCheckinRecordRequest request) {
+    @PostMapping("customer-checkin-record")
+    public DataResponse<Long> createCustomerCheckinRecord(@RequestBody CreateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
                 .setUserId(request.getUserId())
                 .setRoomId(request.getRoomId())
                 .setBeginDate(request.getBeginDate())
                 .setEndDate(request.getEndDate());
-        this.userRoomService.create(ur);
+        this.customerCheckinRecordService.create(ur);
         return new DataResponse<>(1L);
     }
 
-    @PutMapping("users/rooms")
-    public CommonResponse updateUserRoomRelationship(@RequestBody UpdateCustomerCheckinRecordRequest request) {
+    @PutMapping("customer-checkin-record")
+    public CommonResponse updateCustomerCheckinRecord(@RequestBody UpdateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
                 .setId(request.getId())
                 .setUserId(request.getUserId())
                 .setRoomId(request.getRoomId())
                 .setBeginDate(request.getBeginDate())
                 .setEndDate(request.getEndDate());
-        this.userRoomService.update(ur);
+        this.customerCheckinRecordService.update(ur);
         return new DataResponse<>(1L);
     }
 
-    @GetMapping("users/rooms/:id")
+    @GetMapping("customer-checkin-record/:id")
     public CommonResponse getUserRoomRelationship(@PathVariable("id") long userRoomId) {
         try {
             var id = Long.valueOf(userRoomId);
-            var ur = this.userRoomService.get(id);
+            var ur = this.customerCheckinRecordService.get(id);
             return new DataResponse<>(ur);
         } catch (NumberFormatException nfe) {
             var params = new Object[] { nfe.getMessage() };
@@ -67,11 +67,11 @@ public class CustomerCheckinRecordController {
         }
     }
 
-    @DeleteMapping("users/rooms/:id")
+    @DeleteMapping("customer-checkin-record/:id")
     public CommonResponse deleteUserRoomRelationship(@PathVariable("id") String userRoomId) {
         try {
             var id = Long.valueOf(userRoomId);
-            this.userRoomService.delete(id);
+            this.customerCheckinRecordService.delete(id);
             return new CommonResponse();
         } catch (NumberFormatException nfe) {
             var params = new Object[] { nfe.getMessage() };
@@ -81,8 +81,8 @@ public class CustomerCheckinRecordController {
         }
     }
 
-    public CustomerCheckinRecordController(ICustomerCheckinRecordService userRoomService) {
+    public CustomerCheckinRecordController(ICustomerCheckinRecordService customerCheckinRecordService) {
         super();
-        this.userRoomService = userRoomService;
+        this.customerCheckinRecordService = customerCheckinRecordService;
     }
 }
