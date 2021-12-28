@@ -1,0 +1,1 @@
+ALTER TABLE users_rooms RENAME TO customer_checkin_record;
