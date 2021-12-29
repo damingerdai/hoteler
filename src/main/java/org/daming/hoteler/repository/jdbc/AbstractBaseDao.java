@@ -13,8 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  **/
 public abstract class AbstractBaseDao<T> {
 
-    private JdbcTemplate jdbcTemplate;
-    private IErrorService errorService;
+    protected JdbcTemplate jdbcTemplate;
+    protected IErrorService errorService;
 
     public void create(String sql, Object...params) {
         try {
