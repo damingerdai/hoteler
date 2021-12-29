@@ -1,5 +1,7 @@
 package org.daming.hoteler.api.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.CustomerCheckinRecord;
 import org.daming.hoteler.pojo.request.CreateCustomerCheckinRecordRequest;
@@ -30,6 +32,7 @@ public class CustomerCheckinRecordController {
     private ICustomerCheckinRecordService customerCheckinRecordService;
     private IErrorService errorService;
 
+    @Operation(summary = "创建用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("customer-checkin-record")
     public DataResponse<Long> createCustomerCheckinRecord(@RequestBody CreateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
@@ -41,6 +44,7 @@ public class CustomerCheckinRecordController {
         return new DataResponse<>(1L);
     }
 
+    @Operation(summary = "更新用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @PutMapping("customer-checkin-record")
     public CommonResponse updateCustomerCheckinRecord(@RequestBody UpdateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
@@ -53,6 +57,7 @@ public class CustomerCheckinRecordController {
         return new DataResponse<>(1L);
     }
 
+    @Operation(summary = "获取用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("customer-checkin-record/:id")
     public CommonResponse getUserRoomRelationship(@PathVariable("id") long userRoomId) {
         try {
@@ -67,6 +72,7 @@ public class CustomerCheckinRecordController {
         }
     }
 
+    @Operation(summary = "删除用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @DeleteMapping("customer-checkin-record/:id")
     public CommonResponse deleteUserRoomRelationship(@PathVariable("id") String userRoomId) {
         try {
