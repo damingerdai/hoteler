@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "files",
+    srcs = ["files.go"],
+    importpath = "github.com/damingerdai/hoteler/migration/internal/files",
+    visibility = ["//:__subpackages__"],
+)

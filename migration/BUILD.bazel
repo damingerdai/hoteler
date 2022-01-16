@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/damingerdai/hoteler/migration
+gazelle(name = "gazelle")
+
+go_library(
+    name = "migration_lib",
+    srcs = ["migration.go"],
+    importpath = "github.com/damingerdai/hoteler/migration",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//internal/cmd",
+        "@com_github_golang_migrate_migrate_v4//database/postgres:go_default_library",
+        "@com_github_golang_migrate_migrate_v4//source/file:go_default_library",
+        "@com_github_joho_godotenv//autoload:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "migration",
+    embed = [":migration_lib"],
+    visibility = ["//visibility:public"],
+)

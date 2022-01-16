@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cmd",
+    srcs = [
+        "cmd.go",
+        "migrate.go",
+    ],
+    importpath = "github.com/damingerdai/hoteler/migration/internal/cmd",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/files",
+        "//internal/times",
+        "@com_github_golang_migrate_migrate_v4//:go_default_library",
+    ],
+)
