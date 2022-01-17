@@ -2,4 +2,7 @@ bazel-*
 migration
 migrate
 migrate.exe
+seed
+seed.exe
+*.exe
 .env
