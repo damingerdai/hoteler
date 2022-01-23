@@ -4,6 +4,7 @@ go_library(
     name = "cmd",
     srcs = [
         "root.go",
+        "seed.go",
         "version.go",
     ],
     importpath = "github.com/damingerdai/hoteler/migration/cmd",
