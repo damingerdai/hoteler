@@ -1,0 +1,2 @@
+insert into users (id, username, password, create_dt, create_user, update_dt, update_user) values ( '791067575822979071', 'daming', '12345', statement_timestamp(),'system', statement_timestamp(), 'system');
+insert into users (id, username, password, create_dt, create_user, update_dt, update_user) values ( '791067575822979072', 'xiao2', '12345', statement_timestamp(),'system', statement_timestamp(), 'system')
