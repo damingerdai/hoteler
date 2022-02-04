@@ -1,5 +1,6 @@
 package org.daming.hoteler.service.impl;
 
+import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(cacheNames = { "user" }, key = "#username")
     public User getUserByUsername(String username) {
         Assert.hasText("username", "params 'username' is required");
-        return userDao.getUserByUsername(username).get();
+        return userDao.getUserByUsername(username).orElseThrow(() -> ExceptionBuilder.buildException(600005, "用户名或者密码错误."));
     }
 
     @Override
