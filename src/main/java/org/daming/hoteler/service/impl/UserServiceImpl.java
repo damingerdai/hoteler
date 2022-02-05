@@ -4,6 +4,7 @@ import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
+import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class UserServiceImpl implements IUserService {
 
     private ISnowflakeService snowflakeService;
 
+    private IErrorService errorService;
+
     private UserMapper userMapper;
 
     private IUserDao userDao;
@@ -34,7 +37,9 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(cacheNames = { "user" }, key = "#username")
     public User getUserByUsername(String username) {
         Assert.hasText("username", "params 'username' is required");
-        return userDao.getUserByUsername(username).orElseThrow(() -> ExceptionBuilder.buildException(600005, "用户名或者密码错误."));
+        return userDao.getUserByUsername(username)
+                // () -> ExceptionBuilder.buildException(600005, "用户名或者密码错误.")
+                .orElseThrow(() -> this.errorService.createHotelerException(600005));
     }
 
     @Override
@@ -55,6 +60,11 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     public void setSnowflakeService(ISnowflakeService snowflakeService) {
         this.snowflakeService = snowflakeService;
+    }
+
+    @Autowired
+    public void setErrorService(IErrorService errorService) {
+        this.errorService = errorService;
     }
 
     public UserServiceImpl(UserMapper userMapper, IUserDao userDao) {
