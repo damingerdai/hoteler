@@ -3,6 +3,7 @@ package org.daming.hoteler.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.StringJoiner;
 
 public class User implements Serializable {
@@ -15,6 +16,8 @@ public class User implements Serializable {
     private String username;
 
     private String password;
+
+    private List<Role> roles;
 
     public long getId() {
         return id;
@@ -43,12 +46,34 @@ public class User implements Serializable {
         return this;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public User setRoles(List<Role> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public User() {
+        super();
+    }
+
+    public User(long id, String username, String password, List<Role> roles) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
-        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("username='" + username + "'")
-                .add("password='" + password + "'")
-                .toString();
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

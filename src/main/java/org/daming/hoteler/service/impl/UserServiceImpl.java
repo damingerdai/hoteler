@@ -1,6 +1,7 @@
 package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
+import org.daming.hoteler.repository.jdbc.IRoleDao;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @CacheConfig(cacheNames = {"UserCache"})
@@ -28,6 +30,8 @@ public class UserServiceImpl implements IUserService {
 
     private IUserDao userDao;
 
+    private IRoleDao roleDao;
+
     @Override
     public List<User> list() {
         return this.userMapper.list();
@@ -37,16 +41,25 @@ public class UserServiceImpl implements IUserService {
     @Cacheable(cacheNames = { "user" }, key = "#username")
     public User getUserByUsername(String username) {
         Assert.hasText("username", "params 'username' is required");
-        return userDao.getUserByUsername(username)
-                // () -> ExceptionBuilder.buildException(600005, "用户名或者密码错误.")
+        var user =  this.userDao.getUserByUsername(username)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
+        var roles = this.roleDao.list();
+        if (Objects.nonNull(roles) && !roles.isEmpty()) {
+            user.setRoles(roles);
+        }
+        return user;
     }
 
     @Override
     @Cacheable(cacheNames = { "user" }, key = "#id")
     public User get(long id) {
         Assert.isTrue(id > 0, "params 'id' is required");
-        return userDao.get(id).get();
+        var user =  userDao.get(id).get();
+        var roles = this.roleDao.list();
+        if (Objects.nonNull(roles) && !roles.isEmpty()) {
+            user.setRoles(roles);
+        }
+        return user;
     }
 
     @Override
@@ -67,9 +80,10 @@ public class UserServiceImpl implements IUserService {
         this.errorService = errorService;
     }
 
-    public UserServiceImpl(UserMapper userMapper, IUserDao userDao) {
+    public UserServiceImpl(UserMapper userMapper, IUserDao userDao, IRoleDao roleDao) {
         super();
         this.userMapper = userMapper;
         this.userDao = userDao;
+        this.roleDao = roleDao;
     }
 }
