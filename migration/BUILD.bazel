@@ -17,11 +17,13 @@ gazelle(
 go_library(
     name = "migration_lib",
     srcs = [
+        "main.go",
         "migration.go",
     ],
     importpath = "github.com/damingerdai/hoteler/migration",
     visibility = ["//visibility:private"],
     deps = [
+        "//cmd",
         "//internal/cmd",
         "@com_github_golang_migrate_migrate_v4//database/postgres",
         "@com_github_golang_migrate_migrate_v4//source/file",
@@ -31,13 +33,12 @@ go_library(
 
 go_library(
     name = "hoteler_lib",
-    srcs = [
-        "main.go",
-    ],
+    srcs = ["main.go"],
     importpath = "github.com/damingerdai/hoteler/migration",
     visibility = ["//visibility:private"],
     deps = [
         "//cmd",
+        "@com_github_joho_godotenv//autoload",
     ],
 )
 
@@ -52,4 +53,3 @@ go_binary(
     embed = [":hoteler_lib"],
     visibility = ["//visibility:public"],
 )
-

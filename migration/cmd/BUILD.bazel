@@ -9,5 +9,8 @@ go_library(
     ],
     importpath = "github.com/damingerdai/hoteler/migration/cmd",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_spf13_cobra//:go_default_library"],
+    deps = [
+        "//internal/cmd",
+        "@com_github_spf13_cobra//:cobra",
+    ],
 )

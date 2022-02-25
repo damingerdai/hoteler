@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "cmd.go",
         "migrate.go",
+        "seed.go",
     ],
     importpath = "github.com/damingerdai/hoteler/migration/internal/cmd",
     visibility = ["//:__subpackages__"],
@@ -12,5 +13,7 @@ go_library(
         "//internal/files",
         "//internal/times",
         "@com_github_golang_migrate_migrate_v4//:migrate",
+        "@com_github_golang_migrate_migrate_v4//database/postgres",
+        "@com_github_golang_migrate_migrate_v4//source/file",
     ],
 )
