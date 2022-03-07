@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.UserToken;
+import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.JwtUtil;
@@ -20,17 +21,16 @@ public class TokenServiceImpl implements ITokenService {
 
     private IUserService userService;
 
+    private IErrorService errorService;
+
     @Value("${secret.key}")
     private String secretKey;
 
     @Override
     public UserToken createToken(String username, String password) {
         var user = userService.getUserByUsername(username);
-        if (Objects.isNull(user)) {
-            throw new RuntimeException("no user");
-        }
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("user is invalid");
+        if (Objects.isNull(user) || !user.getPassword().equals(password)) {
+            throw this.errorService.createHotelerException(600005);
         }
         return doCreateToken(user);
     }
@@ -74,8 +74,9 @@ public class TokenServiceImpl implements ITokenService {
 
     }
 
-    public TokenServiceImpl(IUserService userService) {
+    public TokenServiceImpl(IUserService userService, IErrorService errorService) {
         super();
         this.userService = userService;
+        this.errorService = errorService;
     }
 }
