@@ -1,1 +1,1 @@
-nohup java -jar -Xmx384m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=24m hoteler-standalone.jar --spring.config.location=./application.yml  &
+nohup java -jar -Xmx384m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=24m -Dlog4j2.formatMsgNoLookups=true hoteler-standalone.jar --spring.config.location=./application.yml > /dev/null 2>&1&
