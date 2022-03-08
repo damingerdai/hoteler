@@ -21,6 +21,7 @@ class JwtUtilTest {
         var map = new HashMap<String, Object>(4);
         map.put("username", "daming");
         var token = JwtUtil.createJWT(id, subject, ttlMillis, key, map);
+        System.out.println(token);
         assertNotNull(token);
     }
 
