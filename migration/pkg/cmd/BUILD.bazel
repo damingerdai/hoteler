@@ -7,7 +7,7 @@ go_library(
         "migrate.go",
         "seed.go",
     ],
-    importpath = "github.com/damingerdai/hoteler/migration/internal/cmd",
+    importpath = "github.com/damingerdai/hoteler/migration/pkg/cmd",
     visibility = ["//:__subpackages__"],
     deps = [
         "//internal/files",

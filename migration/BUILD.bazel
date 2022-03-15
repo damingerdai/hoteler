@@ -23,7 +23,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//cmd",
-        "//internal/cmd",
+        "//pkg/cmd",
         "@com_github_golang_migrate_migrate_v4//database/postgres",
         "@com_github_golang_migrate_migrate_v4//source/file",
         "@com_github_joho_godotenv//autoload",

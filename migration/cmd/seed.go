@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/damingerdai/hoteler/migration/internal/cmd"
+	"github.com/damingerdai/hoteler/migration/pkg/cmd"
 	"github.com/spf13/cobra"
 )
 
