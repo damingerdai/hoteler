@@ -44,10 +44,22 @@ public class TokenController {
 
     @Operation(summary = "更新token")
     @PutMapping("token")
-    public ResponseEntity<String> verifyToken(@RequestHeader String accessToken) {
-        tokenService.verifyToken(accessToken);
-        var response = new ResponseEntity<>("ok", HttpStatus.OK);
-        return response;
+    public UserTokenResponse verifyToken(@RequestHeader String accessToken) {
+        try {
+            var userToken = tokenService.refreshToken(accessToken);
+            var response = new UserTokenResponse();
+            response.setUserToken(userToken);
+            return response;
+        } catch (HotelerException ex) {
+            LoggerManager.getApiLogger().error("HotelerException: " + ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            LoggerManager.getApiLogger().error("Exception: " + ex.getMessage());
+            throw ex;
+        } finally {
+            // TODO
+        }
+
     }
 
     public TokenController(ITokenService tokenService) {

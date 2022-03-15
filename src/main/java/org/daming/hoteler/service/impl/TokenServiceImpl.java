@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class TokenServiceImpl implements ITokenService {
@@ -50,7 +51,21 @@ public class TokenServiceImpl implements ITokenService {
 
     @Override
     public UserToken refreshToken(String refreshToken) {
-        return null;
+        try {
+            var key = JwtUtil.generalKey(secretKey);
+            var claim = JwtUtil.parseJwt(refreshToken, key);
+            var sub = claim.getSubject();
+            var subs = sub.split("@");
+            var userId = subs[0];
+            var username = subs[1];
+            var user = Optional.ofNullable(userService.get(Long.valueOf(userId)))
+                    .orElseThrow(() -> this.errorService.createHotelerException(600005));
+            return doCreateToken(user);
+        } catch (ExpiredJwtException ex) {
+            throw ExceptionBuilder.buildException(600010, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw ExceptionBuilder.buildException(600001, ex.getMessage(), ex);
+        }
     }
 
     @Override
