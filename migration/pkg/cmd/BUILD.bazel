@@ -4,12 +4,11 @@ go_library(
     name = "cmd",
     srcs = [
         "cmd.go",
-        "migrate.go",
-        "seed.go",
     ],
     importpath = "github.com/damingerdai/hoteler/migration/pkg/cmd",
     visibility = ["//:__subpackages__"],
     deps = [
+        "//internal/database",
         "//internal/files",
         "//internal/times",
         "@com_github_golang_migrate_migrate_v4//:migrate",
