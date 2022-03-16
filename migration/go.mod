@@ -20,6 +20,7 @@ require (
 replace (
 	github.com/damingerdai/hoteler/migration/cmd => ./cmd
 	github.com/damingerdai/hoteler/migration/internal => ./internal
+	github.com/damingerdai/hoteler/migration/internal/database => ./internal/database
 	github.com/damingerdai/hoteler/migration/internal/files => ./internal/files
 	github.com/damingerdai/hoteler/migration/internal/times => ./internal/times
 	github.com/damingerdai/hoteler/migration/pkg/cmd => ./pkg/cmd
