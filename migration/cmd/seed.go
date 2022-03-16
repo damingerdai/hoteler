@@ -12,7 +12,7 @@ var seedCmd = &cobra.Command{
 	Short: "hoteler的seed命令",
 	Long:  "hoteler的seed命令",
 	Run: func(command *cobra.Command, args []string) {
-		seed, err := cmd.FetchSeed()
+		seed, err := cmd.FetchSeedExecutor()
 		if err != nil {
 			fmt.Println(err)
 			return

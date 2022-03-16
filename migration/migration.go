@@ -17,7 +17,7 @@ func main() {
 	fmt.Fprintln(os.Stdout, "migrate db scripts")
 	switch flag.Arg(0) {
 	case "up":
-		m, err := cmd.FetchMigrate()
+		m, err := cmd.FetchMigrateExecutor()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
 			os.Exit(0)
@@ -30,7 +30,7 @@ func main() {
 		}
 		os.Exit(0)
 	case "down":
-		m, err := cmd.FetchMigrate()
+		m, err := cmd.FetchMigrateExecutor()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
 			os.Exit(0)
@@ -48,7 +48,7 @@ func main() {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
 			os.Exit(0)
 		}
-		m, err := cmd.FetchMigrate()
+		m, err := cmd.FetchMigrateExecutor()
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "fail to run migrate script: %s", err.Error())
 			os.Exit(0)
