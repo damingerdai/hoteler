@@ -2,9 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "cmd",
-    srcs = [
-        "cmd.go",
-    ],
+    srcs = ["cmd.go"],
     importpath = "github.com/damingerdai/hoteler/migration/pkg/cmd",
     visibility = ["//:__subpackages__"],
     deps = [
