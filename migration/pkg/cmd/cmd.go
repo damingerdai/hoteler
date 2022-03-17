@@ -9,6 +9,8 @@ import (
 	"github.com/damingerdai/hoteler/migration/internal/files"
 	"github.com/damingerdai/hoteler/migration/internal/times"
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func CreateCmd(filename string) error {
