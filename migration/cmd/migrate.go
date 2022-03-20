@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
+	idatabase "github.com/damingerdai/hoteler/migration/internal/database"
 	"github.com/damingerdai/hoteler/migration/pkg/cmd"
+	"github.com/damingerdai/hoteler/migration/pkg/executor"
 	"github.com/spf13/cobra"
 )
 
@@ -78,7 +80,7 @@ var migrateForceCmd = &cobra.Command{
 
 var migrateCreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "hoteler的migrate crate命令",
+	Short: "hoteler的migrate create命令",
 	Long:  "hoteler的migrate create命令",
 	Args:  cobra.RangeArgs(1, 1),
 	Run: func(command *cobra.Command, args []string) {
@@ -103,10 +105,29 @@ var migrateCmd = &cobra.Command{
 	},
 }
 
+var migrateV2Cmd = &cobra.Command{
+	Use:   "migrate2",
+	Short: "hoteler的migrate命令2",
+	Long:  "hoteler的migrate命令2",
+	Args:  cobra.RangeArgs(0, 1),
+	Run: func(command *cobra.Command, args []string) {
+		filePath := "file://./db/migrations"
+		db := idatabase.EnvDb{}
+		dbUrl := db.GetDBUrl()
+		m, err := executor.New(filePath, dbUrl)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer m.Close()
+		fmt.Println(m)
+	},
+}
+
 func init() {
 	migrateCmd.AddCommand(migrateUpCmd)
 	migrateCmd.AddCommand(migrateDownCmd)
 	migrateCmd.AddCommand(migrateForceCmd)
 	migrateCmd.AddCommand(migrateCreateCmd)
 	rootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(migrateV2Cmd)
 }

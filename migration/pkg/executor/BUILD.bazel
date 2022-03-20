@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "executor",
+    srcs = ["migrate.go"],
+    importpath = "github.com/damingerdai/hoteler/migration/pkg/executor",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_jackc_pgx_v4//pgxpool"],
+)

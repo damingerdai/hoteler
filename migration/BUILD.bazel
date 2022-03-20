@@ -17,6 +17,7 @@ gazelle(
 go_library(
     name = "migration_lib",
     srcs = [
+        "main.go",
         "migration.go",
     ],
     importpath = "github.com/damingerdai/hoteler/migration",
