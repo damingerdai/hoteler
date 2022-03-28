@@ -1,9 +1,9 @@
 buildscript {
 	repositories {
 		mavenLocal()
-		mavenCentral()
 		maven { url 'https://repo.spring.io/milestone' }
 		maven { url 'https://repo.spring.io/snapshot' }
+		mavenCentral()
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 	}
 }
@@ -22,9 +22,9 @@ targetCompatibility = '17'
 
 repositories {
 	mavenLocal()
-	mavenCentral()
   	maven { url 'https://repo.spring.io/milestone' }
   	maven { url 'https://repo.spring.io/snapshot' }
+	mavenCentral()
 	maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 }
 
