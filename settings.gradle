@@ -1,4 +1,3 @@
-rootProject.name = 'hoteler'
 // 当spring boot 3正式发布之后可以删除
 pluginManagement {
     repositories {
@@ -11,3 +10,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = 'hoteler'
