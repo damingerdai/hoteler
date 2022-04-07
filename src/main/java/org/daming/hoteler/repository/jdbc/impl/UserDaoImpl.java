@@ -2,7 +2,6 @@ package org.daming.hoteler.repository.jdbc.impl;
 
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.pojo.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,9 +34,8 @@ public class UserDaoImpl implements IUserDao {
         }, new Object[] { id });
     }
 
-    @Autowired
-    public UserDaoImpl setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
+        super();
         this.jdbcTemplate = jdbcTemplate;
-        return this;
     }
 }
