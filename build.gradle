@@ -40,7 +40,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	implementation 'commons-codec:commons-codec:1.15'
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
-	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     // Runtime, com.sun.xml.bind module
 	implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
