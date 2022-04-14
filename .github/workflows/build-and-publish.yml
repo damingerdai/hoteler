@@ -30,7 +30,7 @@ jobs:
         with:
           context: .
           tags: |
-            ghcr.io/damigerdai/hoteler:${{ github.sha }}
+            ghcr.io/damingerdai/hoteler:${{ github.sha }}
           push: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Image digest
