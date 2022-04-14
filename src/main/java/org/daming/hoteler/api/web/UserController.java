@@ -3,6 +3,7 @@ package org.daming.hoteler.api.web;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.User;
@@ -51,6 +52,14 @@ public class UserController {
     public ResponseEntity<User> create(CreateUserRequest request) {
         var user = UserBuilder.fromCreateUserRequest(request);
         this.userService.create(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Operation(summary = "获取当前用户",security = { @SecurityRequirement(name = "bearer-key") })
+    @GetMapping("user")
+    public ResponseEntity<User> get() {
+        var context = ThreadLocalContextHolder.get();
+        var user = context.getUser();
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
