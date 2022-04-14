@@ -2,9 +2,7 @@ name: Build and Publish
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   build-and-push-docker-image:
@@ -33,8 +31,7 @@ jobs:
           context: .
           tags: |
             ghcr.io/damigerdai/hoteler:${{ github.sha }}
-          # push: ${{ github.ref == 'refs/heads/master' }}
-          push: true
+          push: ${{ github.ref == 'refs/heads/master' }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
