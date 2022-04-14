@@ -6,6 +6,7 @@ import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.HotelerContext;
+import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,8 @@ public class AuthenticationFilter extends GenericFilterBean {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|dev|ping|images|api-docs|html|js|css|svg|ico).*");
+
+    private IUserService userService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -98,6 +101,9 @@ public class AuthenticationFilter extends GenericFilterBean {
         var key = JwtUtil.generalKey(secretKey);
         var claims = JwtUtil.parseJwt(accessToken, key);
         var subject =  claims.getSubject();
+        var username = subject.split("@")[1];
+        var user = this.userService.getUserByUsername(username);
+        context.setUser(user);
     }
 
     private HttpServletRequest asHttp(ServletRequest request) {
@@ -126,4 +132,8 @@ public class AuthenticationFilter extends GenericFilterBean {
         return new Exception(message);
     }
 
+    public AuthenticationFilter(IUserService userService) {
+        super();
+        this.userService = userService;
+    }
 }

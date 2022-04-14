@@ -17,6 +17,7 @@ public class HotelerContext implements Serializable {
     private String requestId;
     private Instant in;
     private String accessToken;
+    private User user;
 
     public String getRequestId() {
         return requestId;
@@ -45,6 +46,15 @@ public class HotelerContext implements Serializable {
         return this;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public HotelerContext setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
     public HotelerContext() {
         super();
     }
@@ -56,12 +66,21 @@ public class HotelerContext implements Serializable {
         this.accessToken = accessToken;
     }
 
+    public HotelerContext(String requestId, Instant in, String accessToken, User user) {
+        super();
+        this.requestId = requestId;
+        this.in = in;
+        this.accessToken = accessToken;
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", HotelerContext.class.getSimpleName() + "[", "]")
                 .add("requestId='" + requestId + "'")
                 .add("in=" + in)
                 .add("accessToken='" + accessToken + "'")
+                .add("user='" + user + "'")
                 .toString();
     }
 }
