@@ -33,7 +33,8 @@ jobs:
           context: .
           tags: |
             ghcr.io/damigerdai/hoteler:${{ github.sha }}
-          push: ${{ github.ref == 'refs/heads/master' }}
+          # push: ${{ github.ref == 'refs/heads/master' }}
+          push: true
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
