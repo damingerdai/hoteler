@@ -28,6 +28,7 @@ jobs:
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
+        id: docker_build
         with:
           context: .
           tags: |
