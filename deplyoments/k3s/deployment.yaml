@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoteler-api
+  namespace: hoteler-namespace
+  labels:
+    app:  hoteler-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hoteler-api
+  template:
+    metadata:
+      labels:
+        app: hoteler-api
+      name: hoteler-api
+    spec:
+      # imagePullSecrets:
+      #   - name: regcred
+      containers:
+        - name: hoteler-api
+          image: ghcr.io/damingerdai/hoteler
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+          resources:
+            requests:
+              cpu: 200m
+              memory: 500Mi
+          # 指定配置文件挂载到 /app/config 目录下，构建镜像时的jar包也在 /app 目录下
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      volumes:
+        - configMap:
+            # 指定我们创建的configMap的名字
+            name: hoteler-api-config
+          # 自定义的名字，需要跟 volumeMounts.name 匹配
+          name: config
