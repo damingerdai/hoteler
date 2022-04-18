@@ -130,13 +130,16 @@ var migrateV2CreateCmd = &cobra.Command{
 	Args:  cobra.RangeArgs(1, 1),
 	Run: func(command *cobra.Command, args []string) {
 		fileName := args[0]
-		err := cmd.CreateCmd(fileName)
+		filePath := "file://./db/migrations"
+		db := idatabase.EnvDb{}
+		dbUrl := db.GetDBUrl()
+		m, err := executor.New(filePath, dbUrl)
 		if err != nil {
 			fmt.Println(err)
-			return
 		}
-
-		fmt.Println("文件创建成功")
+		m.Create(fileName)
+		defer m.Close()
+		fmt.Println(m)
 	},
 }
 

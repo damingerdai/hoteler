@@ -2,7 +2,14 @@ package executor
 
 import (
 	"context"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
+	"time"
 
+	"github.com/damingerdai/hoteler/migration/internal/files"
+	"github.com/damingerdai/hoteler/migration/internal/times"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -10,7 +17,7 @@ type IMigrateExecutor interface {
 	Migrate(version uint) error
 	Up() error
 	Down() error
-	Create() error
+	Create(fileName string) error
 	Close() error
 }
 
@@ -38,7 +45,25 @@ func (m *MigrateExecutor) Down() error {
 	return nil
 }
 
-func (m *MigrateExecutor) Create() error {
+func (m *MigrateExecutor) Create(fileName string) error {
+	sourcePath := strings.Split(m.source, "file://")[1]
+	mirgationPath, err := filepath.Abs(sourcePath)
+	if err != nil {
+		return err
+	}
+	tv := times.TimeVersion(time.Now())
+	upSqlFile := tv + "_" + files.Kebabcase(fileName) + ".up.sql"
+	downSqlFile := tv + "_" + files.Kebabcase(fileName) + ".down.sql"
+	upFile, err := os.Create(path.Join(mirgationPath, upSqlFile))
+	if err != nil {
+		return err
+	}
+	defer upFile.Close()
+	downFile, err := os.Create(path.Join(mirgationPath, downSqlFile))
+	if err != nil {
+		return err
+	}
+	defer downFile.Close()
 	return nil
 }
 
