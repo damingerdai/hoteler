@@ -123,11 +123,30 @@ var migrateV2Cmd = &cobra.Command{
 	},
 }
 
+var migrateV2CreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "hoteler的migrate v2 create命令",
+	Long:  "hoteler的migrate v2 create命令",
+	Args:  cobra.RangeArgs(1, 1),
+	Run: func(command *cobra.Command, args []string) {
+		fileName := args[0]
+		err := cmd.CreateCmd(fileName)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println("文件创建成功")
+	},
+}
+
 func init() {
 	migrateCmd.AddCommand(migrateUpCmd)
 	migrateCmd.AddCommand(migrateDownCmd)
 	migrateCmd.AddCommand(migrateForceCmd)
 	migrateCmd.AddCommand(migrateCreateCmd)
 	rootCmd.AddCommand(migrateCmd)
+
+	migrateV2Cmd.AddCommand(migrateV2CreateCmd)
 	rootCmd.AddCommand(migrateV2Cmd)
 }
