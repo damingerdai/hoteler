@@ -5,5 +5,10 @@ go_library(
     srcs = ["migrate.go"],
     importpath = "github.com/damingerdai/hoteler/migration/pkg/executor",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_jackc_pgx_v4//pgxpool"],
+    deps = [
+        "//internal/files",
+        "//internal/schema",
+        "//internal/times",
+        "@com_github_jackc_pgx_v4//pgxpool",
+    ],
 )
