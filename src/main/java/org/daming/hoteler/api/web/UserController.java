@@ -9,6 +9,7 @@ import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.builder.UserBuilder;
 import org.daming.hoteler.pojo.request.CreateUserRequest;
+import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,10 +58,10 @@ public class UserController {
 
     @Operation(summary = "获取当前用户",security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("user")
-    public ResponseEntity<User> get() {
+    public DataResponse<User> get() {
         var context = ThreadLocalContextHolder.get();
         var user = context.getUser();
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new DataResponse<>(user);
     }
 
 
