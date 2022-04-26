@@ -211,6 +211,7 @@
                             <include>**/*.properties</include>
                             <include>**/*.txt</include>
                             <include>**/*.yml</include>
+                            <include>**/*.xml</include>
                             <include>db/**</include>
                             <include>static/**</include>
                         </includes>
