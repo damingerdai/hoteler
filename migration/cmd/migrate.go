@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	idatabase "github.com/damingerdai/hoteler/migration/internal/database"
@@ -119,7 +120,14 @@ var migrateV2Cmd = &cobra.Command{
 			fmt.Println(err)
 		}
 		defer m.Close()
-		fmt.Println(m)
+		versionStr := args[0]
+		version, err := strconv.ParseInt(versionStr, 10, 64)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			return
+		}
+		m.Migrate(version)
+
 	},
 }
 

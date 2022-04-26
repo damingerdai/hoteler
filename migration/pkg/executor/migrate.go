@@ -3,6 +3,8 @@ package executor
 import (
 	"context"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -36,6 +38,38 @@ func New(source, database string) (IMigrateExecutor, error) {
 }
 
 func (m *MigrateExecutor) Migrate(version int64) error {
+	sourcePath := strings.Split(m.source, "file://")[1]
+	mirgationPath, err := filepath.Abs(sourcePath)
+	if err != nil {
+		return err
+	}
+	files, err := ioutil.ReadDir(mirgationPath)
+	if err != nil {
+		return err
+	}
+	var upFile, downFile []byte
+	for _, file := range files {
+		fileName := file.Name()
+		if strings.HasPrefix(fileName, fmt.Sprint(version)) {
+			filePath := path.Join(mirgationPath, fileName)
+			if strings.HasSuffix(fileName, "down.sql") {
+				downFile, _ = ioutil.ReadFile(filePath)
+			} else if strings.HasSuffix(fileName, "up.sql") {
+				upFile, _ = ioutil.ReadFile(filePath)
+			}
+		}
+		if len(downFile) > 0 && len(upFile) > 0 {
+			break
+		}
+		continue
+	}
+	upFileContent := string(upFile)
+	// downileContent := string(downFile)
+	err = m.fetchDBengine()
+	if err != nil {
+		return err
+	}
+	m.pool.Exec(context.Background(), upFileContent)
 	return nil
 }
 
