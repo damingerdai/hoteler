@@ -2,6 +2,7 @@ package org.daming.hoteler.repository.jdbc.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
+import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Customer;
 import org.daming.hoteler.pojo.enums.Gender;
@@ -12,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -38,18 +41,22 @@ public class CustomerDaoImpl implements ICustomerDao {
 
     @Override
     public void create(Customer customer) throws HotelerException {
+        var in = Instant.now();
         var sql = "insert into customers (id, name, gender, card_id, phone, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
         var params = new Object[] { customer.getId(), customer.getName(), customer.getGender().name(), customer.getCardId(), customer.getPhone() };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to update customer with '" + customer + "', err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public Customer get(long id) throws HotelerException {
+        var in = Instant.now();
         var sql = "select id, name, gender, card_id, phone from customers where id = ? limit 1";
         var params = new Object[] { id };
         try {
@@ -60,43 +67,54 @@ public class CustomerDaoImpl implements ICustomerDao {
                 return null;
             }, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to get customer with '" + id + "', err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public List<Customer> list() throws HotelerException {
+        var in = Instant.now();
         var sql = "select id, name, gender, card_id, phone from customers";
         try {
             return this.jdbcTemplate.query(sql, (rs,i) -> new Customer().setId(rs.getLong("id")).setName(rs.getString("name")).setGender(this.getGender(rs.getString("gender"))).setCardId(rs.getString("card_id")).setPhone(rs.getLong("phone")));
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list customer, err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, null, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, null, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public void delete(long id) throws HotelerException {
+        var in = Instant.now();
         var sql = "delete from customers where id = ?";
         var params = new Object[] { id };
         try {
             this.jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list customer, err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public void update(Customer customer) throws HotelerException {
+        var in = Instant.now();
         var sql = "update customers set name = ?, gender = ?, card_id = ?, phone = ?, create_dt = statement_timestamp(), create_user = 'system', update_dt = statement_timestamp(), update_user = 'system' where id = ?";
         var params = new Object[] { customer.getName(), customer.getGender().name(), customer.getCardId(), customer.getPhone(), customer.getId() };
         try {
             this.jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list customer, err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 

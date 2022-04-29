@@ -2,6 +2,7 @@ package org.daming.hoteler.repository.jdbc.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
+import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.CustomerCheckinRecord;
 import org.daming.hoteler.repository.jdbc.ICustomerCheckinRecordDao;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,30 +33,37 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public void create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+        var in = Instant.now();
         var sql = "insert into customer_checkin_record (id, user_id, room_id, begin_date, end_date, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
         var params = new Object[] { customerCheckinRecord.getId(), customerCheckinRecord.getUserId(), customerCheckinRecord.getRoomId(), customerCheckinRecord.getBeginDate(), customerCheckinRecord.getEndDate() };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to create 'customer checkin record' with '" + customerCheckinRecord + "', err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public void update(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+        var in = Instant.now();
         var sql = "update customer_checkin_record set user_id = ?, room_id = ?, begin_date = ?, end_date = ?, create_dt = statement_timestamp(), create_user = 'system', update_dt = statement_timestamp(), update_user = 'system' where id = ?";
         var params = new Object[] { customerCheckinRecord.getUserId(), customerCheckinRecord.getRoomId(), customerCheckinRecord.getBeginDate(), customerCheckinRecord.getEndDate(), customerCheckinRecord.getId() };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to update 'customer checkin record' with '" + customerCheckinRecord + "', err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 
     @Override
     public CustomerCheckinRecord get(long id) throws HotelerException {
+        var in = Instant.now();
         var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where id = ?";
         var params = new Object[] { id };
         try {
@@ -64,8 +74,10 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
                 return null;
             }, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to get 'customer checkin record' with id'" + id + "', err: " + ex.getMessage(), ex);
+            SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }
 

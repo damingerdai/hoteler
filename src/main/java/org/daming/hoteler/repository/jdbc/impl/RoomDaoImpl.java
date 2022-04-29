@@ -1,5 +1,6 @@
 package org.daming.hoteler.repository.jdbc.impl;
 
+import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.IRoomDao;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,22 +26,32 @@ import java.util.Objects;
 public class RoomDaoImpl implements IRoomDao {
 
     private JdbcTemplate jdbcTemplate;
+    private IErrorService errorService;
 
     @Override
     public Room get(long id) {
+        var in = Instant.now();
         var sql = "select id, roomname, status, price from rooms where id = ? limit 1";
         var params = new Object[] { id };
-        return this.jdbcTemplate.query(sql, (rs) -> {
-            while (rs.next()) {
-               return this.convertRoomFromResultSet(rs);
-            }
-            return null;
-        }, params);
+        try {
+            return this.jdbcTemplate.query(sql, (rs) -> {
+                while (rs.next()) {
+                    return this.convertRoomFromResultSet(rs);
+                }
+                return null;
+            }, params);
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params, ex);
+            throw this.errorService.createSqlHotelerException(ex, sql);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
+        }
+
     }
 
     @Override
     public List<Room> list(Room room) {
-        // var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
+        var in = Instant.now();
         var sql = "select id, roomname, status, price from rooms ";
         var params = new ArrayList<Object>();
         if (Objects.nonNull(room.getStatus())) {
@@ -46,13 +59,30 @@ public class RoomDaoImpl implements IRoomDao {
             params.add(room.getStatus().getId());
         }
         sql += " order by create_dt desc, update_dt desc";
-        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs), params.toArray());
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs), params.toArray());
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params.toArray(), ex);
+            throw this.errorService.createSqlHotelerException(ex, sql);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params.toArray(), Duration.between(in, Instant.now()));
+        }
+
     }
 
     @Override
     public List<Room> list() {
+        var in = Instant.now();
         var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
-        return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, null, ex);
+            throw this.errorService.createSqlHotelerException(ex, sql);
+        } finally {
+            SqlLoggerUtil.logSql(sql, null, Duration.between(in, Instant.now()));
+        }
+
     }
 
     private Room convertRoomFromResultSet(ResultSet rs) throws SQLException {
@@ -64,8 +94,9 @@ public class RoomDaoImpl implements IRoomDao {
         return room;
     }
 
-    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RoomDaoImpl(JdbcTemplate jdbcTemplate, IErrorService errorService) {
         super();
         this.jdbcTemplate = jdbcTemplate;
+        this.errorService = errorService;
     }
 }
