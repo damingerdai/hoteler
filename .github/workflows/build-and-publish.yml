@@ -35,3 +35,13 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: authenticate to k3s
+        uses: Azure/k8s-set-context@v1
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        # Deploy the Docker image to the k3s cluster
+      - name: Deploy to k3s
+        run: |-
+          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ github.sha }}
+          kubectl rollout status deployment/hoteler-api
