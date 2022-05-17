@@ -14,6 +14,22 @@ spring:
     baseline-on-migrate: true
   main:
     allow-bean-definition-overriding: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          [
+            "health",
+            "info",
+            "metrics",
+            "prometheus",
+            "bindings",
+            "beans",
+            "env",
+            "loggers",
+            "streamsbindings",
+          ]
 
 mybatis:
   configuration:
