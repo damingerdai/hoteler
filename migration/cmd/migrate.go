@@ -151,6 +151,27 @@ var migrateV2CreateCmd = &cobra.Command{
 	},
 }
 
+var migrateV2MigrateUpCmd = &cobra.Command{
+	Use:   "up",
+	Short: "hoteler的migrate v2 migrate命令",
+	Long:  "hoteler的migrate v2 migrate命令",
+	Args:  cobra.RangeArgs(0, 1),
+	Run: func(command *cobra.Command, args []string) {
+		filePath := "file://./db/migrations"
+		db := idatabase.EnvDb{}
+		dbUrl := db.GetDBUrl()
+		m, err := executor.New(filePath, dbUrl)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = m.Up()
+		if err != nil {
+			fmt.Println(err)
+		}
+		m.Close()
+	},
+}
+
 func init() {
 	migrateCmd.AddCommand(migrateUpCmd)
 	migrateCmd.AddCommand(migrateDownCmd)
@@ -159,5 +180,6 @@ func init() {
 	rootCmd.AddCommand(migrateCmd)
 
 	migrateV2Cmd.AddCommand(migrateV2CreateCmd)
+	migrateV2Cmd.AddCommand(migrateV2MigrateUpCmd)
 	rootCmd.AddCommand(migrateV2Cmd)
 }

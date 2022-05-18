@@ -9,6 +9,7 @@ go_library(
         "//internal/files",
         "//internal/schema",
         "//internal/times",
+        "//internal/util",
         "@com_github_jackc_pgx_v4//pgxpool",
     ],
 )

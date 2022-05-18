@@ -10,7 +10,6 @@ type Item struct {
 	Checksum      int64
 	ExecutionTime int64
 	Success       bool
-	InstalledBy   string
 	InstalledOn   time.Time
 }
 
