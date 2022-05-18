@@ -55,7 +55,7 @@ dependencies {
 }
 
 flyway {
-	url = 'jdbc:postgresql://127.0.0.1:5432/postgres'
+	url = 'jdbc:postgresql://127.0.0.1:5432/hoteler'
 	user = 'postgres'
 	password = '123456'
 }
