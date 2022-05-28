@@ -13,7 +13,7 @@ WORKDIR /app
 COPY src/main/angular /app
 RUN yarn build
 
-FROM maven:3.6.3-jdk-11-slim AS back-build
+FROM maven:3.8.5-jdk-11-slim AS back-build
 
 WORKDIR app
 COPY pom.xml /app
