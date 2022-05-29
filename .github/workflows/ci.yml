@@ -31,7 +31,7 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5432/tcp
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -68,7 +68,7 @@ jobs:
         java-version: [ 17, 18 ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -91,7 +91,7 @@ jobs:
         java-version: [ 17, 18 ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
