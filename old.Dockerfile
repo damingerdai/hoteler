@@ -1,4 +1,4 @@
-FROM node:14.15.0 AS front-build
+FROM node:16.15.0 AS front-build
 
 ENV SELF_SIGNED_CERT_IN_CHAIN=true
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
@@ -13,7 +13,7 @@ WORKDIR /app
 COPY src/main/angular /app
 RUN yarn build
 
-FROM maven:3.8.5-jdk-11-slim AS back-build
+FROM maven:3.8.5-openjdk-17-slim AS back-build
 
 WORKDIR app
 COPY pom.xml /app
@@ -23,7 +23,7 @@ COPY --from=front-build /app/dist/hoteler /app/src/main/resources/static
 COPY --from=front-build /app/dist/hoteler/index.html /app/src/main/resources/static/error/404.html
 RUN mvn package -Dmaven.test.skip=true
 
-FROM openjdk:11.0.5-slim
+FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 COPY --from=back-build /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
