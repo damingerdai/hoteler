@@ -38,17 +38,18 @@ public class RoomController {
 
     @Operation(summary = "创建房间", security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("room")
-    public long create(@RequestBody CreateRoomRequest request) {
+    public CommonResponse create(@RequestBody CreateRoomRequest request) {
         var room = new Room().setRoomname(request.getRoomname()).setStatus(RoomStatus.NoUse).setPrice(request.getPrice());
         roomService.create(room);
-        return room.getId();
+        var roomId = room.getId();
+        return new DataResponse<String>(Long.toString(roomId));
     }
 
     @Operation(summary = "获取房间", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("room/{id}")
-    public Room get(@PathVariable(value = "id")long id) {
-        var rooms = this.roomService.get(id);
-        return rooms;
+    public DataResponse<Room> get(@PathVariable(value = "id")long id) {
+        var room = this.roomService.get(id);
+        return new DataResponse(room);
     }
 
     @Operation(summary = "获取所有的房间", security = { @SecurityRequirement(name = "bearer-key") })
