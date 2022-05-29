@@ -50,7 +50,7 @@ jobs:
           POSTGRES_DB: postgres
           POSTGRES_SSLMODE: disable
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -74,7 +74,7 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -97,7 +97,7 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
       - name: Cache Maven packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
