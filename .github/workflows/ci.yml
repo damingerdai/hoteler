@@ -35,7 +35,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: Setup go
         uses: actions/setup-go@v3
@@ -73,7 +73,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -97,7 +97,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: Cache Maven packages
         uses: actions/cache@v3
