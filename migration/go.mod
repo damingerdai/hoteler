@@ -6,7 +6,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/jackc/pgx/v4 v4.15.0
 	github.com/joho/godotenv v1.3.0
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.4.0
 )
 
 require (
