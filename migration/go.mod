@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/joho/godotenv v1.3.0
+	github.com/joho/godotenv v1.4.0
 	github.com/spf13/cobra v1.4.0
 )
 
