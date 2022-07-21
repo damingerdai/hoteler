@@ -6,7 +6,7 @@ RUN mvn clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=tru
 COPY src /app/src
 RUN mvn package -Dmaven.test.skip=true
 
-FROM openjdk:18.0.1-jdk-slim
+FROM openjdk:18.0.2-jdk-slim
 WORKDIR /app
 COPY --from=back-build /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
