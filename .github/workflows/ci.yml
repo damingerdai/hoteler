@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  REGISTRY_NAME: github.com
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -64,6 +67,7 @@ jobs:
         run: ./gradlew test
   build:
     runs-on: ${{ matrix.os }}
+    needs: [ test ]
     strategy:
       matrix:
         java-version: [ 17, 18 ]
@@ -88,6 +92,7 @@ jobs:
         run: ./gradlew build -x test
   build-maven:
     runs-on: ${{ matrix.os }}
+    needs: [ build ]
     strategy:
       matrix:
         java-version: [ 17, 18 ]
@@ -108,3 +113,21 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build with Maven
         run: mvn package -Dmaven.test.skip=true
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: [ build, build-maven ]
+    steps:
+      - uses: actions/checkout@master
+      # Container build
+      - name: Build docker with gradle
+        id: build-docker-g
+        run: |
+          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-g:${{ github.sha }} -f Dockerfile
+      - name: Image digest for gradle
+        run: echo ${{ steps.build-docker-g.outputs.digest }}
+      - name: Build docker with maven
+        id: build-docker-m
+        run: |
+          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
+      - name: Image digest for maven
+        run: echo ${{ steps.build-docker-m.outputs.digest }}
