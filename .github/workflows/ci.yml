@@ -121,7 +121,7 @@ jobs:
       # Container build
       - name: Build docker with gradle
         run: |
-          ll -a && docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f Dockerfile
+          ls -a && docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f Dockerfile
       - name: Build docker with maven
         run: |
-          ll -a & docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f maven.Dockerfile
+          ls -a & docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f maven.Dockerfile
