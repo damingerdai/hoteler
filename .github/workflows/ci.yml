@@ -130,4 +130,4 @@ jobs:
         run: |
           docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
       - name: Image digest for maven
-        run: echo ${{ steps.build-docker-n.outputs.digest }}
+        run: echo ${{ steps.build-docker-m.outputs.digest }}
