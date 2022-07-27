@@ -120,8 +120,14 @@ jobs:
       - uses: actions/checkout@master
       # Container build
       - name: Build docker with gradle
+        id: build-docker-g
         run: |
-          ls -a && docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f Dockerfile
+          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-g:${{ github.sha }} -f Dockerfile
+      - name: Image digest for gradle
+        run: echo ${{ steps.build-docker-g.outputs.digest }}
       - name: Build docker with maven
+        id: build-docker-m
         run: |
-          ls -a & docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler:${{ github.sha }} -f maven.Dockerfile
+          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
+      - name: Image digest for maven
+        run: echo ${{ steps.build-docker-n.outputs.digest }}
