@@ -3,6 +3,7 @@ package org.daming.hoteler.service.impl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.UserToken;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ITokenService;
@@ -69,7 +70,7 @@ public class TokenServiceImpl implements ITokenService {
     }
 
     @Override
-    public void verifyToken(String token) throws HotelerException {
+    public User verifyToken(String token) throws HotelerException {
         try {
             var key = JwtUtil.generalKey(secretKey);
             var claim = JwtUtil.parseJwt(token, key);
@@ -81,6 +82,7 @@ public class TokenServiceImpl implements ITokenService {
             if (Objects.isNull(user)) {
                 throw new RuntimeException("no user");
             }
+            return user;
         } catch (ExpiredJwtException ex) {
             throw ExceptionBuilder.buildException(600010, ex.getMessage(), ex);
         } catch (Exception ex) {

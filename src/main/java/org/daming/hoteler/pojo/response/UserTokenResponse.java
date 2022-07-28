@@ -24,6 +24,11 @@ public class UserTokenResponse extends CommonResponse {
         this.userToken = userToken;
     }
 
+    public UserTokenResponse(UserToken userToken) {
+        super();
+        this.userToken = userToken;
+    }
+
     public UserTokenResponse() {
         super();
     }

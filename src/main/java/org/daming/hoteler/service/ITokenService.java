@@ -1,6 +1,7 @@
 package org.daming.hoteler.service;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.UserToken;
 
 public interface ITokenService {
@@ -9,5 +10,5 @@ public interface ITokenService {
 
     UserToken refreshToken(String refreshToken);
 
-    void verifyToken(String token) throws HotelerException;
+    User verifyToken(String token) throws HotelerException;
 }
