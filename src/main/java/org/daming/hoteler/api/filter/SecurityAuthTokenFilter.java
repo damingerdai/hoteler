@@ -44,6 +44,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        System.out.println(requestUrl);
         String token = getToken(request);
         if(StringUtils.hasLength(token)){
             var userInfo = this.tokenService.verifyToken(token);

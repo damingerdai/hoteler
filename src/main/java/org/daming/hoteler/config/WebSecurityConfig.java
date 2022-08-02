@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                 "/csrf",
 
                 // other
+                "**.html",
                 "/css/**",
                 "/js/**",
                 "/html/**",
@@ -113,11 +114,18 @@ public class WebSecurityConfig {
         http
                 .authorizeRequests()// 授权
                 .antMatchers("/index/**").anonymous()// 匿名用户权限
+                .antMatchers("/**/*.html").anonymous()// 匿名用户权限
+                .antMatchers("/**/*.js").anonymous()// 匿名用户权限
+                .antMatchers("/**/*.css").anonymous()// 匿名用户权限
+                .antMatchers("/assets/**").anonymous()// 匿名用户权限
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").anonymous()
+                .antMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").anonymous()
                 .antMatchers("/api/v1/token").anonymous()//普通用户权限
                 .antMatchers("/api/**").hasRole("USERS")//普通用户权限
-                .antMatchers("/login").permitAll()
+                .antMatchers("/api/login").permitAll()
                 //其他的需要授权后访问
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                .anyRequest().anonymous()
                 .and()// 异常
                 .exceptionHandling()
 //                .accessDeniedHandler(accessDeny)//授权异常处理
@@ -126,7 +134,7 @@ public class WebSecurityConfig {
                 .logout()
                 //.logoutSuccessHandler(authenticationLogout)
                 .and()
-                .addFilterBefore(new JWTLoginFilter("/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 // 设置Session的创建策略为：Spring Security不创建HttpSession
