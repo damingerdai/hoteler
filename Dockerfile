@@ -1,4 +1,4 @@
-FROM gradle:7.5.0-jdk17-alpine AS builder
+FROM gradle:7.5.0-jdk18-alpine AS builder
 COPY src /usr/src/app/src
 COPY *.gradle  /usr/src/app/
 RUN gradle build -x test --project-dir  /usr/src/app
