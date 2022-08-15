@@ -1,12 +1,20 @@
 package org.daming.hoteler.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.ApiError;
 import org.daming.hoteler.pojo.HotelerContext;
+import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.response.ErrorResponse;
 import org.daming.hoteler.service.ITokenService;
+import org.daming.hoteler.service.IUserService;
+import org.daming.hoteler.utils.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,9 +26,12 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -33,48 +44,74 @@ import java.util.stream.Collectors;
  */
 public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
 
+    @Value("${secret.key}")
+    private String secretKey = "damingerdai";
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     private ITokenService tokenService;
+
+    private IUserService userService;
+
 
     private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|dev|ping|images|api-docs|html|js|css|svg|ico).*");
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var requestUrl = request.getRequestURI();
-        if (isFilter(requestUrl) || requestUrl.contains("token")){
-            filterChain.doFilter(request, response);
-            return;
-        }
-        System.out.println(requestUrl);
-        String token = getToken(request);
-        if(StringUtils.hasLength(token)){
-            var userInfo = this.tokenService.verifyToken(token);
-            if(Objects.isNull(userInfo)){
-                this.render(request, response, new ErrorResponse(new ApiError("ERROR-600002", "访问拒绝")));
-                return;
+    protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
+        var request = asHttp(servletRequest);
+        var response = asHttp(servletResponse);
+        var in = Instant.now();
+        try {
+            var requestUrl = request.getRequestURI();
+            logger.debug("url: " + requestUrl + "\t" + isFilter(requestUrl));
+            if (!isFilter(requestUrl) && !requestUrl.contains("token")) {
+                logger.info("verify url: " + requestUrl);
+                // verifyHttpHeaders(request);
+                var context = new HotelerContext();
+                ThreadLocalContextHolder.put(context);
+                context.setIn(in);
+                context.setRequestId(UUID.randomUUID().toString());
+                verifyToken(request, context);
+            } else {
+                logger.info("url: " + requestUrl + " is ignored");
             }
-            if (StringUtils.hasLength(userInfo.getUsername()) &&  SecurityContextHolder.getContext().getAuthentication() == null){
-                // 如果没过期，保持登录状态
-                // 将用户信息存入 authentication，方便后续校验
-                Set<GrantedAuthority> grantedAuthorities = userInfo.getRoles()
-                        .stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_"+ role.getName().trim().toUpperCase()))
-                        .collect(Collectors.toSet());
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.getUsername(), null, grantedAuthorities);
-                // SecurityContextHolder 权限验证上下文
-                SecurityContext context = SecurityContextHolder.getContext();
-                // 指示用户已通过身份验证
-                context.setAuthentication(authentication);
-
+            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (ExpiredJwtException ex) {
+            SecurityContextHolder.clearContext();
+            if (logger.isErrorEnabled()) {
+                logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
+        } catch (HotelerException ex) {
+            SecurityContextHolder.clearContext();
+            if (logger.isErrorEnabled()) {
+                logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
+            }
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            SecurityContextHolder.clearContext();
+            if (logger.isErrorEnabled()) {
+                logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
+            }
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         }
-        // 继续下一个过滤器
-        filterChain.doFilter(request, response);
     }
+
+    private HttpServletRequest asHttp(ServletRequest request) {
+        return (HttpServletRequest) request;
+    }
+
+    private HttpServletResponse asHttp(ServletResponse response) {
+        return (HttpServletResponse) response;
+    }
+
     /**
      * 从header或者参数中获取token
+     *
      * @return token
      */
-    public String getToken(HttpServletRequest request){
+    public String getToken(HttpServletRequest request) {
         final String requestTokenHeader = request.getHeader("Authorization");
         if (Objects.isNull(requestTokenHeader) || !requestTokenHeader.startsWith("Bearer ")) {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
@@ -86,7 +123,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         return accessToken;
     }
 
-    private  void render(HttpServletRequest request, HttpServletResponse response, Object object) throws IOException {
+    private void render(HttpServletRequest request, HttpServletResponse response, Object object) throws IOException {
         // 允许跨域
         response.setHeader("Access-Control-Allow-Origin", "*");
         // 允许自定义请求头token(允许head跨域)
@@ -105,8 +142,45 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         return !r.matcher(url).matches();
     }
 
-    public SecurityAuthTokenFilter(AuthenticationManager authenticationManager, ITokenService tokenService) {
+    private void verifyToken(HttpServletRequest httpRequest, HotelerContext context) {
+        final String requestTokenHeader = httpRequest.getHeader("Authorization");
+        if (Objects.isNull(requestTokenHeader) || !requestTokenHeader.startsWith("Bearer ")) {
+            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+        }
+        var accessToken = requestTokenHeader.substring(7);
+        if (!StringUtils.hasText(accessToken)) {
+            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+        }
+        context.setAccessToken(accessToken);
+        var key = JwtUtil.generalKey(secretKey);
+        var claims = JwtUtil.parseJwt(accessToken, key);
+        var subject = claims.getSubject();
+        var username = subject.split("@")[1];
+        var user = this.userService.getUserByUsername(username);
+        context.setUser(user);
+        verifyGrantedAuthority(user);
+    }
+
+    private void verifyGrantedAuthority(User user) {
+        if (StringUtils.hasLength(user.getUsername()) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // 如果没过期，保持登录状态
+            // 将用户信息存入 authentication，方便后续校验
+            Set<GrantedAuthority> grantedAuthorities = user.getRoles()
+                    .stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().trim().toUpperCase()))
+                    .collect(Collectors.toSet());
+            var authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, grantedAuthorities);
+            // SecurityContextHolder 权限验证上下文
+            var securityContext = SecurityContextHolder.getContext();
+            // 指示用户已通过身份验证
+            securityContext.setAuthentication(authentication);
+
+        }
+    }
+
+    public SecurityAuthTokenFilter(AuthenticationManager authenticationManager, ITokenService tokenService, IUserService userService) {
         super(authenticationManager);
         this.tokenService = tokenService;
+        this.userService = userService;
     }
 }

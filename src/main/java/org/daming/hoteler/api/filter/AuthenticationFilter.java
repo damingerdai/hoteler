@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
  * @author gming001
  * @create 2020-12-28 11:40
  **/
+@Deprecated
 @Component
 public class AuthenticationFilter extends GenericFilterBean {
 

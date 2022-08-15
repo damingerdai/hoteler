@@ -5,6 +5,7 @@ import org.daming.hoteler.api.filter.JWTLoginFilter;
 import org.daming.hoteler.api.filter.SecurityAuthTokenFilter;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
+import org.daming.hoteler.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -107,7 +108,9 @@ public class WebSecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, SecurityUserService securityUserService, PasswordEncoder passwordEncoder, ITokenService tokenService) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http, SecurityUserService securityUserService, PasswordEncoder passwordEncoder,
+            ITokenService tokenService, IUserService userService) throws Exception {
         var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(securityUserService).passwordEncoder(passwordEncoder);
         var authenticationManager = authenticationManagerBuilder.build();
@@ -135,7 +138,8 @@ public class WebSecurityConfig {
                 //.logoutSuccessHandler(authenticationLogout)
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
+                // .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 // 设置Session的创建策略为：Spring Security不创建HttpSession
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
