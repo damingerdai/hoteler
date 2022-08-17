@@ -1,12 +1,10 @@
 package org.daming.hoteler.config;
 
-import org.daming.hoteler.api.filter.AuthenticationFilter;
 import org.daming.hoteler.api.filter.JWTLoginFilter;
 import org.daming.hoteler.api.filter.SecurityAuthTokenFilter;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,8 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 //开启权限注解,默认是关闭的
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class WebSecurityConfig {
-
-    private AuthenticationFilter authenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,6 +65,7 @@ public class WebSecurityConfig {
         //对于在header里面增加token等类似情况，放行所有OPTIONS请求。
         return (web) -> web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS, "/**")
+                .mvcMatchers(HttpMethod.POST, "/api/v1/user")
                 // 可以直接访问的静态数据或接口
                 .antMatchers(authWhiteList);
     }
@@ -100,8 +96,8 @@ public class WebSecurityConfig {
                 .authenticationEntryPoint(unauthorizedEntryPoint())
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http
-                .addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class);
+        //http
+                //.addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }
@@ -116,6 +112,7 @@ public class WebSecurityConfig {
         var authenticationManager = authenticationManagerBuilder.build();
         http
                 .authorizeRequests()// 授权
+                .mvcMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
                 .antMatchers("/index/**").anonymous()// 匿名用户权限
                 .antMatchers("/**/*.html").anonymous()// 匿名用户权限
                 .antMatchers("/**/*.js").anonymous()// 匿名用户权限
@@ -127,7 +124,6 @@ public class WebSecurityConfig {
                 .antMatchers("/api/**").hasRole("USERS")//普通用户权限
                 .antMatchers("/api/login").permitAll()
                 //其他的需要授权后访问
-                //.anyRequest().authenticated()
                 .anyRequest().anonymous()
                 .and()// 异常
                 .exceptionHandling()
@@ -138,7 +134,6 @@ public class WebSecurityConfig {
                 //.logoutSuccessHandler(authenticationLogout)
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
-                // .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 // 设置Session的创建策略为：Spring Security不创建HttpSession
@@ -154,10 +149,5 @@ public class WebSecurityConfig {
         return (request, response, ex) -> {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         };
-    }
-
-    @Autowired
-    public void setAuthenticationFilter(AuthenticationFilter authenticationFilter) {
-        this.authenticationFilter = authenticationFilter;
     }
 }

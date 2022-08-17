@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * @create 2020-12-28 11:40
  **/
 @Deprecated
-@Component
+// @Component
 public class AuthenticationFilter extends GenericFilterBean {
 
     @Value("${secret.key}")
@@ -56,7 +56,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             var requestUrl = request.getRequestURI();
            logger.debug("url: " + requestUrl + "\t" + isFilter(requestUrl));
             if (!isFilter(requestUrl) && !requestUrl.contains("token")) {
-                logger.info("verify url: " + requestUrl );
+                logger.info("verify url2: " + requestUrl );
                 verifyHttpHeaders(request);
                 var context = new HotelerContext();
                 ThreadLocalContextHolder.put(context);
