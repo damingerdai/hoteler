@@ -10,13 +10,11 @@ import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.builder.UserBuilder;
 import org.daming.hoteler.pojo.request.CreateUserRequest;
 import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.pojo.response.ListResponse;
 import org.daming.hoteler.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,14 +28,10 @@ public class UserController {
 
     @Operation(summary = "获取所有的用户",security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("users")
-    public ResponseEntity<List<User>> listUser() {
+    public ListResponse<User> listUser() {
         try {
             var users = this.userService.list();
-            if (Objects.nonNull(users) && !users.isEmpty()) {
-                return new ResponseEntity<>(users, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            return new ListResponse<>(users);
         } catch (HotelerException ex) {
             LoggerManager.getApiLogger().error("HotelerException: " + ex.getMessage());
             throw ex;
@@ -50,10 +44,10 @@ public class UserController {
 
     @Operation(summary = "创建用户",security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("user")
-    public ResponseEntity<User> create(CreateUserRequest request) {
+    public DataResponse<User> create(@RequestBody  CreateUserRequest request) {
         var user = UserBuilder.fromCreateUserRequest(request);
         this.userService.create(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new DataResponse<>(user);
     }
 
     @Operation(summary = "获取当前用户",security = { @SecurityRequirement(name = "bearer-key") })

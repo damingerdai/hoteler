@@ -75,6 +75,26 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
         }
     }
 
+    @Override
+    public Role get(String name) throws HotelerException {
+        var in = Instant.now();
+        var sql = "SELECT id, name, description FROM roles WHERE name = ?";
+        var params = new Object[] { name };
+        try {
+            return this.jdbcTemplate.query(sql, (rs) -> {
+                while (rs.next()) {
+                    return this.convertRoleFromResultSet(rs);
+                }
+                return null;
+            }, params);
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params, ex);
+            throw this.getErrorService().createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
+        }
+    }
+
     private Role convertRoleFromResultSet(ResultSet rs) throws SQLException {
         var role = new Role()
                 .setId(rs.getLong("id"))
