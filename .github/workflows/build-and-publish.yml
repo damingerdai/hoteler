@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Authenticate to k3s
-        uses: Azure/k8s-set-context@v2
+        uses: Azure/k8s-set-context@v3
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
       - name: Deploy to k3s
