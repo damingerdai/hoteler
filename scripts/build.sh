@@ -2,7 +2,7 @@ echo "build web application"
 
 cd src/main/angular \
   && yarn \
-  && ng build --configuration production --output-path ../resources/static \
+  && yarn ng build --configuration production --output-path ../resources/static \
   && cd ../../../
 
 echo "copy web application to resources"
