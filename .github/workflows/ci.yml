@@ -131,3 +131,14 @@ jobs:
           docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
       - name: Image digest for maven
         run: echo ${{ steps.build-docker-m.outputs.digest }}
+  build-bazel:
+    runs-on: ${{ matrix.os }}
+    needs: [ build ]
+    strategy:
+      matrix:
+        java-version: [ 17 ]
+        os: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build with bazel
+        run: bazel build //:hoteler

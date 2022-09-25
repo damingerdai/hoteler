@@ -33,6 +33,16 @@ build/
 src/main/resources/static/
 bin/
 
+### Bazel ###
+bazel-bin/
+bazel-bin
+bazel-hoteler/
+bazel-hoteler
+bazel-out/
+bazel-out
+bazel-testlogs/
+bazel-testlogs
+
 ### Others ###
 logs/
 .DS_Store
