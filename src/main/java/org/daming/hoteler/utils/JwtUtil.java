@@ -45,7 +45,7 @@ public class JwtUtil {
     public static SecretKey generalKey(String key) {
         var signatureAlgorithm = SignatureAlgorithm.HS256;
         var encodeKey = Base64.encodeBase64(key.trim().getBytes(StandardCharsets.UTF_8));
-        var bytes = new byte[encodeKey.length < signatureAlgorithm.getMinKeyLength() ? signatureAlgorithm.getMinKeyLength() :encodeKey.length];
+        var bytes = new byte[Math.max(encodeKey.length, signatureAlgorithm.getMinKeyLength())];
         System.arraycopy(encodeKey, 0, bytes, 0, encodeKey.length);
         var secretKey = new SecretKeySpec(bytes, signatureAlgorithm.getJcaName());
         return secretKey;
