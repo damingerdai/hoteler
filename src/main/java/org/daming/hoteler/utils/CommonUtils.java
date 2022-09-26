@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class CommonUtils {
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     /**
      * checks empty.

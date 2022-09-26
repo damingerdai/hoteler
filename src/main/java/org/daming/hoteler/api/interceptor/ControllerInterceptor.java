@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
@@ -70,7 +71,17 @@ public class ControllerInterceptor {
     private String getMethodArgs(Object[] args) throws JsonProcessingException {
         var sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
-            sb.append("arg[").append(i).append("]: ").append(jsonMapper.writeValueAsString(args[i])).append(",");
+            sb.append("arg[").append(i).append("]: ");
+            try {
+                if (args[i] instanceof MultipartFile multipartFile) {
+                    sb.append(jsonMapper.writeValueAsString(multipartFile.getOriginalFilename()));
+                } else {
+                    sb.append(jsonMapper.writeValueAsString(args[i])).append(",");
+                }
+            } catch (JsonProcessingException ex) {
+                LoggerManager.getApiLogger().warn("getMethodArgs[{}] json error: {}", i, ex.getMessage());
+            }
+            sb.append(",");
         }
         if (args.length > 0) {
             sb.deleteCharAt(sb.length() - 1);
