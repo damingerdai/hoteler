@@ -1,6 +1,7 @@
 package org.daming.hoteler.security.service.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,7 @@ public class HmacPasswordService implements IPasswordService {
 
     private IErrorService errorService;
 
-   @Value("${secret.key}")
-   private String secretKey;
+    private ISecretPropService secretPropService;
 
     private SecretKey key;
 
@@ -67,14 +67,15 @@ public class HmacPasswordService implements IPasswordService {
 
     @PostConstruct
     private void init() {
-        this.key = this.generateKey(this.secretKey);
+        this.key = this.generateKey(this.secretPropService.getKey());
         if (Objects.isNull(this.key)) {
-            throw new RuntimeException("generateKey error for " + secretKey);
+            throw new RuntimeException("generateKey error for " + this.secretPropService.getKey());
         }
     }
 
-    public HmacPasswordService(IErrorService errorService) {
+    public HmacPasswordService(IErrorService errorService, ISecretPropService secretPropService) {
         super();
         this.errorService = errorService;
+        this.secretPropService = secretPropService;
     }
 }

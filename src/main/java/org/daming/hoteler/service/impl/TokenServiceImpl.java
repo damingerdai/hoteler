@@ -3,6 +3,7 @@ package org.daming.hoteler.service.impl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.UserToken;
 import org.daming.hoteler.service.IErrorService;
@@ -25,8 +26,7 @@ public class TokenServiceImpl implements ITokenService {
 
     private IErrorService errorService;
 
-    @Value("${secret.key}")
-    private String secretKey;
+    private ISecretPropService secretPropService;
 
     @Override
     public UserToken createToken(String username, String password) {
@@ -41,7 +41,7 @@ public class TokenServiceImpl implements ITokenService {
         var id = String.valueOf(user.getId());
         var subject = user.getId() + "@" + user.getUsername();
         var ttlMillis = Duration.ofHours(1L).toMillis();
-        var key = JwtUtil.generalKey(secretKey);
+        var key = JwtUtil.generalKey(this.secretPropService.getKey());
         var claims = new HashMap<String, Object>();
 
         var accessToken = JwtUtil.createJWT(id, subject, ttlMillis, key, claims);
@@ -53,13 +53,13 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     public UserToken refreshToken(String refreshToken) {
         try {
-            var key = JwtUtil.generalKey(secretKey);
+            var key = JwtUtil.generalKey(this.secretPropService.getKey());
             var claim = JwtUtil.parseJwt(refreshToken, key);
             var sub = claim.getSubject();
             var subs = sub.split("@");
             var userId = subs[0];
             var username = subs[1];
-            var user = Optional.ofNullable(userService.get(Long.valueOf(userId)))
+            var user = Optional.ofNullable(userService.get(Long.parseLong(userId)))
                     .orElseThrow(() -> this.errorService.createHotelerException(600005));
             return doCreateToken(user);
         } catch (ExpiredJwtException ex) {
@@ -72,13 +72,13 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     public User verifyToken(String token) throws HotelerException {
         try {
-            var key = JwtUtil.generalKey(secretKey);
+            var key = JwtUtil.generalKey(this.secretPropService.getKey());
             var claim = JwtUtil.parseJwt(token, key);
             var sub = claim.getSubject();
             var subs = sub.split("@");
             var userId = subs[0];
             var username = subs[1];
-            var user = userService.get(Long.valueOf(userId));
+            var user = userService.get(Long.parseLong(userId));
             if (Objects.isNull(user)) {
                 throw new RuntimeException("no user");
             }
@@ -91,9 +91,10 @@ public class TokenServiceImpl implements ITokenService {
 
     }
 
-    public TokenServiceImpl(IUserService userService, IErrorService errorService) {
+    public TokenServiceImpl(IUserService userService, IErrorService errorService, ISecretPropService secretPropService) {
         super();
         this.userService = userService;
         this.errorService = errorService;
+        this.secretPropService = secretPropService;
     }
 }

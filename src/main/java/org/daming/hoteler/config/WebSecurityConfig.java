@@ -2,9 +2,11 @@ package org.daming.hoteler.config;
 
 import org.daming.hoteler.api.filter.JWTLoginFilter;
 import org.daming.hoteler.api.filter.SecurityAuthTokenFilter;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,6 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 //开启权限注解,默认是关闭的
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class WebSecurityConfig {
+
+    @Autowired
+    private ISecretPropService secretPropService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -134,7 +139,7 @@ public class WebSecurityConfig {
                 //.logoutSuccessHandler(authenticationLogout)
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 // 设置Session的创建策略为：Spring Security不创建HttpSession
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

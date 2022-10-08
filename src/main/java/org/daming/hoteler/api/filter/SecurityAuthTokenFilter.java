@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.HotelerContext;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.service.ITokenService;
@@ -41,14 +42,13 @@ import java.util.stream.Collectors;
  */
 public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
 
-    @Value("${secret.key}")
-    private String secretKey = "damingerdai";
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private ITokenService tokenService;
 
     private IUserService userService;
+
+    private ISecretPropService secretPropService;
 
 
     private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|dev|ping|images|api-docs|html|js|css|svg|ico).*");
@@ -149,7 +149,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
         }
         context.setAccessToken(accessToken);
-        var key = JwtUtil.generalKey(secretKey);
+        var key = JwtUtil.generalKey(this.secretPropService.getKey());
         var claims = JwtUtil.parseJwt(accessToken, key);
         var subject = claims.getSubject();
         var username = subject.split("@")[1];
@@ -175,9 +175,14 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         }
     }
 
-    public SecurityAuthTokenFilter(AuthenticationManager authenticationManager, ITokenService tokenService, IUserService userService) {
+    public SecurityAuthTokenFilter(
+            AuthenticationManager authenticationManager,
+            ITokenService tokenService,
+            IUserService userService,
+            ISecretPropService secretPropService) {
         super(authenticationManager);
         this.tokenService = tokenService;
         this.userService = userService;
+        this.secretPropService = secretPropService;
     }
 }
