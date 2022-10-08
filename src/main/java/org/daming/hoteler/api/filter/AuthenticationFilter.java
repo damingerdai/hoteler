@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.HotelerContext;
 import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.JwtUtil;
@@ -38,14 +39,13 @@ import java.util.regex.Pattern;
 // @Component
 public class AuthenticationFilter extends GenericFilterBean {
 
-    @Value("${secret.key}")
-    private String secretKey;
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Pattern ignoreUrlPattern = Pattern.compile(".*(swagger|webjars|configuration|token|dev|ping|images|api-docs|html|js|css|svg|ico).*");
 
     private IUserService userService;
+
+    private ISecretPropService secretPropService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -99,7 +99,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
         }
         context.setAccessToken(accessToken);
-        var key = JwtUtil.generalKey(secretKey);
+        var key = JwtUtil.generalKey(this.secretPropService.getKey());
         var claims = JwtUtil.parseJwt(accessToken, key);
         var subject =  claims.getSubject();
         var username = subject.split("@")[1];
@@ -133,8 +133,9 @@ public class AuthenticationFilter extends GenericFilterBean {
         return new Exception(message);
     }
 
-    public AuthenticationFilter(IUserService userService) {
+    public AuthenticationFilter(IUserService userService, ISecretPropService secretPropService) {
         super();
         this.userService = userService;
+        this.secretPropService = secretPropService;
     }
 }

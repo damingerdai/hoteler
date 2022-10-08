@@ -36,6 +36,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 secret:
+  salt: dc513dcf1de6941978deb973fe98c1f6
   key: damingerdai
 
 logger:

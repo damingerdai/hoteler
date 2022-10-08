@@ -1,6 +1,7 @@
 package org.daming.hoteler.security.service.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,12 +32,11 @@ public class DESPasswordService implements IPasswordService {
     private static String CHARSETNAME = "UTF-8";
     private static String ALGORITHM = "DES";
 
-    @Value("${secret.key}")
-    private String secretKey;
-
     private Key key;
 
     private IErrorService errorService;
+
+    private ISecretPropService secretPropService;
 
     protected Key generateKey(String keyStr) throws HotelerException {
         Key key = null;
@@ -103,14 +103,19 @@ public class DESPasswordService implements IPasswordService {
 
     @PostConstruct
     private void init() {
-        this.key = this.generateKey(this.secretKey);
+        this.key = this.generateKey(this.getSecretKey());
         if (Objects.isNull(this.key)) {
-            throw new RuntimeException("generateKey error for " + secretKey);
+            throw new RuntimeException("generateKey error for " + this.getSecretKey());
         }
     }
 
-    public DESPasswordService(IErrorService errorService) {
+    private String getSecretKey() {
+        return this.secretPropService.getKey();
+    }
+
+    public DESPasswordService(IErrorService errorService, ISecretPropService secretPropService) {
         super();
         this.errorService = errorService;
+        this.secretPropService = secretPropService;
     }
 }
