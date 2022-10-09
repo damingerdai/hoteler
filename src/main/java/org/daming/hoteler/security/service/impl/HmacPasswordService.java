@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * HMAC(Hash Message Authentication Code，散列消息鉴别码)
  */
-@Service
+@Service("hmacPasswordService")
 public class HmacPasswordService implements IPasswordService {
 
     private static final String ALGORITHM = "HMAC";
