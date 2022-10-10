@@ -17,6 +17,8 @@ public class User implements Serializable {
 
     private String password;
 
+    private String passwordType;
+
     private List<Role> roles;
 
     public long getId() {
@@ -43,6 +45,15 @@ public class User implements Serializable {
 
     public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getPasswordType() {
+        return passwordType;
+    }
+
+    public User setPasswordType(String passwordType) {
+        this.passwordType = passwordType;
         return this;
     }
 

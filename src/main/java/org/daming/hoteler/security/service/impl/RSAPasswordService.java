@@ -20,7 +20,7 @@ import java.util.Objects;
  * RSA非对称加密/解密
  * 非对称加密算法的典型代表，既能加密、又能解密。和对称加密算法比如DES的明显区别在于用于加密、解密的密钥是不同的。使用RSA算法，只要密钥足够长(一般要求1024bit)，加密的信息是不能被破解的
  */
-@Service
+@Service("rsaPasswordService")
 public class RSAPasswordService implements IPasswordService {
 
     private static String ALGORITHM = "RSA";

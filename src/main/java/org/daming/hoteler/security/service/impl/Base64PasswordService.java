@@ -10,7 +10,7 @@ import java.util.Base64;
  * BASE64进行加密/解密
  * 通常用作对二进制数据进行加密
  */
-@Service
+@Service("base64PasswordService")
 public class Base64PasswordService implements IPasswordService {
 
     /**

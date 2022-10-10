@@ -46,6 +46,7 @@ public class UserController {
     @PostMapping("user")
     public DataResponse<User> create(@RequestBody  CreateUserRequest request) {
         var user = UserBuilder.fromCreateUserRequest(request);
+        user.setPasswordType("md5");
         this.userService.create(user);
         return new DataResponse<>(user);
     }

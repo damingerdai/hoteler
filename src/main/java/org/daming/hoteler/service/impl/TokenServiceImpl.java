@@ -6,11 +6,16 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.UserToken;
+import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
+import org.daming.hoteler.utils.CommonUtils;
 import org.daming.hoteler.utils.JwtUtil;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -20,7 +25,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TokenServiceImpl implements ITokenService {
+public class TokenServiceImpl implements ITokenService, ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
 
     private IUserService userService;
 
@@ -31,7 +38,12 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     public UserToken createToken(String username, String password) {
         var user = userService.getUserByUsername(username);
-        if (Objects.isNull(user) || !user.getPassword().equals(password)) {
+        if (Objects.isNull(user)) {
+            throw this.errorService.createHotelerException(600005);
+        }
+        var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
+        var passwordService = this.getPasswordService(passwordType);
+        if (!user.getPassword().equals(passwordService.encodePassword(password))) {
             throw this.errorService.createHotelerException(600005);
         }
         return doCreateToken(user);
@@ -91,10 +103,19 @@ public class TokenServiceImpl implements ITokenService {
 
     }
 
+    private IPasswordService getPasswordService(String passwordType) {
+        return Objects.requireNonNull(this.applicationContext).getBean(passwordType + "PasswordService", IPasswordService.class);
+    }
+
     public TokenServiceImpl(IUserService userService, IErrorService errorService, ISecretPropService secretPropService) {
         super();
         this.userService = userService;
         this.errorService = errorService;
         this.secretPropService = secretPropService;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * MD5(Message Digest Algorithm)加密算法
  * 是一种单向加密算法，只能加密不能解密
  */
-@Service
+@Service("md5PasswordService")
 public class Md5PasswordService implements IPasswordService {
 
     private IErrorService errorService;
