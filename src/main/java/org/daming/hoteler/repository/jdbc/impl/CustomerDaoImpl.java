@@ -57,7 +57,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     @Override
     public Customer get(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, name, gender, card_id, phone from customers where id = ? limit 1";
+        var sql = "select id, name, gender, card_id, phone from customers where id = ? and deleted_at is null limit 1";
         var params = new Object[] { id };
         try {
             return this.jdbcTemplate.query(sql, (rs) -> {
@@ -77,7 +77,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     @Override
     public List<Customer> list() throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, name, gender, card_id, phone from customers";
+        var sql = "select id, name, gender, card_id, phone from customers where deleted_at is null";
         try {
             return this.jdbcTemplate.query(sql, (rs,i) -> new Customer().setId(rs.getLong("id")).setName(rs.getString("name")).setGender(this.getGender(rs.getString("gender"))).setCardId(rs.getString("card_id")).setPhone(rs.getLong("phone")));
         } catch (Exception ex) {
@@ -91,7 +91,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     @Override
     public void delete(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "delete from customers where id = ?";
+        var sql = "update customers set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
         var params = new Object[] { id };
         try {
             this.jdbcTemplate.update(sql, params);
@@ -106,7 +106,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     @Override
     public void update(Customer customer) throws HotelerException {
         var in = Instant.now();
-        var sql = "update customers set name = ?, gender = ?, card_id = ?, phone = ?, create_dt = statement_timestamp(), create_user = 'system', update_dt = statement_timestamp(), update_user = 'system' where id = ?";
+        var sql = "update customers set name = ?, gender = ?, card_id = ?, phone = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
         var params = new Object[] { customer.getName(), customer.getGender().name(), customer.getCardId(), customer.getPhone(), customer.getId() };
         try {
             this.jdbcTemplate.update(sql, params);

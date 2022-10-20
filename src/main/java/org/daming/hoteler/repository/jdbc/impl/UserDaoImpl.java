@@ -20,7 +20,7 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public Optional<User> getUserByUsername(String username) {
         var in = Instant.now();
-        var sql = "select id, username, password, password_type from users where username = ? limit 1";
+        var sql = "select id, username, password, password_type from users where username = ? and deleted_at is null limit 1";
         var params = new Object[] { username };
         try {
             return jdbcTemplate.query(sql, rs -> {
@@ -45,7 +45,7 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public Optional<User> get(long id) {
         var in = Instant.now();
-        var sql = "select id, username, password, password_type from users where id = ? limit 1";
+        var sql = "select id, username, password, password_type from users where id = ? and deleted_at is null limit 1";
         var params = new Object[] { id };
         try {
             return jdbcTemplate.query(sql, rs -> {

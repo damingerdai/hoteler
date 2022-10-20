@@ -29,7 +29,7 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
     @Override
     public List<Role> list() throws HotelerException {
         var in = Instant.now();
-        var sql = "SELECT id, name, description FROM roles";
+        var sql = "SELECT id, name, description FROM roles WHERE deleted_at IS NULL";
         try {
             return this.jdbcTemplate.query(sql,(rs, i) -> this.convertRoleFromResultSet(rs));
         } catch (Exception ex) {
@@ -43,7 +43,7 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
     @Override
     public List<Role> list(List<Long> ids) throws HotelerException {
         var in = Instant.now();
-        var sql = "SELECT id, name, description FROM roles WHERE id = ANY(?::bigint[])";
+        var sql = "SELECT id, name, description FROM roles WHERE id = ANY(?::bigint[]) AND deleted_at IS NULL";
         var params = new Object[] { ids.toArray(new Long[0]) };
         try {
             return this.jdbcTemplate.query(sql,(rs, i) -> this.convertRoleFromResultSet(rs),  params);
@@ -58,7 +58,7 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
     @Override
     public Role get(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "SELECT id, name, description FROM roles WHERE id = ?";
+        var sql = "SELECT id, name, description FROM roles WHERE id = ? AND deleted_at IS NULL";
         var params = new Object[] { id };
         try {
             return this.jdbcTemplate.query(sql, (rs) -> {
@@ -78,7 +78,7 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
     @Override
     public Role get(String name) throws HotelerException {
         var in = Instant.now();
-        var sql = "SELECT id, name, description FROM roles WHERE name = ?";
+        var sql = "SELECT id, name, description FROM roles WHERE name = ? AND deleted_at IS NULL";
         var params = new Object[] { name };
         try {
             return this.jdbcTemplate.query(sql, (rs) -> {

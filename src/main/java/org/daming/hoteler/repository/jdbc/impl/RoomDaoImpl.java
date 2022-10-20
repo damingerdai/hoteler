@@ -31,7 +31,7 @@ public class RoomDaoImpl implements IRoomDao {
     @Override
     public Room get(long id) {
         var in = Instant.now();
-        var sql = "select id, roomname, status, price from rooms where id = ? limit 1";
+        var sql = "select id, roomname, status, price from rooms where id = ? and deleted_at is null limit 1";
         var params = new Object[] { id };
         try {
             return this.jdbcTemplate.query(sql, (rs) -> {
@@ -52,11 +52,13 @@ public class RoomDaoImpl implements IRoomDao {
     @Override
     public List<Room> list(Room room) {
         var in = Instant.now();
-        var sql = "select id, roomname, status, price from rooms ";
+        var sql = "select id, roomname, status, price from rooms";
         var params = new ArrayList<Object>();
         if (Objects.nonNull(room.getStatus())) {
-            sql += " where status = ?";
+            sql += " where status = ? and deleted_at is null";
             params.add(room.getStatus().getId());
+        } else {
+            sql += " where deleted_at is null";
         }
         sql += " order by create_dt desc, update_dt desc";
         try {
@@ -73,7 +75,7 @@ public class RoomDaoImpl implements IRoomDao {
     @Override
     public List<Room> list() {
         var in = Instant.now();
-        var sql = "select id, roomname, status, price from rooms order by create_dt desc, update_dt desc";
+        var sql = "select id, roomname, status, price from rooms where deleted_at is null order by create_dt desc, update_dt desc";
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> this.convertRoomFromResultSet(rs));
         } catch (Exception ex) {
