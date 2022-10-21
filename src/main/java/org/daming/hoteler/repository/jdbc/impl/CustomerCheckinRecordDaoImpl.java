@@ -49,7 +49,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
     @Override
     public void update(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
         var in = Instant.now();
-        var sql = "update customer_checkin_record set user_id = ?, room_id = ?, begin_date = ?, end_date = ?, create_dt = statement_timestamp(), create_user = 'system', update_dt = statement_timestamp(), update_user = 'system' where id = ?";
+        var sql = "update customer_checkin_record set user_id = ?, room_id = ?, begin_date = ?, end_date = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
         var params = new Object[] { customerCheckinRecord.getUserId(), customerCheckinRecord.getRoomId(), customerCheckinRecord.getBeginDate(), customerCheckinRecord.getEndDate(), customerCheckinRecord.getId() };
         try {
             jdbcTemplate.update(sql, params);
@@ -64,7 +64,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
     @Override
     public CustomerCheckinRecord get(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where id = ?";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where id = ? and deleted_at is null";
         var params = new Object[] { id };
         try {
             return jdbcTemplate.query(sql, rs -> {
@@ -85,7 +85,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public void delete(long id) throws HotelerException {
-        var sql = "delete from customer_checkin_record where id = ?";
+        var sql = "update customer_checkin_record set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
         var params = new Object[] { id };
         try {
             jdbcTemplate.update(sql, params);
@@ -97,7 +97,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public List<CustomerCheckinRecord> list() throws HotelerException {
-        var sql = " select id, user_id, room_id, begin_date, end_date from customer_checkin_record order by create_dt desc, update_dt desc";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where deleted_at is null order by create_dt desc, update_dt desc ";
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs));
         } catch (Exception ex) {
@@ -108,7 +108,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public List<CustomerCheckinRecord> list(LocalDate date) throws HotelerException {
-        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where begin_date <= ? and ? <= end_date order by create_dt desc, update_dt desc";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where begin_date <= ? and ? <= end_date deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
@@ -120,7 +120,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public List<CustomerCheckinRecord> listByRoom(long roomId, LocalDate date) throws HotelerException {
-        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where room_id = ? and begin_date <= ? and ? <= end_date order by create_dt desc, update_dt desc";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where room_id = ? and begin_date <= ? and ? <= end_date deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { roomId, date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
