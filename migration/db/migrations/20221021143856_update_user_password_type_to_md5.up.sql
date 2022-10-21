@@ -1,0 +1,1 @@
+UPDATE users set password = MD5(password), password_type = 'md5', update_dt = statement_timestamp() WHERE password_type = 'noop';
