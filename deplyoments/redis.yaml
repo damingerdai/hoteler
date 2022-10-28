@@ -2,6 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: redis-config
+  namespace: hoteler-namespace
   labels:
     app: redis
 data:
@@ -18,18 +19,21 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
+  namespace: hoteler-namespace
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: manual
+  # storageClassName: manual
+  storageClassName: local-path
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: hoteler-namespace
 spec:
   replicas: 1
   selector:
@@ -41,8 +45,6 @@ spec:
         app: redis
         name: redis
     spec:
-      # nodeSelector:
-      #   node-type: worker
       containers:
         - name: redis-server
           image: redis
@@ -77,6 +79,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
+  namespace: hoteler-namespace
 spec:
   selector:
     app: redis
