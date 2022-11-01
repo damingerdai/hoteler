@@ -38,7 +38,6 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     private IRoleDao roleDao;
 
     @Override
-
     public List<User> list() {
         return this.userMapper.list();
     }

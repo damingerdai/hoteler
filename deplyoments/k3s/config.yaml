@@ -11,6 +11,11 @@ data:
         enabled: true
         mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
     spring:
+      redis:
+        host: 127.0.0.1
+        port: 6379
+        database: 0
+        password:
       datasource:
         url: jdbc:postgresql://127.0.0.1:5432/postgres
         username: postgres

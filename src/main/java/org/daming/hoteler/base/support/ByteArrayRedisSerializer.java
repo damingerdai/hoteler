@@ -36,17 +36,4 @@ public class ByteArrayRedisSerializer implements RedisSerializer<Object> {
         System.out.println(obj.getClass());
         return SerializationUtils.deserialize(bytes);
     }
-
-    @Override
-    public boolean canSerialize(Class<?> type) {
-        System.out.println(type);
-        System.out.println(RedisSerializer.super.canSerialize(type));
-        return RedisSerializer.super.canSerialize(type);
-    }
-
-    @Override
-    public Class<?> getTargetType() {
-        System.out.println( RedisSerializer.super.getTargetType());
-        return RedisSerializer.super.getTargetType();
-    }
 }
