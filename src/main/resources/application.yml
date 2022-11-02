@@ -4,6 +4,11 @@ server:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
 spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/hoteler
     username: postgres
@@ -14,6 +19,9 @@ spring:
     baseline-on-migrate: true
   main:
     allow-bean-definition-overriding: true
+  devtools:
+    restart:
+      enabled: false
 management:
   endpoints:
     web:
