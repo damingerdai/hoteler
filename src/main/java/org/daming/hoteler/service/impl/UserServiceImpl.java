@@ -4,6 +4,7 @@ import org.daming.hoteler.repository.jdbc.IRoleDao;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
+import org.daming.hoteler.repository.mapper.UserRoleMapper;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ISnowflakeService;
@@ -14,6 +15,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -37,6 +39,8 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
 
     private IRoleDao roleDao;
 
+    private UserRoleMapper userRoleMapper;
+
     @Override
     public List<User> list() {
         return this.userMapper.list();
@@ -48,7 +52,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.hasText("username", "params 'username' is required");
         var user =  this.userDao.getUserByUsername(username)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
-        var roles = this.roleDao.list();
+        var roles = this.roleDao.listRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
         }
@@ -61,7 +65,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.isTrue(id > 0, "params 'id' is required");
         var user =  userDao.get(id)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
-        var roles = this.roleDao.list();
+        var roles = this.roleDao.listRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
         }
@@ -69,14 +73,16 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     }
 
     @Override
+    @Transactional
     public void create(User user) {
         Assert.notNull(user,"params 'user' is required");
         var id = snowflakeService.nextId();
         user.setId(id);
-        var role = this.roleDao.get("admin");
+        var role = this.roleDao.get("users");
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
         this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        this.userRoleMapper.create(id, role.getId());
     }
 
     private IPasswordService getPasswordService(String passwordType) {
@@ -93,10 +99,11 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         this.errorService = errorService;
     }
 
-    public UserServiceImpl(UserMapper userMapper, IUserDao userDao, IRoleDao roleDao) {
+    public UserServiceImpl(UserMapper userMapper, IUserDao userDao, IRoleDao roleDao, UserRoleMapper userRoleMapper) {
         super();
         this.userMapper = userMapper;
         this.userDao = userDao;
         this.roleDao = roleDao;
+        this.userRoleMapper = userRoleMapper;
     }
 }
