@@ -76,6 +76,10 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     @Transactional
     public void create(User user) {
         Assert.notNull(user,"params 'user' is required");
+        var existUser = this.userDao.getUserByUsername(user.getUsername());
+        if (Objects.nonNull(existUser)) {
+            throw this.errorService.createHotelerException(600012);
+        }
         var id = snowflakeService.nextId();
         user.setId(id);
         var role = this.roleDao.get("users");

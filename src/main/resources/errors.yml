@@ -21,6 +21,8 @@ errors:
     message: JWT expired error.
   - code: 600011
     message: "Bad request error: '%s'"
+  - code: 600012
+    message: 用户名已经被占.
   - code: 700001
     message: SQL '%s' error.
   - code: 800001
