@@ -28,7 +28,7 @@ public class RoomStatusTask {
     public void updateRoomStatus() {
         logger.info("开始更新房间的状态");
         var rooms = this.roomService.list();
-        if (Objects.isNull(rooms) && rooms.size() == 0) {
+        if (Objects.isNull(rooms) || rooms.size() == 0) {
             logger.warn("no rooms");
             return;
         }
