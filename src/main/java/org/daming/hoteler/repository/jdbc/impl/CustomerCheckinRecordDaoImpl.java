@@ -108,7 +108,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public List<CustomerCheckinRecord> list(LocalDate date) throws HotelerException {
-        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where begin_date <= ? and ? <= end_date deleted_at is null order by create_dt desc, update_dt desc";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
@@ -120,7 +120,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public List<CustomerCheckinRecord> listByRoom(long roomId, LocalDate date) throws HotelerException {
-        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where room_id = ? and begin_date <= ? and ? <= end_date deleted_at is null order by create_dt desc, update_dt desc";
+        var sql = "select id, user_id, room_id, begin_date, end_date from customer_checkin_record where room_id = ? and begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { roomId, date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
