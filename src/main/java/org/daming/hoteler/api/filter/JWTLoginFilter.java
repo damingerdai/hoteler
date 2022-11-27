@@ -3,7 +3,6 @@ package org.daming.hoteler.api.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.pojo.ApiError;
 import org.daming.hoteler.pojo.SecurityUser;
-import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.ErrorResponse;
 import org.daming.hoteler.pojo.response.UserTokenResponse;
 import org.daming.hoteler.service.ITokenService;

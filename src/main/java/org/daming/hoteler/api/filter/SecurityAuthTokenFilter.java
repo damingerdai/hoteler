@@ -91,7 +91,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
             }
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
