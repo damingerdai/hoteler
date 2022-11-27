@@ -9,7 +9,7 @@ import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.ApiError;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import java.util.stream.Collectors;
 
