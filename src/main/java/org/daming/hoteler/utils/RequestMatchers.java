@@ -6,7 +6,9 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Utilities for creating RequestMatcher instances.
@@ -29,11 +31,7 @@ public final class RequestMatchers {
      */
     public static List<RequestMatcher> antMatchers(HttpMethod httpMethod, String... antPatterns) {
         String method = (httpMethod != null) ? httpMethod.toString() : null;
-        List<RequestMatcher> matchers = new ArrayList<>();
-        for (String pattern : antPatterns) {
-            matchers.add(new AntPathRequestMatcher(pattern, method));
-        }
-        return matchers;
+        return Arrays.stream(antPatterns).map((pattern) -> new AntPathRequestMatcher(pattern, method)).collect(Collectors.toList());
     }
 
     /**
@@ -57,11 +55,7 @@ public final class RequestMatchers {
      */
     public static List<RequestMatcher> regexMatchers(HttpMethod httpMethod, String... regexPatterns) {
         String method = (httpMethod != null) ? httpMethod.toString() : null;
-        List<RequestMatcher> matchers = new ArrayList<>();
-        for (String pattern : regexPatterns) {
-            matchers.add(new RegexRequestMatcher(pattern, method));
-        }
-        return matchers;
+        return Arrays.stream(regexPatterns).map(pattern ->new RegexRequestMatcher(pattern, method)).collect(Collectors.toList());
     }
 
     /**
