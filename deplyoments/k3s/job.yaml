@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ping
+spec:
+  schedule: "0,15,30,45 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: ping
+              image: curlimages/curl:7.83.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - "curl -X 'GET' 'http://hoteler-api:8443/ping' -H 'accept: */*'"
+          restartPolicy: OnFailure
