@@ -17,7 +17,7 @@ import (
 	"github.com/damingerdai/hoteler/migration/internal/schema"
 	"github.com/damingerdai/hoteler/migration/internal/times"
 	"github.com/damingerdai/hoteler/migration/internal/util"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type IMigrateExecutor interface {
@@ -100,7 +100,6 @@ func (m *MigrateExecutor) Up() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(item)
 	}
 
 	if err != nil {
@@ -135,10 +134,6 @@ func (m *MigrateExecutor) Up() error {
 		duration := time.Now().UnixNano() - instant
 		fileVersionStr := strings.Split(fileName, "_")[0]
 		descriptionStr := strings.Join(strings.SplitAfterN(fileName, "_", 2), "_")
-		fmt.Println(duration)
-		fmt.Println(fileVersionStr)
-		fmt.Println(descriptionStr)
-		fmt.Println(strings.Trim(string(fileContent), " "))
 		_, err2 := m.pool.Exec(
 			context.Background(),
 			"INSERT INTO  schema_migrations (version, description, script, checksum, execution_time, success, installed_on) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING id;",
@@ -150,8 +145,6 @@ func (m *MigrateExecutor) Up() error {
 			util.If(err == nil, true, false),
 		)
 		if err2 != nil {
-			fmt.Println(string(fileContent))
-			fmt.Println(err2)
 			return err2
 		}
 		if err != nil {
@@ -196,7 +189,7 @@ func (m *MigrateExecutor) Close() error {
 }
 
 func (m *MigrateExecutor) fetchDBengine() error {
-	pool, err := pgxpool.Connect(context.Background(), m.database)
+	pool, err := pgxpool.New(context.Background(), m.database)
 	if err != nil {
 		return err
 	}
@@ -282,8 +275,6 @@ func (m *MigrateExecutor) fetchSchemaHistory() (*schema.Items, error) {
 		}
 
 		items = append(items, item)
-
-		fmt.Println(item)
 	}
 
 	return &items, nil

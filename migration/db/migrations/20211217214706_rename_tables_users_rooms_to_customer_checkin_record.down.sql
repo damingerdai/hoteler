@@ -1,1 +1,1 @@
-ALTER TABLE customer_checkin_record TO users_rooms;
+ALTER TABLE customer_checkin_record RENAME TO users_rooms;
