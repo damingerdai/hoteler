@@ -29,8 +29,21 @@ services:
     networks:
       - hoteler-network
 
+  redis:
+    image: redis:6.2.1-alpine
+    container_name: 'redis'
+    ports:
+      - 6379:6379
+    networks:
+      - hoteler-network
+    restart: unless-stopped
+    volumes:
+      - hoteler-redis-volume:/data/redis
+
 volumes:
   hoteler-volume:
+    external: true
+  hoteler-redis-volume:
     external: true
 networks:
   hoteler-network:

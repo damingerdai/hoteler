@@ -24,6 +24,7 @@ git clone git@github.com:damingerdai/hoteler.git --recurse-submodules --remote-s
 
 ```shell script
 docker volume create --name=hoteler-volume
+docker volume create --name=hoteler-redis-volume
 ```
 2. 创建网桥
 
@@ -33,7 +34,7 @@ docker network create hoteler-network
 3. 启动数据库
 
 ```shell script
-docker compose up db
+docker compose up db redis
 # db uses on image, skipping
 # docker-compose up --force-recreate db
 ```

@@ -23,7 +23,6 @@ var migrateUpCmd = &cobra.Command{
 		}
 		defer m.Close()
 		err = m.Up()
-		fmt.Println(err)
 		if err != nil && err.Error() != "no change" {
 			fmt.Println(err)
 			return
