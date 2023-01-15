@@ -107,6 +107,7 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @CacheEvict(cacheNames = { "rooms", "roomList" }, allEntries = true)
     public void updateStatus(long id, RoomStatus status) throws HotelerException {
         try {
             this.roomMapper.updateStatus(id, status);
