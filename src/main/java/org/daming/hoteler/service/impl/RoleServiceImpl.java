@@ -27,6 +27,16 @@ public class RoleServiceImpl implements IRoleService {
         return this.roleDao.get(id);
     }
 
+    @Override
+    public Role getByName(String name) throws HotelerException {
+        return this.roleDao.get(name);
+    }
+
+    @Override
+    public List<Role> getRolesByUserId(long userId) throws HotelerException {
+        return this.roleDao.listRolesByUserId(userId);
+    }
+
     public RoleServiceImpl(IRoleDao roleDao) {
         super();
         this.roleDao = roleDao;

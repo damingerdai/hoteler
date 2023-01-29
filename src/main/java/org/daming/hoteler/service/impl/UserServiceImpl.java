@@ -7,6 +7,7 @@ import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.repository.mapper.UserRoleMapper;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
+import org.daming.hoteler.service.IRoleService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.CommonUtils;
@@ -33,11 +34,11 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
 
     private IErrorService errorService;
 
+    private IRoleService roleService;
+
     private UserMapper userMapper;
 
     private IUserDao userDao;
-
-    private IRoleDao roleDao;
 
     private UserRoleMapper userRoleMapper;
 
@@ -52,7 +53,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.hasText("username", "params 'username' is required");
         var user =  this.userDao.getUserByUsername(username)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
-        var roles = this.roleDao.listRolesByUserId(user.getId());
+        var roles = this.roleService.getRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
         }
@@ -65,7 +66,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.isTrue(id > 0, "params 'id' is required");
         var user =  userDao.get(id)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
-        var roles = this.roleDao.listRolesByUserId(user.getId());
+        var roles = this.roleService.getRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
         }
@@ -82,7 +83,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         }
         var id = snowflakeService.nextId();
         user.setId(id);
-        var role = this.roleDao.get("users");
+        var role = this.roleService.getByName("users");
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
         this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
@@ -103,11 +104,15 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         this.errorService = errorService;
     }
 
-    public UserServiceImpl(UserMapper userMapper, IUserDao userDao, IRoleDao roleDao, UserRoleMapper userRoleMapper) {
+    @Autowired
+    public void setRoleService(IRoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    public UserServiceImpl(UserMapper userMapper, IUserDao userDao, UserRoleMapper userRoleMapper) {
         super();
         this.userMapper = userMapper;
         this.userDao = userDao;
-        this.roleDao = roleDao;
         this.userRoleMapper = userRoleMapper;
     }
 }
