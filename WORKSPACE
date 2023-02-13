@@ -37,7 +37,7 @@ maven_install(
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0",
 
         "org.postgresql:postgresql:42.5.1",
-        "org.springdoc:springdoc-openapi-ui:1.6.13",
+        "org.springdoc:springdoc-openapi-ui:1.6.14",
         "io.jsonwebtoken:jjwt-api:0.11.5",
         "io.jsonwebtoken:jjwt-impl:0.11.5",
         "io.jsonwebtoken:jjwt-jackson:0.11.5",
