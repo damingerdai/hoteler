@@ -34,7 +34,7 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-cache:3.0.2",
         "org.springframework.boot:spring-boot-starter-actuator:3.0.2",
         "org.springframework.boot:spring-boot-starter-data-redis:3.0.2",
-        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0",
+        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1",
 
         "org.postgresql:postgresql:42.5.1",
         "org.springdoc:springdoc-openapi-ui:1.6.13",
