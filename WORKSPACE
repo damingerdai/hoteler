@@ -34,10 +34,10 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-cache:3.0.2",
         "org.springframework.boot:spring-boot-starter-actuator:3.0.2",
         "org.springframework.boot:spring-boot-starter-data-redis:3.0.2",
-        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.0",
+        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1",
 
-        "org.postgresql:postgresql:42.5.1",
-        "org.springdoc:springdoc-openapi-ui:1.6.13",
+        "org.postgresql:postgresql:42.5.3",
+        "org.springdoc:springdoc-openapi-ui:1.6.14",
         "io.jsonwebtoken:jjwt-api:0.11.5",
         "io.jsonwebtoken:jjwt-impl:0.11.5",
         "io.jsonwebtoken:jjwt-jackson:0.11.5",
@@ -45,11 +45,11 @@ maven_install(
         "org.apache.commons:commons-lang3:3.12.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0",
 
-        "org.glassfish.jaxb:jaxb-runtime:4.0.1",
+        "org.glassfish.jaxb:jaxb-runtime:4.0.2",
         "javax.xml.bind:jaxb-api:2.4.0-b180830.0359",
-        "com.github.ben-manes.caffeine:caffeine:2.9.3",
+        "com.github.ben-manes.caffeine:caffeine:3.1.2",
         "org.yaml:snakeyaml:1.33",
-        "org.flywaydb:flyway-core:9.2.3",
+        "org.flywaydb:flyway-core:9.14.1",
 
         "org.springframework.boot:spring-boot-devtools:3.0.2",
         "org.springframework.boot:spring-boot-starter-test:3.0.2",
@@ -63,5 +63,6 @@ maven_install(
         "https://repo1.maven.org/maven2",
         "http://uk.maven.org/maven2",
         "https://jcenter.bintray.com/",
+        "https://maven.google.com",
     ],
 )
