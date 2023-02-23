@@ -1,0 +1,5 @@
+filegroup(
+    name = "resource",
+    srcs = glob(["*.yml", "*.xml", "banner.txt"]),
+    visibility = ["//visibility:public"]
+)

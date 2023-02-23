@@ -35,6 +35,9 @@ java_library(
 java_binary(
     name = "hoteler",
     main_class = "org.daming.hoteler.HotelerApplication",
+    resources = [
+        "//src/main/resources:resource",
+    ],
     runtime_deps = [":java-maven-lib"],
 )
 
