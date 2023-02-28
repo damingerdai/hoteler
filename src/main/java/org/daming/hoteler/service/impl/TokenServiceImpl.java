@@ -1,7 +1,6 @@
 package org.daming.hoteler.service.impl;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.User;
@@ -13,7 +12,6 @@ import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.CommonUtils;
 import org.daming.hoteler.utils.JwtUtil;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
@@ -36,7 +34,7 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
     private ISecretPropService secretPropService;
 
     @Override
-    public UserToken createToken(String username, String password) {
+    public UserToken createToken(String username, String password) throws HotelerException {
         var user = userService.getUserByUsername(username);
         if (Objects.isNull(user)) {
             throw this.errorService.createHotelerException(600005);
@@ -49,7 +47,7 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
         return doCreateToken(user);
     }
 
-    private UserToken doCreateToken(org.daming.hoteler.pojo.User user) {
+    private UserToken doCreateToken(User user) {
         var id = String.valueOf(user.getId());
         var subject = user.getId() + "@" + user.getUsername();
         var ttlMillis = Duration.ofHours(1L).toMillis();
@@ -63,7 +61,7 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
     }
 
     @Override
-    public UserToken refreshToken(String refreshToken) {
+    public UserToken refreshToken(String refreshToken) throws HotelerException {
         try {
             var key = JwtUtil.generalKey(this.secretPropService.getKey());
             var claim = JwtUtil.parseJwt(refreshToken, key);
@@ -75,9 +73,9 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
                     .orElseThrow(() -> this.errorService.createHotelerException(600005));
             return doCreateToken(user);
         } catch (ExpiredJwtException ex) {
-            throw ExceptionBuilder.buildException(600010, ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(600010, new Object[] { ex.getMessage() }, ex);
         } catch (Exception ex) {
-            throw ExceptionBuilder.buildException(600001, ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(600001, new Object[] { ex.getMessage() }, ex);
         }
     }
 
@@ -96,9 +94,9 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
             }
             return user;
         } catch (ExpiredJwtException ex) {
-            throw ExceptionBuilder.buildException(600010, ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(600010, new Object[] { ex.getMessage() }, ex);
         } catch (Exception ex) {
-            throw ExceptionBuilder.buildException(600001, ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(600001, new Object[] { ex.getMessage() }, ex);
         }
 
     }

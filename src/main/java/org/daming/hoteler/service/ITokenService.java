@@ -6,9 +6,9 @@ import org.daming.hoteler.pojo.UserToken;
 
 public interface ITokenService {
 
-    UserToken createToken(String username, String password);
+    UserToken createToken(String username, String password) throws HotelerException;
 
-    UserToken refreshToken(String refreshToken);
+    UserToken refreshToken(String refreshToken) throws HotelerException;
 
     User verifyToken(String token) throws HotelerException;
 }
