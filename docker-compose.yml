@@ -30,7 +30,7 @@ services:
       - hoteler-network
 
   redis:
-    image: redis:6.2.10-alpine
+    image: redis:6.2.11-alpine
     container_name: 'redis'
     ports:
       - 6379:6379
