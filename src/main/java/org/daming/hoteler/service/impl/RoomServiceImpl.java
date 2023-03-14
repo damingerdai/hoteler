@@ -82,13 +82,13 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
-    @Cacheable(cacheNames = { "rooms" }, key = "#room")
+    //@Cacheable(cacheNames = { "rooms" }, key = "#room")
     public List<Room> list(Room room) {
         return this.roomDao.list(room);
     }
 
     @Override
-    @Cacheable("roomList")
+    //@Cacheable("roomList")
     public List<Room> list() throws HotelerException {
         return this.roomDao.list();
     }

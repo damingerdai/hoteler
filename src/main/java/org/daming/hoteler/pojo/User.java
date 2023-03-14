@@ -21,6 +21,8 @@ public class User implements Serializable {
 
     private List<Role> roles;
 
+    private List<Permission> permissions;
+
     public long getId() {
         return id;
     }
@@ -66,6 +68,15 @@ public class User implements Serializable {
         return this;
     }
 
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public User setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+        return this;
+    }
+
     public User() {
         super();
     }
@@ -78,13 +89,25 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
+    public User(long id, String username, String password, String passwordType, List<Role> roles, List<Permission> permissions) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.passwordType = passwordType;
+        this.roles = roles;
+        this.permissions = permissions;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("username='" + username + "'")
+                .add("password='" + password + "'")
+                .add("passwordType='" + passwordType + "'")
+                .add("roles=" + roles)
+                .add("permissions=" + permissions)
+                .toString();
     }
 }

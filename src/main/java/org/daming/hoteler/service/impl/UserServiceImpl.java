@@ -1,5 +1,6 @@
 package org.daming.hoteler.service.impl;
 
+import org.daming.hoteler.pojo.Role;
 import org.daming.hoteler.repository.jdbc.IRoleDao;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
@@ -7,6 +8,7 @@ import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.repository.mapper.UserRoleMapper;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
+import org.daming.hoteler.service.IPermissionService;
 import org.daming.hoteler.service.IRoleService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.IUserService;
@@ -19,9 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * ApplicationObjectSupport 参考 <a href="https://sxpujs.github.io/2020/03/27/spring-get-bean-by-name/">...</a>
@@ -35,6 +39,8 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     private IErrorService errorService;
 
     private IRoleService roleService;
+
+    private IPermissionService permissionService;
 
     private UserMapper userMapper;
 
@@ -56,6 +62,9 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         var roles = this.roleService.getRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
+            var roleIds = roles.stream().mapToLong(Role::getId).toArray();
+            var permission = this.permissionService.listByRoleId(roleIds);
+            user.setPermissions(permission);
         }
         return user;
     }
@@ -69,6 +78,10 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         var roles = this.roleService.getRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
+            var roleIds = roles.stream().mapToLong(Role::getId).toArray();
+            var permission = this.permissionService.listByRoleId(roleIds);
+            user.setPermissions(permission);
+
         }
         return user;
     }
@@ -107,6 +120,11 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     @Autowired
     public void setRoleService(IRoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setPermissionService(IPermissionService permissionService) {
+        this.permissionService = permissionService;
     }
 
     public UserServiceImpl(UserMapper userMapper, IUserDao userDao, UserRoleMapper userRoleMapper) {
