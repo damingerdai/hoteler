@@ -2,6 +2,7 @@ package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.base.exceptions.ExceptionBuilder;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.base.exceptions.RateLimitException;
 import org.daming.hoteler.config.service.IErrorCodeService;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.service.IErrorService;
@@ -45,6 +46,13 @@ public class ErrorServiceImpl implements IErrorService {
     public HotelerException createSqlHotelerException(Exception ex, Object... params) {
         var message = this.errorCodeService.getMessage(ErrorCodeConstants.SQL_ERROR_CODE, params);
         return ExceptionBuilder.buildException(ErrorCodeConstants.SQL_ERROR_CODE, message, ex);
+    }
+
+    @Override
+    public RateLimitException createHotelerRateLimitException() {
+        var code = ErrorCodeConstants.SYSTEM_TOO_MANY_REQUESTS;
+        var message = this.errorCodeService.getMessage(code);
+        return ExceptionBuilder.buildRateLimitException(code, message);
     }
 
     public ErrorServiceImpl(IErrorCodeService errorCodeService) {

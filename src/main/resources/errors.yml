@@ -23,6 +23,8 @@ errors:
     message: "Bad request error: '%s'"
   - code: 600012
     message: 用户名已经被占.
+  - code: 600013
+    message: 访问过于频繁，请稍候再试
   - code: 700001
     message: SQL '%s' error.
   - code: 800001

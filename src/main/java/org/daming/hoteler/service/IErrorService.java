@@ -1,6 +1,7 @@
 package org.daming.hoteler.service;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.base.exceptions.RateLimitException;
 
 /**
  * error service
@@ -19,4 +20,6 @@ public interface IErrorService {
     HotelerException createHotelerException(int code);
 
     HotelerException createSqlHotelerException(Exception ex, Object...params);
+
+    RateLimitException createHotelerRateLimitException();
 }
