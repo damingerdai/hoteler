@@ -10,15 +10,18 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.time.Duration;
 
@@ -33,11 +36,24 @@ import java.time.Duration;
 public class RedisConfig {
 
     @Bean
+    @Primary
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         var redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(keySerializer());
         redisTemplate.setHashKeySerializer(keySerializer());
+        redisTemplate.setValueSerializer(valueSerializer());
+        redisTemplate.setHashValueSerializer(valueSerializer());
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+    @Bean("redisRateLimitTemplate")
+    public RedisTemplate<Object, Object> redisRateLimitTemplate(RedisConnectionFactory redisConnectionFactory) {
+        var redisTemplate = new RedisTemplate<Object, Object>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(valueSerializer());
+        redisTemplate.setHashKeySerializer(valueSerializer());
         redisTemplate.setValueSerializer(valueSerializer());
         redisTemplate.setHashValueSerializer(valueSerializer());
         redisTemplate.afterPropertiesSet();
@@ -58,6 +74,14 @@ public class RedisConfig {
                 .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(redisCacheConfiguration)
                 .build();
+    }
+
+    @Bean
+    public DefaultRedisScript<Long> limitScript() {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/limit.lua")));
+        redisScript.setResultType(Long.class);
+        return redisScript;
     }
 
     private RedisSerializer<String> keySerializer() {

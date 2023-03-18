@@ -26,4 +26,10 @@ public class ExceptionBuilder {
     public static HotelerException buildException(int code, String message) {
         return buildException(code, message, null);
     }
+
+    public static RateLimitException buildRateLimitException(int code, String message) {
+        RateLimitException ex = new RateLimitException(code, message);
+        LoggerManager.getErrorLogger().error("error: code {}, message: {}", code, message);
+        return ex;
+    }
 }

@@ -14,7 +14,7 @@ cd src/main/resources/static \
 
 # echo "build java application"
 
-# mvn clean install package -Dmaven.test.skip=true -Pstandalone
+# mvn clean install package -DskipTests -Pstandalone
 
 echo "build java application with gradle"
 

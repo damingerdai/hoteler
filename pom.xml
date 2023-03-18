@@ -234,6 +234,7 @@
                             <include>**/*.yml</include>
                             <include>**/*.xml</include>
                             <include>db/**</include>
+                            <include>lua/**</include>
                             <include>static/**</include>
                         </includes>
                         <excludes>
