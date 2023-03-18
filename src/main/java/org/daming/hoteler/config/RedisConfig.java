@@ -51,11 +51,15 @@ public class RedisConfig {
     @Bean("redisRateLimitTemplate")
     public RedisTemplate<Object, Object> redisRateLimitTemplate(RedisConnectionFactory redisConnectionFactory) {
         var redisTemplate = new RedisTemplate<Object, Object>();
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.activateDefaultTyping(om.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setKeySerializer(valueSerializer());
-        redisTemplate.setHashKeySerializer(valueSerializer());
-        redisTemplate.setValueSerializer(valueSerializer());
-        redisTemplate.setHashValueSerializer(valueSerializer());
+        redisTemplate.setKeySerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
@@ -89,10 +93,6 @@ public class RedisConfig {
     }
 
     private RedisSerializer<Object> valueSerializer() {
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.activateDefaultTyping(om.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
-        return jackson2JsonRedisSerializer;
+        return new ByteArrayRedisSerializer();
     }
 }
