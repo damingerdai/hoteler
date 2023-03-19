@@ -60,7 +60,7 @@ public class UserController {
     @GetMapping("/user/{id}")
     public DataResponse<User> getByUserId(@PathVariable("id") String userId) {
         try {
-            var id = Long.valueOf(userId);
+            var id = Long.parseLong(userId);
             var user = this.userService.get(id);
             return new DataResponse<>(user);
         } catch (NumberFormatException nfe) {
