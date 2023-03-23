@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 17, 19 ]
+        java-version: [ 17, 20 ]
         go-version: ["1.20"]
         os: [ubuntu-latest]
     # https://github.com/actions/example-services/blob/master/.github/workflows/postgres-service.yml
@@ -70,7 +70,7 @@ jobs:
     needs: [ test ]
     strategy:
       matrix:
-        java-version: [ 17, 19 ]
+        java-version: [ 17, 20 ]
         os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v3.4.0
@@ -95,7 +95,7 @@ jobs:
     needs: [ build ]
     strategy:
       matrix:
-        java-version: [ 17, 19 ]
+        java-version: [ 17, 20 ]
         os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v3.4.0
