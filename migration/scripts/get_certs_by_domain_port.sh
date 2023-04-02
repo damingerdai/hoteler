@@ -4,7 +4,7 @@ set -Eeuo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-hosts=(github.com mirror.bazel.build objects.githubusercontent.com)
+hosts=(github.com mirror.bazel.build objects.githubusercontent.com dl.google.com)
 port=443
 
 for host in ${hosts[@]};do

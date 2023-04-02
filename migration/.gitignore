@@ -7,4 +7,5 @@ seed.exe
 *.exe
 .env
 hoteler
+.bazelrc.user
 main

@@ -2,3 +2,7 @@
 test --action_env=GOPROXY=https://goproxy.io
 build --action_env=GOPROXY=https://goproxy.io
 run --action_env=GOPROXY=https://goproxy.io
+
+# Load any settings which are specific to the current user. Needs to be *last* statement
+# in this config, as the user configuration should be able to overwrite flags from this file.
+try-import %workspace%/.bazelrc.user
