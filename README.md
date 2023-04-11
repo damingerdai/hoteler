@@ -1,6 +1,10 @@
 # hoteler
 一个简单的入门酒店管理系统
 
+## 架构图
+
+![architecture](./docs/hoteler-architecture.png)
+
 ## 系统功能：
 1. 登录验证
 2. 房态统计显示
