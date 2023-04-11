@@ -47,7 +47,7 @@ maven_install(
 
         "org.glassfish.jaxb:jaxb-runtime:4.0.2",
         "javax.xml.bind:jaxb-api:2.4.0-b180830.0359",
-        "com.github.ben-manes.caffeine:caffeine:3.1.5",
+        "com.github.ben-manes.caffeine:caffeine:3.1.6",
         "org.yaml:snakeyaml:2.0",
         "org.flywaydb:flyway-core:9.16.3",
 
