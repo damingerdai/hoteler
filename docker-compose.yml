@@ -25,7 +25,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: hoteler
+      POSTGRES_DB: postgres
     networks:
       - hoteler-network
 

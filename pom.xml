@@ -193,7 +193,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>9.16.3</version>
                 <configuration>
-                    <url>jdbc:postgresql://127.0.0.1:5432/hoteler</url>
+                    <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
                     <user>postgres</user>
                     <password>123456</password>
                 </configuration>
