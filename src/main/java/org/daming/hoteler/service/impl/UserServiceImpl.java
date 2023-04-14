@@ -94,13 +94,16 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         if (existUser.isPresent()) {
             throw this.errorService.createHotelerException(600012);
         }
+        var isFirstUser = this.userMapper.count() == 0;
         var id = snowflakeService.nextId();
         user.setId(id);
-        var role = this.roleService.getByName("users");
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
         this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
-        this.userRoleMapper.create(id, role.getId());
+        var roles = isFirstUser
+                ? List.of(this.roleService.getByName("admin"), this.roleService.getByName("users"))
+                : List.of(this.roleService.getByName("users"));
+        roles.forEach((role ->  this.userRoleMapper.create(id, role.getId())));
     }
 
     private IPasswordService getPasswordService(String passwordType) {
