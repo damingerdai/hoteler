@@ -23,6 +23,7 @@ java_library(
         "@maven//:commons_codec_commons_codec",
         "@maven//:org_apache_commons_commons_lang3",
         "@maven//:jakarta_xml_bind_jakarta_xml_bind_api",
+        "@maven//:cn_hutool_hutool_crypto"
 
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_boot_spring_boot_autoconfigure",
