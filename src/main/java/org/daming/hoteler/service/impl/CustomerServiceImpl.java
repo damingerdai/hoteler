@@ -110,8 +110,6 @@ public class CustomerServiceImpl implements ICustomerService {
                 customers.forEach(customer ->
                         customer.setCardId(DesensitizedUtil.idCardNum(customer.getCardId(), 3, 4))
                 );
-                customers.stream().map()
-
             }
             return customers;
         } catch (HotelerException he) {
