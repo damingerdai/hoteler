@@ -1,9 +1,9 @@
-FROM gradle:7.5.1-jdk18-alpine AS builder
+FROM gradle:8.1.1-jdk17 AS builder
 COPY src /usr/src/app/src
 COPY *.gradle  /usr/src/app/
 RUN gradle build -x test --project-dir  /usr/src/app
 
-FROM openjdk:18.0.2-jdk-slim
+FROM openjdk:17.0.2-slim
 WORKDIR /app
 COPY --from=builder /usr/src/app/build/libs/*.jar /app/app.jar
 ENV TZ=Asia/Shanghai
