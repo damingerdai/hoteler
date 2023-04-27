@@ -1,10 +1,13 @@
 package org.daming.hoteler.service.impl;
 
+import cn.hutool.core.util.DesensitizedUtil;
+import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.CustomerErrorCodeConstants;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Customer;
+import org.daming.hoteler.pojo.Role;
 import org.daming.hoteler.repository.jdbc.ICustomerDao;
 import org.daming.hoteler.repository.mapper.CustomerMapper;
 import org.daming.hoteler.service.ICustomerService;
@@ -83,7 +86,12 @@ public class CustomerServiceImpl implements ICustomerService {
     @Cacheable(cacheNames = { "customer", "customerList" }, key = "#id")//如果缓存存在，直接读取缓存值；如果缓存不存在，则调用目标方法，并将结果放入缓存
     public Customer get(long id) throws HotelerException {
         try {
-            return this.customerDao.get(id);
+            var customer = this.customerDao.get(id);
+            var user = ThreadLocalContextHolder.get().getUser();
+            if (user.getRoles().stream().map(Role::getName).noneMatch("admin"::equals)) {
+                customer.setCardId(DesensitizedUtil.idCardNum(customer.getCardId(), 3, 4));
+            }
+            return customer;
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error(() -> "fail to get a customer whose id is " + id, he);
         } catch (Exception ex) {
@@ -96,7 +104,14 @@ public class CustomerServiceImpl implements ICustomerService {
     //@Cacheable("customerList") // 标志读取缓存操作，如果缓存不存在，则调用目标方法，并将结果放入缓存
     public List<Customer> list() throws HotelerException {
         try {
-            return this.customerDao.list();
+            var user = ThreadLocalContextHolder.get().getUser();
+            var customers = this.customerDao.list();
+            if (user.getRoles().stream().map(Role::getName).noneMatch("admin"::equals)) {
+                customers.forEach(customer ->
+                        customer.setCardId(DesensitizedUtil.idCardNum(customer.getCardId(), 3, 4))
+                );
+            }
+            return customers;
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error( "fail to list customer", he);
             throw he;
