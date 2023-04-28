@@ -51,7 +51,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'com.github.ben-manes.caffeine:caffeine'
-	implementation 'cn.hutool:hutool-crypto:5.8.16'
+	implementation 'cn.hutool:hutool-crypto:5.8.18'
 	implementation 'org.yaml:snakeyaml:2.0'
 	implementation 'org.flywaydb:flyway-core:9.16.3'
 
