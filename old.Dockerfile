@@ -13,7 +13,11 @@ WORKDIR /app
 COPY src/main/angular /app
 RUN yarn build
 
+<<<<<<< HEAD
 FROM maven:3.9.4-amazoncorretto-21-debian AS back-build
+=======
+FROM maven:3.8.7-openjdk-18-slim AS back-build
+>>>>>>> 9c0ae97 (build: 更新old.Dockerfile的maven版本)
 
 WORKDIR app
 COPY pom.xml /app
