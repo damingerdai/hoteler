@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
 
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1'
 
@@ -66,7 +67,7 @@ flyway {
 	password = '123456'
 }
 
-test {
+tasks.named('test') {
 	useJUnitPlatform()
 }
 

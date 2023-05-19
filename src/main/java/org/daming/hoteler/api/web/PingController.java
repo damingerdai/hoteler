@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingController {
 
-    private IPingService pingService;
+    private final IPingService pingService;
 
     @Operation(summary = "ping接口")
     @RequestMapping("ping")
     @RateLimiter(time = 5,count = 3,limitType = LimitType.IP)
     public String Ping() {
-        return "pong";
+        return this.pingService.ping();
     }
 
     public PingController(IPingService pingService) {
