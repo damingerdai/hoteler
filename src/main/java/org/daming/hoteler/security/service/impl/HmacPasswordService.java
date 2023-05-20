@@ -43,7 +43,7 @@ public class HmacPasswordService implements IPasswordService {
     @Override
     public String decrypt(String encoderContent) throws HotelerException {
         throw this.errorService.createHotelerSystemException(
-                "md5 algorithm encrypt is not supported",
+                "hmac algorithm encrypt is not supported",
                 new RuntimeException("org.daming.hoteler.security.service.impl.HmacPasswordService#encrypt method is not supported"));
     }
 

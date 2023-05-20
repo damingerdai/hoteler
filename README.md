@@ -94,8 +94,8 @@ sh scripts/build.sh
 
 ### graphql
 
-由于graphql的集成存在bug，因此已经废弃。
-<!-- [http://localhost:8080/graphiq](http://localhost:8080/graphiq) -->
+graphql接口尚未完成
+[http://localhost:8443/graphiql?path=/graphql](http://localhost:8443/graphiql?path=/graphql)
 
 ## K8S
 

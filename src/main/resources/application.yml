@@ -20,6 +20,9 @@ spring:
     baseline-on-migrate: true
   main:
     allow-bean-definition-overriding: true
+  graphql:
+    graphiql:
+      enabled: true
   devtools:
     restart:
       enabled: false
