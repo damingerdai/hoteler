@@ -1,6 +1,7 @@
 package org.daming.hoteler.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +16,10 @@ public class User implements Serializable {
 
     private String username;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String passwordType;
 
     private List<Role> roles;

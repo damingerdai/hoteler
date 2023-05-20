@@ -27,15 +27,21 @@ import java.util.Optional;
 @RequestMapping("api/v1")
 public class UserController {
 
-    private IUserService userService;
+    private final IUserService userService;
 
-    private IErrorService errorService;
+    private final IErrorService errorService;
 
     @Operation(summary = "获取所有的用户",security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("users")
     public ListResponse<User> listUser() {
         try {
-            var users = this.userService.list();
+            var users = this.userService.list().stream().map((user) -> {
+                user.setPassword(null);
+                user.setPasswordType(null);
+
+                return user;
+            }).toList();
+
             return new ListResponse<>(users);
         } catch (HotelerException ex) {
             LoggerManager.getApiLogger().error("HotelerException: " + ex.getMessage());
@@ -62,6 +68,8 @@ public class UserController {
         try {
             var id = Long.parseLong(userId);
             var user = this.userService.get(id);
+            user.setPassword(null);
+            user.setPasswordType(null);
             return new DataResponse<>(user);
         } catch (NumberFormatException nfe) {
             var params = new Object[] { nfe.getMessage() };
@@ -75,8 +83,14 @@ public class UserController {
     @GetMapping("/user")
     public DataResponse<User> get() {
         var context = ThreadLocalContextHolder.get();
-        var user = context.getUser();
-        return new DataResponse<>(user);
+        try {
+            var user = context.getUser();
+            user.setPassword(null);
+            user.setPasswordType(null);
+            return new DataResponse<>(user);
+        } catch (Exception ex) {
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
     }
 
 
