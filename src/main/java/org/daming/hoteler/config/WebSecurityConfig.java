@@ -6,17 +6,16 @@ import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
-import org.daming.hoteler.utils.RequestMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.AbstractRequestMatcherRegistry;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +24,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * WebSecurityConfig
@@ -46,11 +44,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
-
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().antMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg", "/**.html");
-//    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -78,39 +71,6 @@ public class WebSecurityConfig {
                 .requestMatchers(authWhiteList);
     }
 
-    // @Bean
-    @Deprecated
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                //.requestMatchers("/index.html","/static/**").permitAll()
-                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").permitAll()
-                .requestMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").permitAll()
-                .requestMatchers("/v2/api-docs").permitAll()
-                .requestMatchers("/v3/api-docs").permitAll()
-                .requestMatchers("/swagger-resources/**").permitAll()
-                .requestMatchers("/swagger-ui.html").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/webjars/**").permitAll()
-                .requestMatchers("/configuration/**").permitAll()
-                .requestMatchers("/images").permitAll()
-                .requestMatchers("/api/v1/**").permitAll()
-                .requestMatchers("/", "/login").permitAll()
-                .requestMatchers("/api/v1/token").permitAll()
-                .requestMatchers("/api/**").authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedEntryPoint())
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //http
-                //.addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http, SecurityUserService securityUserService, PasswordEncoder passwordEncoder,
@@ -119,36 +79,48 @@ public class WebSecurityConfig {
         authenticationManagerBuilder.userDetailsService(securityUserService).passwordEncoder(passwordEncoder);
         var authenticationManager = authenticationManagerBuilder.build();
         http
-                .authorizeHttpRequests()// 授权
-                .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
-                .requestMatchers("/index/**").anonymous()// 匿名用户权限
-                .requestMatchers("/**.html").anonymous()// 匿名用户权限
-                .requestMatchers("/**.js").anonymous()// 匿名用户权限
-                .requestMatchers("/**.css").anonymous()// 匿名用户权限
-                .requestMatchers("/assets/**").anonymous()// 匿名用户权限
-                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").anonymous()
-                .requestMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").anonymous()
-                .requestMatchers("/api/v1/token").anonymous()//普通用户权限
-                .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
-                .requestMatchers("/api/login").permitAll()
-                //其他的需要授权后访问
-                .anyRequest().anonymous()
-                .and()// 异常
-                .exceptionHandling()
+                .authorizeHttpRequests((authorizeHttpRequests) -> {
+                    authorizeHttpRequests
+                            .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
+                            .requestMatchers("/index/**").anonymous()// 匿名用户权限
+                            .requestMatchers("/**.html").anonymous()// 匿名用户权限
+                            .requestMatchers("/**.js").anonymous()// 匿名用户权限
+                            .requestMatchers("/**.css").anonymous()// 匿名用户权限
+                            .requestMatchers("/assets/**").anonymous()// 匿名用户权限
+                            .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").anonymous()
+                            .requestMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").anonymous()
+                            .requestMatchers("/api/v1/token").anonymous()//普通用户权限
+                            .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
+                            .requestMatchers("/api/login").permitAll()
+                            //其他的需要授权后访问
+                            .anyRequest().anonymous();
+                });// 授权
+//                .and()// 异常
+//                .exceptionHandling()
 //                .accessDeniedHandler(accessDeny)//授权异常处理
 //                .authenticationEntryPoint(anonymousAuthenticationEntryPoint)// 认证异常处理
-                .and()
-                .logout()
+//                .and()
+//                .logout()
                 //.logoutSuccessHandler(authenticationLogout)
-                .and()
-                .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
+//                .and()
+//                .addFilterBefore()
+//                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class)
+//                .sessionManagement()
                 // 设置Session的创建策略为：Spring Security不创建HttpSession
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationManager(authenticationManager)
-                .csrf().disable();// 关闭 csrf
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authenticationManager(authenticationManager)
+//                .csrf().disable();// 关闭 csrf
+        http.exceptionHandling(exceptionHandlingCustomizer -> {
+                //TODO: add exception handing
+        });
+        http.addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class);
+        http.sessionManagement((sessionManagementCustomizer) -> {
+            sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        });
+        http.authenticationManager(authenticationManager);
+        http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
