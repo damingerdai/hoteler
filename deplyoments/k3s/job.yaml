@@ -17,3 +17,21 @@ spec:
                 - -c
                 - "curl -X 'GET' 'http://hoteler-api:8443/ping' -H 'accept: */*'"
           restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-crpyto-customer-id
+spec:
+  template:
+    spec:
+      containers:
+        - name: update-crpyto-customer-id
+          image: curlimages/curl:7.83.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - "curl -X 'GET' 'http://hoteler-api:8443/api/v1/job/update-crpyto-customer-id' -H 'accept: */*'"
+      restartPolicy: Never
+  backoffLimit: 4
