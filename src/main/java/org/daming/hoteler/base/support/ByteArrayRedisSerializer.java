@@ -31,9 +31,6 @@ public class ByteArrayRedisSerializer implements RedisSerializer<Object> {
      */
     @Override
     public Object deserialize(byte[] bytes) throws SerializationException {
-        var obj = SerializationUtils.deserialize(bytes);
-        System.out.println(obj);
-        System.out.println(obj.getClass());
         return SerializationUtils.deserialize(bytes);
     }
 }

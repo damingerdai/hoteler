@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.StringJoiner;
+
 /**
  * @author gming001
  * @version 2022-10-08 17:26
@@ -14,6 +16,8 @@ public class SecretProp {
 
     private String salt;
 
+    private String personSalt;
+
     private String key;
 
     public String getSalt() {
@@ -22,6 +26,14 @@ public class SecretProp {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getPersonSalt() {
+        return personSalt;
+    }
+
+    public void setPersonSalt(String personSalt) {
+        this.personSalt = personSalt;
     }
 
     public String getKey() {
@@ -38,9 +50,10 @@ public class SecretProp {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("salt", salt)
-                .append("key", key)
+        return new StringJoiner(", ", SecretProp.class.getSimpleName() + "[", "]")
+                .add("salt='" + salt + "'")
+                .add("personSalt='" + personSalt + "'")
+                .add("key='" + key + "'")
                 .toString();
     }
 }

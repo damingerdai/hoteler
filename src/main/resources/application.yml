@@ -49,6 +49,7 @@ mybatis:
 
 secret:
   salt: dc513dcf1de6941978deb973fe98c1f6
+  personSalt: dc513dcf1de6941978deb973fe98c1f4
   key: damingerdai
 
 logger:

@@ -11,4 +11,7 @@ public final class CustomerErrorCodeConstants {
     private CustomerErrorCodeConstants() { }
 
     public static final int CREATE_CUSTOMER_ERROR_CODE = 800001;
+
+    public static final int UPDATE_CUSTOMER_ERROR_CODE = 800001;
+    public static final int GET_CUSTOMER_ERROR_CODE = 800003;
 }

@@ -1,5 +1,6 @@
 package org.daming.hoteler.config.service.impl;
 
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.config.prop.SecretProp;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,13 +18,18 @@ public class SecretPropServiceImpl implements ISecretPropService, InitializingBe
     private final SecretProp secretProp;
 
     @Override
-    public String getSalt() {
+    public String getSalt() throws HotelerException {
         return this.secretProp.getSalt();
     }
 
     @Override
-    public String getKey() {
+    public String getKey() throws HotelerException {
         return this.secretProp.getKey();
+    }
+
+    @Override
+    public String getPersonSalt() throws HotelerException {
+        return this.secretProp.getPersonSalt();
     }
 
     @Override
