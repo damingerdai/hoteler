@@ -69,7 +69,7 @@ public class RedisConfig {
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         var redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig(Thread.currentThread().getContextClassLoader())
-                .entryTtl(Duration.ofMinutes(30l)) // 设置缓存时间
+                .entryTtl(Duration.ofMinutes(30L)) // 设置缓存时间
                 .disableCachingNullValues() // 如果是空值，不缓存
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer())) // 设置key序列化器
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer())); // 设置value序列化器

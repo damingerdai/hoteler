@@ -83,7 +83,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    @CachePut(cacheNames = {"customer"}, key = "#customer.id")
+    @CachePut(cacheNames = {"customer"}, key = "#customer.id", unless="#result == null")
     public void update(Customer customer) throws HotelerException {
         try {
             var cardId = StringUtils.trimAllWhitespace(customer.getCardId());
@@ -95,9 +95,11 @@ public class CustomerServiceImpl implements ICustomerService {
             }
             this.customerDao.update(customer);
         } catch (HotelerException he) {
+            he.printStackTrace();
             LoggerManager.getCommonLogger().error(() -> "fail to update customer:" + customer.getId(), he);
             throw he;
         } catch (Exception ex) {
+            ex.printStackTrace();
             LoggerManager.getCommonLogger().error(() -> "fail to update a customer: " + customer.getId() + ", error: " + ex.getMessage(), ex);
             throw errorService.createHotelerException(CustomerErrorCodeConstants.UPDATE_CUSTOMER_ERROR_CODE, ex);
         }
