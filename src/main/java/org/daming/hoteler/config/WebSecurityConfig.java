@@ -67,6 +67,7 @@ public class WebSecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(HttpMethod.OPTIONS, "/**")
                 .requestMatchers(HttpMethod.POST, "/api/v1/user")
+                .requestMatchers("/api/v1/job/**")
                 // 可以直接访问的静态数据或接口
                 .requestMatchers(authWhiteList);
     }

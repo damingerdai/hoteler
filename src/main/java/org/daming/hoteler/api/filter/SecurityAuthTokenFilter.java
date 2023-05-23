@@ -61,7 +61,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         try {
             var requestUrl = request.getRequestURI();
             logger.debug("url: " + requestUrl + "\t" + isFilter(requestUrl));
-            if (!isFilter(requestUrl) && !requestUrl.contains("token")) {
+            if (!isFilter(requestUrl) && !requestUrl.contains("token") && !requestUrl.contains("/api/v1/job")) {
                 logger.info("verify url: " + requestUrl);
                 // verifyHttpHeaders(request);
                 var context = new HotelerContext();

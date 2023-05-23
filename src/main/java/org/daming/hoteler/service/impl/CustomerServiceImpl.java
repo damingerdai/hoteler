@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * CustomerService
@@ -129,7 +130,9 @@ public class CustomerServiceImpl implements ICustomerService {
     public List<Customer> list() throws HotelerException {
         try {
             var user = ThreadLocalContextHolder.get().getUser();
-            var isAdmin = user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
+            var isAdmin = Objects.isNull(user)
+                    ? false
+                    : user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
             var customers = this.customerDao.list()
                     .stream()
                     .peek(customer -> {

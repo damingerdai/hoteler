@@ -1,6 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
+  namespace: hoteler-namespace
   name: ping
 spec:
   schedule: "0,15,30,45 * * * *"
@@ -21,6 +22,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  namespace: hoteler-namespace
   name: update-crpyto-customer-id
 spec:
   template:
