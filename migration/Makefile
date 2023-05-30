@@ -23,3 +23,20 @@ run: build
 
 fmt:
 	gofmt -w $(GOFMT_FILES)
+
+bazel-cmd = bazel
+# bazel-targets = $(shell bazel query "kind('go_binary', //cmd/...)" --output=label)
+# bazel-targets-names := $(foreach n,$(bazel-targets),$(n))
+
+bazel-clean:
+	bazel clean
+
+gazelle: bazel-clean
+	 bazel run //:gazelle
+gazelle-update-repos: bazel-clean
+	bazel run //:gazelle-update-repos
+
+bazel: bazel-clean
+	@$(foreach target,$(shell bazel query "kind('go_binary', //...)" --output=label),\
+		${bazel-cmd} build ${target} \
+	;)
