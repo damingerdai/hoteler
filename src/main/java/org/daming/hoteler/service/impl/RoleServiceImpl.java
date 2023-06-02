@@ -4,6 +4,8 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Role;
 import org.daming.hoteler.repository.jdbc.IRoleDao;
 import org.daming.hoteler.service.IRoleService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
  * @since 2021-12-29 20:28
  **/
 @Service
+@CacheConfig(cacheNames = {"RoleCache"})
 public class RoleServiceImpl implements IRoleService {
 
     private IRoleDao roleDao;
@@ -33,6 +36,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
+    @Cacheable(cacheNames = { "user-role" }, key = "'user-role-'+ #root.methodName + #id")
     public List<Role> getRolesByUserId(long userId) throws HotelerException {
         return this.roleDao.listRolesByUserId(userId);
     }

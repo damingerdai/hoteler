@@ -35,12 +35,7 @@ public class UserController {
     @GetMapping("users")
     public ListResponse<User> listUser() {
         try {
-            var users = this.userService.list().stream().map((user) -> {
-                user.setPassword(null);
-                user.setPasswordType(null);
-
-                return user;
-            }).toList();
+            var users = this.userService.list();
 
             return new ListResponse<>(users);
         } catch (HotelerException ex) {

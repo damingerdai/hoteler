@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +47,15 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
 
     @Override
     public List<User> list() {
-        return this.userMapper.list();
+        return this.userMapper.list().stream().peek(user -> {
+            user.setPassword(null);
+            user.setPasswordType(null);
+            var roleIds = Objects.requireNonNullElseGet(
+                    user.getRoles(), () -> new ArrayList<Role>(0))
+                    .stream().mapToLong(Role::getId).toArray();
+            var permission = this.permissionService.listByRoleId(roleIds);
+            user.setPermissions(permission);
+        }).toList();
     }
 
     @Override
