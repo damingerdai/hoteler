@@ -109,12 +109,12 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         this.render(request, response, new ErrorResponse(new ApiError("ERROR-600001", result)));
     }
 
-    private  void render(HttpServletRequest request, HttpServletResponse response, Object object) throws IOException {
+    private void render(HttpServletRequest request, HttpServletResponse response, Object object) throws IOException {
         // 允许跨域
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        //response.setHeader("Access-Control-Allow-Origin", "*");
         // 允许自定义请求头token(允许head跨域)
-        response.setHeader("Access-Control-Allow-Headers", "token, Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
-        response.setHeader("Content-type", "application/json;charset=UTF-8");
+        //response.setHeader("Access-Control-Allow-Headers", "token, Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
+        //response.setHeader("Content-type", "application/json;charset=UTF-8");
         response.getWriter().print(new ObjectMapper().writeValueAsString(object));
     }
 
