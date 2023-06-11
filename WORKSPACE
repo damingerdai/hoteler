@@ -46,7 +46,7 @@ maven_install(
         "org.apache.commons:commons-lang3:3.12.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0",
 
-        "org.glassfish.jaxb:jaxb-runtime:4.0.2",
+        "org.glassfish.jaxb:jaxb-runtime:4.0.3",
         "javax.xml.bind:jaxb-api:2.4.0-b180830.0359",
         "com.github.ben-manes.caffeine:caffeine:3.1.6",
         "cn.hutool:hutool-crypto:5.8.19",
