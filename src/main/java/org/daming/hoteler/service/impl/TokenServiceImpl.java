@@ -2,6 +2,8 @@ package org.daming.hoteler.service.impl;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.base.logger.HotelerLogger;
+import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.UserToken;
@@ -14,16 +16,20 @@ import org.daming.hoteler.utils.JwtUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class TokenServiceImpl implements ITokenService, ApplicationContextAware {
+
+    private final HotelerLogger logger = LoggerManager.getCommonLogger();
 
     private ApplicationContext applicationContext;
 
@@ -33,8 +39,15 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
 
     private ISecretPropService secretPropService;
 
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
     public UserToken createToken(String username, String password) throws HotelerException {
+        var key = this.getUsernameAndPasswordKey(username, password);
+        var cacheUserTokenOptional = this.getUserTokenFormRedisCache(key);
+        if (cacheUserTokenOptional.isPresent()) {
+            return cacheUserTokenOptional.get();
+        }
         var user = userService.getUserByUsername(username);
         if (Objects.isNull(user)) {
             throw this.errorService.createHotelerException(600005);
@@ -44,7 +57,9 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
         if (!user.getPassword().equals(passwordService.encodePassword(password))) {
             throw this.errorService.createHotelerException(600005);
         }
-        return doCreateToken(user);
+        var userToken = doCreateToken(user);
+        this.storeUserTokenToRedisCache(key, userToken);
+        return userToken;
     }
 
     private UserToken doCreateToken(User user) {
@@ -57,7 +72,8 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
         var accessToken = JwtUtil.createJWT(id, subject, ttlMillis, key, claims);
         var refreshToken = JwtUtil.createJWT(id, subject, ttlMillis + Duration.ofHours(23L).toMillis(), key, claims);
         var exp = Instant.now().toEpochMilli() + ttlMillis;
-        return new UserToken().setAccessToken(accessToken).setRefreshToken(refreshToken).setExp(exp);
+        var token = new UserToken().setAccessToken(accessToken).setRefreshToken(refreshToken).setExp(exp);
+        return token;
     }
 
     @Override
@@ -105,11 +121,32 @@ public class TokenServiceImpl implements ITokenService, ApplicationContextAware 
         return Objects.requireNonNull(this.applicationContext).getBean(passwordType + "PasswordService", IPasswordService.class);
     }
 
-    public TokenServiceImpl(IUserService userService, IErrorService errorService, ISecretPropService secretPropService) {
+    private String getUsernameAndPasswordKey(String username, String password) {
+        return "token-" + username + "-" + password;
+    }
+
+    private Optional<UserToken> getUserTokenFormRedisCache(String key) {
+        if (Boolean.TRUE.equals(this.redisTemplate.hasKey(key))) {
+            logger.debug(() -> "key " + key + " is exited in redis cache");
+            var userToken = Objects.requireNonNull(this.redisTemplate.opsForValue().get(key));
+            return Optional.of((UserToken)userToken);
+        } else {
+            logger.debug(() -> "key " + key + " is not exited in redis cache");
+            return Optional.empty();
+        }
+    }
+
+    private void storeUserTokenToRedisCache(String key, UserToken userToken) {
+        logger.debug(() -> " store key " + key + "in redis cache with user token '" + userToken + "', expired datetime is " + (LocalDateTime.now().plusHours(1L)));
+        this.redisTemplate.opsForValue().set(key, userToken, Duration.ofHours(1L));
+    }
+
+    public TokenServiceImpl(IUserService userService, IErrorService errorService, ISecretPropService secretPropService, RedisTemplate<String, Object> redisTemplate) {
         super();
         this.userService = userService;
         this.errorService = errorService;
         this.secretPropService = secretPropService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
