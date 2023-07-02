@@ -35,6 +35,7 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-actuator:3.1.1",
         "org.springframework.boot:spring-boot-starter-data-redis:3.1.1",
         "org.springframework.boot:spring-boot-starter-graphql:3.1.1",
+        "org.springframework.boot:spring-boot-starter-quartz:3.1.1",
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2",
 
         "org.postgresql:postgresql:42.6.0",
