@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.support.ByteArrayRedisSerializer;
+import org.daming.hoteler.listener.RedisMessageListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,6 +18,8 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -34,6 +37,8 @@ import java.time.Duration;
 @ConditionalOnClass(RedisConfig.class)
 @EnableCaching
 public class RedisConfig {
+
+    private static final String HOTELER_ALL_EVENTS = "HOTLER-ALL-EVENTS";
 
     @Bean
     @Primary
@@ -86,6 +91,15 @@ public class RedisConfig {
         redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/limit.lua")));
         redisScript.setResultType(Long.class);
         return redisScript;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, RedisMessageListener listener) {
+        var redisMessageListenerContainer = new RedisMessageListenerContainer();
+        redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
+
+        redisMessageListenerContainer.addMessageListener(listener, new PatternTopic(HOTELER_ALL_EVENTS));
+        return redisMessageListenerContainer;
     }
 
     private RedisSerializer<String> keySerializer() {
