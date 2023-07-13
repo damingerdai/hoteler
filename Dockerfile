@@ -1,4 +1,4 @@
-FROM gradle:8.1.1-jdk17 AS builder
+FROM gradle:8.2.1-jdk17 AS builder
 COPY src /usr/src/app/src
 COPY *.gradle  /usr/src/app/
 RUN gradle build -x test --project-dir  /usr/src/app
