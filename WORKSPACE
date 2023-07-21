@@ -27,15 +27,15 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
     artifacts = [
-        "org.springframework.boot:spring-boot-starter-web:3.1.1",
-        "org.springframework.boot:spring-boot-starter-jdbc:3.1.1",
-        "org.springframework.boot:spring-boot-starter-aop:3.1.1",
-        "org.springframework.boot:spring-boot-starter-security:3.1.1",
-        "org.springframework.boot:spring-boot-starter-cache:3.1.1",
-        "org.springframework.boot:spring-boot-starter-actuator:3.1.1",
-        "org.springframework.boot:spring-boot-starter-data-redis:3.1.1",
-        "org.springframework.boot:spring-boot-starter-graphql:3.1.1",
-        "org.springframework.boot:spring-boot-starter-quartz:3.1.1",
+        "org.springframework.boot:spring-boot-starter-web:3.1.2",
+        "org.springframework.boot:spring-boot-starter-jdbc:3.1.2",
+        "org.springframework.boot:spring-boot-starter-aop:3.1.2",
+        "org.springframework.boot:spring-boot-starter-security:3.1.2",
+        "org.springframework.boot:spring-boot-starter-cache:3.1.2",
+        "org.springframework.boot:spring-boot-starter-actuator:3.1.2",
+        "org.springframework.boot:spring-boot-starter-data-redis:3.1.2",
+        "org.springframework.boot:spring-boot-starter-graphql:3.1.2",
+        "org.springframework.boot:spring-boot-starter-quartz:3.1.2",
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2",
 
         "org.postgresql:postgresql:42.6.0",
@@ -54,8 +54,8 @@ maven_install(
         "org.yaml:snakeyaml:2.0",
         "org.flywaydb:flyway-core:9.20.0",
 
-        "org.springframework.boot:spring-boot-devtools:3.1.1",
-        "org.springframework.boot:spring-boot-starter-test:3.1.1",
+        "org.springframework.boot:spring-boot-devtools:3.1.2",
+        "org.springframework.boot:spring-boot-starter-test:3.1.2",
         "org.springframework.security:spring-security-test:6.1.2",
 
     ],
