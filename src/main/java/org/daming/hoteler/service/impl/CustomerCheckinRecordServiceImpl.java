@@ -1,12 +1,19 @@
 package org.daming.hoteler.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.CustomerCheckinRecord;
+import org.daming.hoteler.pojo.HotelerMessage;
+import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.ICustomerCheckinRecordDao;
+import org.daming.hoteler.service.IErrorService;
+import org.daming.hoteler.service.IEventService;
 import org.daming.hoteler.service.IRoomService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.service.ICustomerCheckinRecordService;
+import org.daming.hoteler.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,14 +37,53 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
 
     private ISnowflakeService snowflakeService;
 
+    private IEventService eventService;
+
+    private ObjectMapper jsonMapper;
+
+    private IErrorService errorService;
+
     @Override
-    public long create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    public void create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+        var beginDate = customerCheckinRecord.getBeginDate().toLocalDate();
+        var endDate =  customerCheckinRecord.getEndDate().toLocalDate();
+        var durations = DateUtils.getDates(beginDate, endDate);
+        for (LocalDate begin : durations) {
+            var end = begin.plusDays(1L);
+            var beginDateTime = begin.atTime(12, 0, 0);
+            var endDateTime = end.atTime(12, 0, 0);
+            var record = new CustomerCheckinRecord();
+            record.setBeginDate(beginDateTime);
+            record.setEndDate(endDateTime);
+            record.setRoomId(customerCheckinRecord.getRoomId());
+            record.setUserId(customerCheckinRecord.getUserId());
+
+            if (DateUtils.isToday(begin)) {
+                this.doCreate(record);
+            } else {
+                this.dispatchCustomerCheckinRecord(record);
+            }
+        }
+    }
+
+    private void doCreate(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
         var id  = this.snowflakeService.nextId();
         customerCheckinRecord.setId(id);
         this.processBeginDateAndEndDate(customerCheckinRecord);
         this.customerCheckinRecordDao.create(customerCheckinRecord);
         this.roomService.updateStatus(customerCheckinRecord.getRoomId(), RoomStatus.InUsed);
-        return id;
+    }
+
+    private void dispatchCustomerCheckinRecord(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+        try {
+            var message = new HotelerMessage();
+            message.setEvent(HotelerEvent.CHECK_IN_TIME);
+            var content = this.jsonMapper.writeValueAsString(customerCheckinRecord);
+            message.setContent(content);
+            this.eventService.publishEvent(message);
+        } catch (JsonProcessingException ex) {
+            throw this.errorService.createHotelerSystemException(ex.getMessage(), ex);
+        }
     }
 
     @Override
@@ -84,10 +130,19 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
         return this.customerCheckinRecordDao.listByRoom(roomId, date);
     }
 
-    public CustomerCheckinRecordServiceImpl(ICustomerCheckinRecordDao customerCheckinRecordDao,IRoomService roomService, ISnowflakeService snowflakeService) {
+    public CustomerCheckinRecordServiceImpl(
+            ICustomerCheckinRecordDao customerCheckinRecordDao,
+            IRoomService roomService,
+            ISnowflakeService snowflakeService,
+            IEventService eventService,
+            ObjectMapper jsonMapper,
+            IErrorService errorService) {
         super();
         this.customerCheckinRecordDao = customerCheckinRecordDao;
         this.roomService = roomService;
         this.snowflakeService = snowflakeService;
+        this.eventService = eventService;
+        this.jsonMapper = jsonMapper;
+        this.errorService = errorService;
     }
 }

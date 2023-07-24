@@ -12,6 +12,8 @@ public final class CommonConstants {
 
     }
 
+    public static final String HOTELER_ALL_EVENTS = "HOTLER-ALL-EVENTS";
+
     public static final String LOGGER_NAME_COMMON = "common.logger";
 
     public static final String LOGGER_NAME_ERROR = "error.logger";

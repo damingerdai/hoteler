@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.support.ByteArrayRedisSerializer;
+import org.daming.hoteler.constants.CommonConstants;
 import org.daming.hoteler.listener.RedisMessageListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cache.CacheManager;
@@ -37,8 +38,6 @@ import java.time.Duration;
 @ConditionalOnClass(RedisConfig.class)
 @EnableCaching
 public class RedisConfig {
-
-    private static final String HOTELER_ALL_EVENTS = "HOTLER-ALL-EVENTS";
 
     @Bean
     @Primary
@@ -97,8 +96,8 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, RedisMessageListener listener) {
         var redisMessageListenerContainer = new RedisMessageListenerContainer();
         redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
-
-        redisMessageListenerContainer.addMessageListener(listener, new PatternTopic(HOTELER_ALL_EVENTS));
+        var topic = new PatternTopic(CommonConstants.HOTELER_ALL_EVENTS);
+        redisMessageListenerContainer.addMessageListener(listener, topic);
         return redisMessageListenerContainer;
     }
 
