@@ -14,7 +14,7 @@ import java.util.List;
  **/
 public interface ICustomerCheckinRecordService {
 
-    long create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException;
+    void create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException;
 
     void update(CustomerCheckinRecord customerCheckinRecord) throws HotelerException;
 
