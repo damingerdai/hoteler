@@ -178,7 +178,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>9.20.0</version>
+                <version>9.21.1</version>
                 <configuration>
                     <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
                     <user>postgres</user>
