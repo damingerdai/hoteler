@@ -52,7 +52,7 @@ maven_install(
         "com.github.ben-manes.caffeine:caffeine:3.1.6",
         "cn.hutool:hutool-crypto:5.8.20",
         "org.yaml:snakeyaml:2.1",
-        "org.flywaydb:flyway-core:9.20.0",
+        "org.flywaydb:flyway-core:9.21.1",
 
         "org.springframework.boot:spring-boot-devtools:3.1.2",
         "org.springframework.boot:spring-boot-starter-test:3.1.2",
