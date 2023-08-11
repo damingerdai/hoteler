@@ -51,7 +51,7 @@ maven_install(
         "javax.xml.bind:jaxb-api:2.4.0-b180830.0359",
         "com.github.ben-manes.caffeine:caffeine:3.1.6",
         "cn.hutool:hutool-crypto:5.8.20",
-        "org.yaml:snakeyaml:2.0",
+        "org.yaml:snakeyaml:2.1",
         "org.flywaydb:flyway-core:9.20.0",
 
         "org.springframework.boot:spring-boot-devtools:3.1.2",
