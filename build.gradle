@@ -56,6 +56,7 @@ dependencies {
 	implementation 'cn.hutool:hutool-crypto:5.8.21'
 	implementation 'org.yaml:snakeyaml:2.1'
 	implementation 'org.flywaydb:flyway-core:9.21.1'
+	implementation 'com.cronutils:cron-utils:9.2.1'
 
 	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

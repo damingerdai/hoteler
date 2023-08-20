@@ -4,6 +4,7 @@ import org.daming.hoteler.service.IQuartzService;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -32,6 +33,30 @@ public class QuartzServiceImpl implements IQuartzService {
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (ClassNotFoundException e) {
+            throw new SchedulerException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public void addJob(String name, String group, String cron, Class<? extends Job> clazz) throws SchedulerException {
+        try {
+            TriggerKey triggerKey = TriggerKey.triggerKey(name, group);
+            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(name, group).build();
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (Exception e) {
+            throw new SchedulerException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public void addJob(String name, String group, String cron, Class<? extends Job> clazz, JobDataMap jobDataMap) throws SchedulerException {
+        try {
+            TriggerKey triggerKey = TriggerKey.triggerKey(name, group);
+            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(name, group).setJobData(jobDataMap).build();
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
+            scheduler.scheduleJob(jobDetail, trigger);
+        } catch (Exception e) {
             throw new SchedulerException(e.getMessage(), e.getCause());
         }
     }

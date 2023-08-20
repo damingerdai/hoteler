@@ -1,5 +1,7 @@
 package org.daming.hoteler.service;
 
+import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
@@ -12,6 +14,10 @@ import java.util.List;
 public interface IQuartzService {
 
     void addJob(String name, String group, String cron, String className) throws SchedulerException;
+
+    void addJob(String name, String group, String cron, Class<? extends Job> clazz) throws SchedulerException;
+
+    void addJob(String name, String group, String cron, Class<? extends Job> clazz, JobDataMap jobDataMap) throws SchedulerException;
 
     // JobInfo getJob(String name, String group) throws SchedulerException;
 

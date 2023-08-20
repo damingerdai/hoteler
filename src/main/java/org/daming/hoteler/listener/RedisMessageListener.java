@@ -40,8 +40,10 @@ public class RedisMessageListener implements MessageListener {
 
             var body = this.redisTemplate.getValueSerializer().deserialize(message.getBody());
             if (body instanceof String) {
-                var hotlerMessage = this.jsonMapper.readValue((String)body, HotelerMessage.class);
+                var hotlerMessage = this.jsonMapper.readValue((String) body, HotelerMessage.class);
                 this.eventService.receiveEvent(hotlerMessage);
+            } else if (body instanceof HotelerMessage) {
+                this.eventService.receiveEvent((HotelerMessage)body);
             } else {
                 logger.warn("unsupported message: " + Arrays.toString(message.getBody()));
             }

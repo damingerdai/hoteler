@@ -20,7 +20,6 @@ public class JacksonRoomStatusDeserializer extends JsonDeserializer<RoomStatus> 
     @Override
     public RoomStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         var id = jsonParser.getIntValue();
-        System.out.println(id);
         return RoomStatus.getInstance(id);
     }
 }
