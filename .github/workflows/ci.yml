@@ -34,7 +34,7 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5432/tcp
       redis:
-        image: redis:7.0.12-alpine
+        image: redis:7.2.0-alpine
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
