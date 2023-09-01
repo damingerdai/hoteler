@@ -42,6 +42,7 @@ bazel-out/
 bazel-out
 bazel-testlogs/
 bazel-testlogs
+.bazelrc.*
 
 ### Others ###
 logs/

@@ -18,7 +18,7 @@ java_library(
         "@maven//:org_mybatis_spring_boot_mybatis_spring_boot_starter",
 
         "@maven//:org_postgresql_postgresql",
-        "@maven//:org_springdoc_springdoc_openapi_ui",
+        "@maven//:org_springdoc_springdoc_openapi_starter_webmvc-ui",
         "@maven//:io_jsonwebtoken_jjwt_api",
         "@maven//:io_jsonwebtoken_jjwt_impl",
         "@maven//:io_jsonwebtoken_jjwt_jackson",
