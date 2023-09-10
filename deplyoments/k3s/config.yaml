@@ -27,6 +27,26 @@ data:
         baseline-on-migrate: true
       main:
         allow-bean-definition-overriding: true
+      quartz:
+        properties:
+          org:
+            quartz:
+              scheduler:
+                instanceName: clusteredScheduler
+                instanceId: AUTO
+              jobStore:
+                class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+                driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+                tablePrefix: QRTZ_
+                isClustered: true
+                clusterCheckinInterval: 10000
+                useProperties: false
+              threadPool:
+                class: org.quartz.simpl.SimpleThreadPool
+                threadCount: 10
+                threadPriority: 5
+                threadsInheritContextClassLoaderOfInitializingThread: true
+        job-store-type: jdbc
     mybatis:
       configuration:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
