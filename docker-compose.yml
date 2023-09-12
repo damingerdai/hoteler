@@ -16,7 +16,7 @@ services:
       - db
 
   db:
-    image: postgres:15
+    image: postgres:15.4-alpine3.18
     container_name: db
     ports:
       - 5432:5432
