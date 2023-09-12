@@ -1,4 +1,4 @@
-CREATE TABLE roles (
+CREATE TABLE IF NOT EXISTS roles (
     id bigint primary key not null,
     name varchar(100) not null,
     description text not null,

@@ -1,4 +1,4 @@
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     id bigint primary key not null,
     name varchar(100) not null,
     gender char(1) default 'N',
@@ -8,4 +8,4 @@ CREATE TABLE customers (
     create_user varchar(50),
     update_dt timestamp,
     update_user varchar(50)
-)
+);

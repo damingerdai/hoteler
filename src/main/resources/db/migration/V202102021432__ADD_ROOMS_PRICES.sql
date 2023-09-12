@@ -1,1 +1,1 @@
-ALTER TABLE "public"."rooms" ADD COLUMN "price" numeric DEFAULT '0';
+ALTER TABLE rooms ADD COLUMN IF NOT EXISTS price numeric DEFAULT '0';

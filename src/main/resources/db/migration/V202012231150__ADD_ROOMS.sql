@@ -1,4 +1,4 @@
-CREATE TABLE rooms(
+CREATE TABLE IF NOT EXISTS rooms (
     id bigint primary key not null,
     roomname varchar(100) not null,
     status integer,
@@ -6,4 +6,4 @@ CREATE TABLE rooms(
     create_user varchar(50),
     update_dt timestamp,
     update_user varchar(50)
-)
+);
