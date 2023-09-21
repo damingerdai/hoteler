@@ -20,7 +20,8 @@ spec:
     spec:
       containers:
         - name: pgbouncer
-          image: edoburu/pgbouncer:1.9.0
+          # image: edoburu/pgbouncer:1.9.0
+          image: edoburu/pgbouncer:1:20:1-p0
           #imagePullPolicy: Always
           ports:
             - containerPort: 5432
