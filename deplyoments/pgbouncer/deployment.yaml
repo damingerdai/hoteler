@@ -6,10 +6,10 @@ metadata:
   labels:
     app: pgbouncer
 spec:
-  revisionHistoryLimit: 10  # removes old replicasets for deployment rollbacks
+  revisionHistoryLimit: 10 # removes old replicasets for deployment rollbacks
   strategy:
     rollingUpdate:
-      maxUnavailable: 0  # Avoid Terminating and ContainerCreating at the same time
+      maxUnavailable: 0 # Avoid Terminating and ContainerCreating at the same time
   selector:
     matchLabels:
       app: pgbouncer
@@ -20,7 +20,6 @@ spec:
     spec:
       containers:
         - name: pgbouncer
-          # image: edoburu/pgbouncer:1.9.0
           image: edoburu/pgbouncer:1:20:1-p0
           #imagePullPolicy: Always
           ports:
@@ -28,7 +27,7 @@ spec:
           volumeMounts:
             - name: configfiles
               mountPath: "/etc/pgbouncer"
-              readOnly: true  # writes update the secret!
+              readOnly: true # writes update the secret!
           livenessProbe:
             tcpSocket:
               port: 5432
@@ -37,11 +36,12 @@ spec:
             preStop:
               exec:
                 # Allow existing queries clients to complete within 120 seconds
-                command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+                command:
+                  ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
-              drop: ['all']
+              drop: ["all"]
       volumes:
         - name: configfiles
           secret:
