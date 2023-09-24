@@ -13,7 +13,7 @@ WORKDIR /app
 COPY src/main/angular /app
 RUN yarn build
 
-FROM maven:3.8.5-openjdk-17-slim AS back-build
+FROM maven:3.9.4-amazoncorretto-21-debian AS back-build
 
 WORKDIR app
 COPY pom.xml /app
@@ -23,7 +23,7 @@ COPY --from=front-build /app/dist/hoteler /app/src/main/resources/static
 COPY --from=front-build /app/dist/hoteler/index.html /app/src/main/resources/static/error/404.html
 RUN mvn package -Dmaven.test.skip=true
 
-FROM openjdk:18.0.2-jdk-slim
+FROM openjdk:21-slim
 WORKDIR /app
 COPY --from=back-build /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai

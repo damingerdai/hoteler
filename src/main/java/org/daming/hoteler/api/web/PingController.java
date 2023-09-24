@@ -16,7 +16,7 @@ public class PingController {
 
     @Operation(summary = "ping接口")
     @RequestMapping("ping")
-    @RateLimiter(time = 5,count = 3,limitType = LimitType.IP)
+    // @RateLimiter(time = 5,count = 3,limitType = LimitType.IP)
     public String Ping() {
         return this.pingService.ping();
     }
