@@ -17,21 +17,6 @@ data:
   POSTGRES_DB: postgres
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pv-claim
-  namespace: hoteler-namespace
-  # labels:
-  #   type: local
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
----
-apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv-volume
@@ -46,6 +31,21 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  namespace: hoteler-namespace
+  # labels:
+  #   type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -65,7 +65,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:13.3
+          image: postgres:16.0-alpine3.18
           envFrom:
             - configMapRef:
                 name: postgres-config

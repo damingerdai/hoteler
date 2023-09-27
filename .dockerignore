@@ -33,3 +33,4 @@ src/main/resources/static/
 
 ### Others ###
 logs/
+bazel-*/

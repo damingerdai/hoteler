@@ -16,6 +16,20 @@ data:
     pidfile /data/redis-6379.pid
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv
+  namespace: hoteler-namespace
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/redis-data"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
@@ -23,11 +37,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  # storageClassName: manual
-  storageClassName: local-path
+  storageClassName: manual
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -13,12 +13,12 @@ data:
     spring:
       data:
         redis:
-          host: 127.0.0.1
+          host: redis
           port: 6379
           database: 0
-          password:
+          password: 12345
       datasource:
-        url: jdbc:postgresql://127.0.0.1:5432/postgres
+        url: jdbc:postgresql://postgres:5432/postgres
         username: postgres
         password: 123456
         driver-class-name: org.postgresql.Driver
