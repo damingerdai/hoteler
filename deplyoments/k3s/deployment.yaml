@@ -28,6 +28,9 @@ spec:
             requests:
               cpu: 200m
               memory: 500Mi
+            limits:
+              cpu: "0.5"
+              memory: "1.5g"
           # 指定配置文件挂载到 /app/config 目录下，构建镜像时的jar包也在 /app 目录下
           volumeMounts:
             - mountPath: /app/config
