@@ -77,6 +77,11 @@ jobs:
         run: ./gradlew test
         env:
           IS-CI: true
+      - name: Unit Test with Maven
+        # run: ./gradlew flywayMigrate && ./gradlew build
+        run: ./mvnw test
+        env:
+          IS-CI: true
   build:
     runs-on: ${{ matrix.os }}
     needs: [ test ]
