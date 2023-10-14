@@ -19,19 +19,19 @@ public class JwtUtil {
         var now = new Date(nowMillis);
         var builder = Jwts.builder();
         if (Objects.nonNull(claims) && !claims.isEmpty()) {
-            builder.setClaims(claims);
+            builder.claims(claims);
         }
-        builder.setId(id).setIssuedAt(now).setSubject(subject).signWith(secretKey);
+        builder.id(id).issuedAt(now).subject(subject).signWith(secretKey);
         if (ttlMillis >= 0L) {
             var expMillis = nowMillis + ttlMillis;
             var exp = new Date(expMillis);
-            builder.setExpiration(exp);
+            builder.expiration(exp);
         }
         return builder.compact();
     }
 
     public static Claims parseJwt(String jwt, SecretKey secretKey) {
-        var claim = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(jwt).getBody();
+        var claim = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt).getPayload();
         return claim;
     }
 
