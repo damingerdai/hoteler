@@ -194,6 +194,7 @@
             </plugin>
 
             <!-- git changelog maven plugin -->
+            <!--
             <plugin>
                 <groupId>se.bjurr.gitchangelog</groupId>
                 <artifactId>git-changelog-maven-plugin</artifactId>
@@ -209,7 +210,7 @@
                             <useIntegrations>true</useIntegrations>
                             <gitHubEnabled>trye</gitHubEnabled>
                             <gitHubApi>https://api.github.com/repos/damingerdai/hoteler</gitHubApi>
-<!--                            <gitHubToken>${GITHUB_OAUTH2TOKEN}</gitHubToken>&lt;!&ndash; Optional // &ndash;&gt;-->
+                            <gitHubToken>${GITHUB_OAUTH2TOKEN}</gitHubToken>
                             <gitHubIssuePattern>#([0-9]*)</gitHubIssuePattern>
                             <templateFile>changelog.mustache</templateFile>
                             <readableTagName>-([^-]+?)$</readableTagName>
@@ -219,7 +220,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            -->
         </plugins>
     </build>
     <repositories>
