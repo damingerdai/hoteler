@@ -43,7 +43,7 @@ maven_install(
         "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0",
         "io.jsonwebtoken:jjwt-api:0.12.2",
         "io.jsonwebtoken:jjwt-impl:0.12.2",
-        "io.jsonwebtoken:jjwt-jackson:0.12.2",
+        "io.jsonwebtoken:jjwt-jackson:0.12.3",
         "commons-codec:commons-codec:1.16.0",
         "org.apache.commons:commons-lang3:3.13.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0",
