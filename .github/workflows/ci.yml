@@ -44,7 +44,7 @@ jobs:
           # Maps port 6379 on service container to the host
           - 6379:6379
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -83,7 +83,7 @@ jobs:
         java-version: [ 21 ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -108,7 +108,7 @@ jobs:
         java-version: [ 21 ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -149,7 +149,7 @@ jobs:
         java-version: [ 21 ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v4.1.0
+      - uses: actions/checkout@v4.1.1
       - name: Mount bazel cache
         uses: actions/cache@v3
         with:
