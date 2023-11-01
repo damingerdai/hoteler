@@ -6,6 +6,7 @@ buildscript {
 		maven { url 'https://repo.spring.io/snapshot' }
 		mavenCentral()
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+		maven { url 'https://plugins.gradle.org/m2/' }
 	}
 }
 
@@ -95,5 +96,12 @@ if (project.hasProperty('standalone')) {
 	bootJar {
 		archiveFileName = "hoteler-standalone.jar"
 		mainClass = 'org.daming.hoteler.HotelerApplication'
+	}
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
 	}
 }

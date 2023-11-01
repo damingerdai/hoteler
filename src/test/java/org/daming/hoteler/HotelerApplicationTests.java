@@ -10,6 +10,8 @@ class HotelerApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("Hello, this is ci env");
+		System.out.println(System.getenv("CI"));
 	}
 
 }

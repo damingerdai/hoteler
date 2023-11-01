@@ -21,6 +21,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <changelog.version>1.100.6</changelog.version>
         <jsonwebtoken.version>0.12.3</jsonwebtoken.version>
+        <jacoco.version>0.8.11</jacoco.version>
     </properties>
 
     <dependencies>
@@ -142,7 +143,6 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -162,9 +162,34 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.2.1</version>
+            </plugin>
+            <!-- jacoco: generate test coverage report -->
+<!--            <plugin>-->
+<!--                <groupId>org.jacoco</groupId>-->
+<!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--                <version>${jacoco.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>prepare-agent</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>generate-code-coverage-report</id>-->
+<!--                        <phase>test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>report</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -194,6 +219,7 @@
             </plugin>
 
             <!-- git changelog maven plugin -->
+            <!--
             <plugin>
                 <groupId>se.bjurr.gitchangelog</groupId>
                 <artifactId>git-changelog-maven-plugin</artifactId>
@@ -209,7 +235,7 @@
                             <useIntegrations>true</useIntegrations>
                             <gitHubEnabled>trye</gitHubEnabled>
                             <gitHubApi>https://api.github.com/repos/damingerdai/hoteler</gitHubApi>
-<!--                            <gitHubToken>${GITHUB_OAUTH2TOKEN}</gitHubToken>&lt;!&ndash; Optional // &ndash;&gt;-->
+                            <gitHubToken>${GITHUB_OAUTH2TOKEN}</gitHubToken>
                             <gitHubIssuePattern>#([0-9]*)</gitHubIssuePattern>
                             <templateFile>changelog.mustache</templateFile>
                             <readableTagName>-([^-]+?)$</readableTagName>
@@ -219,7 +245,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            -->
         </plugins>
     </build>
     <repositories>
