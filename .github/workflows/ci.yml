@@ -76,12 +76,12 @@ jobs:
         # run: ./gradlew flywayMigrate && ./gradlew build
         run: ./gradlew test
         env:
-          IS-CI: true
+          CI: true
       - name: Unit Test with Maven
         # run: ./gradlew flywayMigrate && ./gradlew build
-        run: ./mvnw test
+        run: ./mvnw test && ./mvnw surefire-report:report-only
         env:
-          IS-CI: true
+          CI: true
   build:
     runs-on: ${{ matrix.os }}
     needs: [ test ]

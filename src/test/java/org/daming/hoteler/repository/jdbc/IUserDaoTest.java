@@ -11,8 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@EnabledIfEnvironmentVariable(named = "IS-CI", matches = "true")
-@Disabled
+@EnabledIfEnvironmentVariable(named = "CI", matches = "true")
 class IUserDaoTest {
 
     @Autowired
