@@ -12,15 +12,15 @@ import java.util.concurrent.Executors;
  * @author daming
  * @version 2023-09-23 12:40
  **/
-@Configuration
+//@Configuration
 public class VirtualThreadConfig {
 
-    @Bean
+    //@Bean
     public AsyncTaskExecutor applicationTaskExecutor() {
         return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
     }
 
-    @Bean
+    //@Bean
     public TomcatProtocolHandlerCustomizer<?> protocolHandlerCustomizer() {
         return protocolHandler -> {
             protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
