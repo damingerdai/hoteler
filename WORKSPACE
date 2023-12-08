@@ -40,7 +40,7 @@ maven_install(
 
         "org.postgresql:postgresql:42.7.1",
 
-        "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0",
+        "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0",
         "io.jsonwebtoken:jjwt-api:0.12.3",
         "io.jsonwebtoken:jjwt-impl:0.12.3",
         "io.jsonwebtoken:jjwt-jackson:0.12.3",
