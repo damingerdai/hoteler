@@ -13,7 +13,7 @@ WORKDIR /app
 COPY src/main/angular /app
 RUN yarn build
 
-FROM maven:3.9.5-amazoncorretto-21-debian AS back-build
+FROM maven:3.9.6-amazoncorretto-21-debian AS back-build
 
 WORKDIR app
 COPY pom.xml /app
