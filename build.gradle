@@ -56,7 +56,7 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine'
 	implementation 'cn.hutool:hutool-crypto:5.8.23'
 	implementation 'org.yaml:snakeyaml:2.2'
-	implementation 'org.flywaydb:flyway-core:10.0.1'
+	implementation 'org.flywaydb:flyway-core:10.2.0'
 	implementation 'com.cronutils:cron-utils:9.2.1'
 
 	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
