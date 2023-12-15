@@ -7,6 +7,7 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.service.IErrorService;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -18,7 +19,7 @@ import java.security.SecureRandom;
  * @version 2023-12-15 13:33
  */
 @Service("argon2PasswordService")
-public class Argon2PasswordService implements IPasswordService {
+public class Argon2PasswordService implements IPasswordService, InitializingBean {
 
     private final int iterations = 2;
     private final int memLimit = 66536;
@@ -54,7 +55,7 @@ public class Argon2PasswordService implements IPasswordService {
         return salt;
     }
 
-    @PostConstruct
+    // @PostConstruct
     private void init() {
         byte[] salt = this.secretPropService.getSalt().getBytes(StandardCharsets.UTF_8);
         var builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
@@ -74,5 +75,10 @@ public class Argon2PasswordService implements IPasswordService {
         super();
         this.errorService = errorService;
         this.secretPropService = secretPropService;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.init();
     }
 }
