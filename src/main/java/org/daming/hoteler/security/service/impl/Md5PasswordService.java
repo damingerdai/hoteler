@@ -29,7 +29,7 @@ public class Md5PasswordService implements IPasswordService {
     public String decrypt(String encoderContent) throws HotelerException {
         throw this.errorService.createHotelerSystemException(
                 "md5 algorithm encrypt is not supported",
-                new RuntimeException("org.daming.hoteler.security.service.impl.Md5PasswordService#encrypt method is not supported"));
+                new RuntimeException("org.daming.hoteler.security.service.impl.Md5PasswordService#decrypt method is not supported"));
     }
 
     /**
