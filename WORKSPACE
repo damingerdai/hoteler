@@ -11,7 +11,7 @@ http_archive(
     sha256 = RULES_JVM_EXTERNAL_SHA,
     urls = [
         "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
-        "https://ghproxy.com/https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
+        "https://mirror.ghproxy.com/https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
     ]
 )
 
@@ -54,6 +54,7 @@ maven_install(
         "org.yaml:snakeyaml:2.2",
         "org.flywaydb:flyway-core:10.0.1",
         "com.cronutils:cron-utils:9.2.1",
+        "org.bouncycastle:bcpkix-jdk18on:1.77",
 
         "org.springframework.boot:spring-boot-devtools:3.2.0",
         "org.springframework.boot:spring-boot-starter-test:3.2.0",

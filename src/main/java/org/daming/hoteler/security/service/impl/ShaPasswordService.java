@@ -30,7 +30,7 @@ public class ShaPasswordService implements IPasswordService {
     public String decrypt(String encoderContent) throws HotelerException {
         throw this.errorService.createHotelerSystemException(
                 "SHA algorithm encrypt is not supported",
-                new RuntimeException("org.daming.hoteler.security.service.impl.ShaPasswordService#encrypt method is not supported"));
+                new RuntimeException("org.daming.hoteler.security.service.impl.ShaPasswordService#decrypt method is not supported"));
     }
 
     /**
