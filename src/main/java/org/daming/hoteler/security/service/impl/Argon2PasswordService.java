@@ -1,6 +1,5 @@
 package org.daming.hoteler.security.service.impl;
 
-import jakarta.annotation.PostConstruct;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.daming.hoteler.base.exceptions.HotelerException;
@@ -22,7 +21,7 @@ import java.security.SecureRandom;
 public class Argon2PasswordService implements IPasswordService, InitializingBean {
 
     private final int iterations = 2;
-    private final int memLimit = 66536;
+    private final int memLimit = 16384;
     private final int hashLength = 32;
     private final int parallelism = 1;
 
