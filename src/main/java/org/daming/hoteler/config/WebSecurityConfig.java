@@ -37,39 +37,28 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class WebSecurityConfig {
 
+    private  String[] authWhiteList = {
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/swagger-resources/**",
+            "/v2/**",
+            "/csrf",
+
+            // other
+            "**.html",
+            "/css/**",
+            "/js/**",
+            "/html/**",
+            "/instances",
+            "/favicon.ico"
+    };
+
     @Autowired
     private ISecretPropService secretPropService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // 放行 swagger 相关路径
-        String[] authWhiteList = {
-                "/swagger-ui.html",
-                "/webjars/**",
-                "/swagger-resources/**",
-                "/v2/**",
-                "/csrf",
-
-                // other
-                "**.html",
-                "/css/**",
-                "/js/**",
-                "/html/**",
-                "/instances",
-                "/favicon.ico"
-        };
-        //对于在header里面增加token等类似情况，放行所有OPTIONS请求。
-        return (web) -> web.ignoring()
-                .requestMatchers(HttpMethod.OPTIONS, "/**")
-                .requestMatchers(HttpMethod.POST, "/api/v1/user")
-                .requestMatchers("/api/v1/job/**")
-                // 可以直接访问的静态数据或接口
-                .requestMatchers(authWhiteList);
     }
 
     @Bean
@@ -93,9 +82,11 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/v1/token").anonymous()//普通用户权限
                             .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
                             .requestMatchers("/api/login").permitAll()
+                            .requestMatchers(authWhiteList).permitAll()
                             //其他的需要授权后访问
                             .anyRequest().anonymous();
-                });// 授权
+                })// 授权
+                ;
 //                .and()// 异常
 //                .exceptionHandling()
 //                .accessDeniedHandler(accessDeny)//授权异常处理
