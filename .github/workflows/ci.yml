@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         java-version: [ 21 ]
-        go-version: ["1.21.1"]
+        go-version: ["1.21.5"]
         os: [ubuntu-latest]
     # https://github.com/actions/example-services/blob/master/.github/workflows/postgres-service.yml
     services:
@@ -45,6 +45,8 @@ jobs:
           - 6379:6379
     steps:
       - uses: actions/checkout@v4.1.1
+        with:
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
