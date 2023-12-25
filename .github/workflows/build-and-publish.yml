@@ -42,7 +42,7 @@ jobs:
 
   deploy-to-kubernetes:
     needs: build-and-push-docker-image
-    name: Build Docker image and push to repositories
+    name: Deploy to kubernetes
     runs-on: ubuntu-latest
     steps:
       - name: Authenticate to k3s
