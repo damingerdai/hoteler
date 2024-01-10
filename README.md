@@ -109,3 +109,8 @@ kubectl apply -f app.yaml
 kubectl port-forward --namespace hoteler-namespace service/postgres 5432:5432 --insecure-skip-tls-verify
 kubectl port-forward --namespace hoteler-namespace service/hoteler-web 4200:80 --insecure-skip-tls-verify
 ```
+
+
+# 鸣谢
+
+[![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://jb.gg/OpenSourceSupport)
