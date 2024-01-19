@@ -36,7 +36,7 @@ public class CustomerCheckinRecordController {
     @PostMapping("customer-checkin-record")
     public DataResponse<Long> createCustomerCheckinRecord(@RequestBody CreateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
-                .setUserId(request.getUserId())
+                .setCustomerId(request.getCustomerId())
                 .setRoomId(request.getRoomId())
                 .setBeginDate(request.getBeginDate())
                 .setEndDate(request.getEndDate());
@@ -49,7 +49,7 @@ public class CustomerCheckinRecordController {
     public CommonResponse updateCustomerCheckinRecord(@RequestBody UpdateCustomerCheckinRecordRequest request) {
         var ur = new CustomerCheckinRecord()
                 .setId(request.getId())
-                .setUserId(request.getUserId())
+                .setCustomerId(request.getCustomerId())
                 .setRoomId(request.getRoomId())
                 .setBeginDate(request.getBeginDate())
                 .setEndDate(request.getEndDate());

@@ -56,7 +56,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
             record.setBeginDate(beginDateTime);
             record.setEndDate(endDateTime);
             record.setRoomId(customerCheckinRecord.getRoomId());
-            record.setUserId(customerCheckinRecord.getUserId());
+            record.setCustomerId(customerCheckinRecord.getCustomerId());
 
             if (DateUtils.isToday(begin)) {
                 this.doCreate(record);
