@@ -27,15 +27,15 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
     artifacts = [
-        "org.springframework.boot:spring-boot-starter-web:3.2.1",
-        "org.springframework.boot:spring-boot-starter-jdbc:3.2.1",
-        "org.springframework.boot:spring-boot-starter-aop:3.2.1",
-        "org.springframework.boot:spring-boot-starter-security:3.2.1",
-        "org.springframework.boot:spring-boot-starter-cache:3.2.1",
-        "org.springframework.boot:spring-boot-starter-actuator:3.2.1",
-        "org.springframework.boot:spring-boot-starter-data-redis:3.2.1",
-        "org.springframework.boot:spring-boot-starter-graphql:3.2.1",
-        "org.springframework.boot:spring-boot-starter-quartz:3.2.1",
+        "org.springframework.boot:spring-boot-starter-web:3.2.2",
+        "org.springframework.boot:spring-boot-starter-jdbc:3.2.2",
+        "org.springframework.boot:spring-boot-starter-aop:3.2.2",
+        "org.springframework.boot:spring-boot-starter-security:3.2.2",
+        "org.springframework.boot:spring-boot-starter-cache:3.2.2",
+        "org.springframework.boot:spring-boot-starter-actuator:3.2.2",
+        "org.springframework.boot:spring-boot-starter-data-redis:3.2.2",
+        "org.springframework.boot:spring-boot-starter-graphql:3.2.2",
+        "org.springframework.boot:spring-boot-starter-quartz:3.2.2",
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3",
 
         "org.postgresql:postgresql:42.7.1",
@@ -56,8 +56,8 @@ maven_install(
         "com.cronutils:cron-utils:9.2.1",
         "org.bouncycastle:bcpkix-jdk18on:1.77",
 
-        "org.springframework.boot:spring-boot-devtools:3.2.1",
-        "org.springframework.boot:spring-boot-starter-test:3.2.1",
+        "org.springframework.boot:spring-boot-devtools:3.2.2",
+        "org.springframework.boot:spring-boot-starter-test:3.2.2",
         "org.springframework.security:spring-security-test:6.2.1",
 
     ],
