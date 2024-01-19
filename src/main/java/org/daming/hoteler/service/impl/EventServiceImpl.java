@@ -65,7 +65,7 @@ public class EventServiceImpl implements IEventService {
 
     private void processCheckInTimeEvent(HotelerEvent type,  CustomerCheckinRecord record) throws SchedulerException {
         var beginDate = record.getBeginDate();
-        var triggerName = String.valueOf( record.getUserId() + record.getRoomId() + record.hashCode());
+        var triggerName = String.valueOf( record.getCustomerId() + record.getRoomId() + record.hashCode());
         var cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
                 .withSecond(FieldExpressionFactory.on(0))
                 .withMinute(FieldExpressionFactory.on(0))

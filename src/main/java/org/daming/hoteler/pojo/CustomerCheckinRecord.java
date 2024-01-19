@@ -20,7 +20,7 @@ public class CustomerCheckinRecord implements Serializable {
     private long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private long userId;
+    private long customerId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private long roomId;
@@ -38,12 +38,12 @@ public class CustomerCheckinRecord implements Serializable {
         return this;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public CustomerCheckinRecord setUserId(long userId) {
-        this.userId = userId;
+    public CustomerCheckinRecord setCustomerId(long customerId) {
+        this.customerId = customerId;
         return this;
     }
 
@@ -78,10 +78,10 @@ public class CustomerCheckinRecord implements Serializable {
         super();
     }
 
-    public CustomerCheckinRecord(long id, long userId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
+    public CustomerCheckinRecord(long id, long customerId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
         super();
         this.id = id;
-        this.userId = userId;
+        this.customerId = customerId;
         this.roomId = roomId;
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -91,7 +91,7 @@ public class CustomerCheckinRecord implements Serializable {
     public String toString() {
         return new StringJoiner(", ", CustomerCheckinRecord.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
-                .add("userId=" + userId)
+                .add("customerId=" + customerId)
                 .add("roomId=" + roomId)
                 .add("beginDate=" + beginDate)
                 .add("endDate=" + endDate)
