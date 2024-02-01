@@ -2,6 +2,7 @@ package org.daming.hoteler.api.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.CustomerCheckinRecord;
 import org.daming.hoteler.pojo.request.CreateCustomerCheckinRecordRequest;
@@ -29,8 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1")
 public class CustomerCheckinRecordController {
 
-    private ICustomerCheckinRecordService customerCheckinRecordService;
-    private IErrorService errorService;
+    private final ICustomerCheckinRecordService customerCheckinRecordService;
+    private final IErrorService errorService;
 
     @Operation(summary = "创建用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("customer-checkin-record")
@@ -87,8 +88,23 @@ public class CustomerCheckinRecordController {
         }
     }
 
-    public CustomerCheckinRecordController(ICustomerCheckinRecordService customerCheckinRecordService) {
+    @Operation(summary = "获取所有用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
+    @GetMapping("customer-checkin-records")
+    public CommonResponse listUserRoomRelationship() throws HotelerException {
+        try {
+            var ur = this.customerCheckinRecordService.list();
+            return new DataResponse<>(ur);
+        } catch (NumberFormatException nfe) {
+            var params = new Object[] { nfe.getMessage() };
+            throw errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, params, nfe);
+        } catch (Exception ex) {
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
+    }
+
+    public CustomerCheckinRecordController(ICustomerCheckinRecordService customerCheckinRecordService, IErrorService errorService) {
         super();
         this.customerCheckinRecordService = customerCheckinRecordService;
+        this.errorService = errorService;
     }
 }
