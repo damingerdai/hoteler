@@ -1,3 +1,6 @@
-build --java_runtime_version=17
-build --java_language_version=17
+build --java_language_version=17 --java_runtime_version=17 --tool_java_language_version=17 --tool_java_runtime_version=17
+test  --java_language_version=17 --java_runtime_version=17 --tool_java_language_version=17 --tool_java_runtime_version=17
+
+# Load any settings which are specific to the current user. Needs to be *last* statement
+# in this config, as the user configuration should be able to overwrite flags from this file.
 try-import %workspace%/.bazelrc.user

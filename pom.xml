@@ -20,7 +20,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <changelog.version>1.100.6</changelog.version>
-        <jsonwebtoken.version>0.12.4</jsonwebtoken.version>
+        <jsonwebtoken.version>0.12.5</jsonwebtoken.version>
         <jacoco.version>0.8.11</jacoco.version>
     </properties>
 
