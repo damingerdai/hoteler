@@ -72,4 +72,5 @@ maven_install(
         "https://jcenter.bintray.com/",
         "https://maven.google.com",
     ],
+    maven_install_json = "//:maven_install.json",
 )
