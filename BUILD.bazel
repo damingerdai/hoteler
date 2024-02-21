@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_test")
+load("@rules_spring//springboot:springboot.bzl", "springboot")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -28,21 +29,34 @@ java_library(
         "@maven//:cn_hutool_hutool_crypto",
 
         "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_loader",
         "@maven//:org_springframework_boot_spring_boot_autoconfigure",
         "@maven//:org_springframework_spring_beans",
         "@maven//:org_springframework_spring_web",
         "@maven//:org_springframework_spring_context",
     ],
+    resources = [
+        "//src/main/resources:resource",
+    ],
 )
 
 java_binary(
-    name = "hoteler",
+    name = "hoteler-jar",
     main_class = "org.daming.hoteler.HotelerApplication",
     resources = [
         "//src/main/resources:resource",
     ],
     runtime_deps = [":java-maven-lib"],
 )
+
+springboot(  
+    name = "hoteler",  
+    boot_app_class = "org.daming.hoteler.HotelerApplication",
+    # refrence the library
+    java_library = ":java-maven-lib",
+    boot_launcher_class = 'org.springframework.boot.loader.launch.JarLauncher',
+)
+
 
 java_test(
     name = "tests",

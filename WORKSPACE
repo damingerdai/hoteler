@@ -15,6 +15,15 @@ http_archive(
     ]
 )
 
+http_archive(
+    name = "rules_spring",
+    sha256 = "7bb891ccb2f53ca188a769b3a3777be1c38348e18091afea05320f3003b3e886",
+    urls = [
+        "https://github.com/salesforce/rules_spring/releases/download/2.3.1/rules-spring-2.3.1.zip",
+        "https://mirror.ghproxy.com/https://github.com/salesforce/rules_spring/releases/download/2.3.1/rules-spring-2.3.1.zip",
+    ],
+)
+
 load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
 
 rules_jvm_external_deps()
@@ -39,6 +48,11 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-graphql:3.2.2",
         "org.springframework.boot:spring-boot-starter-quartz:3.2.2",
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3",
+
+        #"org.springframework.boot:spring-boot:3.2.2",
+        #"org.springframework.boot:spring-boot-starter:3.2.2",
+        "org.springframework.boot:spring-boot-loader:3.2.2",
+        "org.springframework.boot:spring-boot-loader-tools:3.2.2",
 
         "org.postgresql:postgresql:42.7.1",
 
@@ -72,5 +86,8 @@ maven_install(
         "https://jcenter.bintray.com/",
         "https://maven.google.com",
     ],
-   # maven_install_json = "//:maven_install.json",
+   maven_install_json = "//:maven_install.json",
 )
+
+load("@maven//:defs.bzl", "pinned_maven_install")  
+pinned_maven_install()
