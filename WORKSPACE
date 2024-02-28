@@ -86,8 +86,8 @@ maven_install(
         "https://jcenter.bintray.com/",
         "https://maven.google.com",
     ],
-   maven_install_json = "//:maven_install.json",
+    maven_install_json = "@//:maven_install.json",
 )
 
-load("@maven//:defs.bzl", "pinned_maven_install")  
+load("@maven//:defs.bzl", "pinned_maven_install")
 pinned_maven_install()
