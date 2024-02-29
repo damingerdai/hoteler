@@ -1,5 +1,6 @@
 package org.daming.hoteler.service;
 
+import org.daming.hoteler.pojo.JobInfo;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
@@ -19,7 +20,7 @@ public interface IQuartzService {
 
     void addJob(String name, String group, String cron, Class<? extends Job> clazz, JobDataMap jobDataMap) throws SchedulerException;
 
-    // JobInfo getJob(String name, String group) throws SchedulerException;
+    JobInfo getJob(String name, String group) throws SchedulerException;
 
     boolean modifyJob(String name, String group, String cron) throws SchedulerException;
 
@@ -29,5 +30,5 @@ public interface IQuartzService {
 
     boolean resumeJob(String name, String group) throws SchedulerException;
 
-    // List<JobInfo> listJob() throws SchedulerException;
+    List<JobInfo> listJob() throws SchedulerException;
 }

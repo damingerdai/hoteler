@@ -80,8 +80,9 @@ public class WebSecurityConfig {
                             .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/icon/**", "/assets/**").anonymous()
                             .requestMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").anonymous()
                             .requestMatchers("/api/v1/token").anonymous()//普通用户权限
-                            .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
+                            .requestMatchers("/api/v1/job/jobinfos").hasRole("USERS")//普通用户权限
                             .requestMatchers("/api/login").permitAll()
+                            .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
                             .requestMatchers(authWhiteList).permitAll()
                             //其他的需要授权后访问
                             .anyRequest().anonymous();

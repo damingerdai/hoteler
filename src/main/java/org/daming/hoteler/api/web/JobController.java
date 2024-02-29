@@ -5,9 +5,15 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.field.expression.FieldExpression;
 import com.cronutils.model.field.expression.FieldExpressionFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
+import org.daming.hoteler.pojo.JobInfo;
 import org.daming.hoteler.pojo.request.AddPingJobTaskRequest;
+import org.daming.hoteler.pojo.response.ListResponse;
+import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IQuartzService;
 import org.daming.hoteler.task.CustomerTask;
 import org.daming.hoteler.task.job.CheckInTimeEventJob;
@@ -30,9 +36,11 @@ import java.time.ZonedDateTime;
 @RequestMapping("api/v1/job")
 public class JobController {
 
-    private CustomerTask customerTask;
+    private final CustomerTask customerTask;
 
-    private IQuartzService quartzService;
+    private final IQuartzService quartzService;
+
+    private final IErrorService errorService;
 
     @GetMapping("update-crpyto-customer-id")
     public String updateCrpytoCustomerId() {
@@ -66,9 +74,23 @@ public class JobController {
 
     }
 
-    public JobController(CustomerTask customerTask, IQuartzService quartzService) {
+    @Operation(summary = "get all quartz jobs", security = { @SecurityRequirement(name = "bearer-key") })
+    @GetMapping("jobinfos")
+    public ListResponse<JobInfo> listQuartzJobs() throws HotelerException {
+        try {
+            System.out.println("jobinfos");
+            var jobs = this.quartzService.listJob();
+            System.out.println(jobs);
+            return new ListResponse<>(jobs);
+        } catch (Exception ex) {
+            throw this.errorService.createHotelerSystemException(ex.getMessage(), ex);
+        }
+    }
+
+    public JobController(CustomerTask customerTask, IQuartzService quartzService, IErrorService errorService) {
         super();
         this.customerTask = customerTask;
         this.quartzService = quartzService;
+        this.errorService = errorService;
     }
 }

@@ -1,7 +1,9 @@
 package org.daming.hoteler.service.impl;
 
+import org.daming.hoteler.pojo.JobInfo;
 import org.daming.hoteler.service.IQuartzService;
 import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -12,8 +14,10 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,24 +65,24 @@ public class QuartzServiceImpl implements IQuartzService {
         }
     }
 
-//    @Override
-//    public JobInfo getJob(String name, String group) throws SchedulerException {
-//        var triggerKey = TriggerKey.triggerKey(name, group);
-//        var jobKey =  JobKey.jobKey(name, group);
-//        var jobDetail = scheduler.getJobDetail(jobKey);
-//        var triggers = scheduler.getTriggersOfJob(jobKey);
-//        if (triggers.isEmpty()) {
-//            throw new SchedulerException("no trigger");
-//        }
-//        var trigger = triggers.get(0);
-//        var triggerState = scheduler.getTriggerState(trigger.getKey());
-//        if (!(trigger instanceof CronTrigger)) {
-//            throw new SchedulerException("no cronTrigger");
-//        }
-//        var cronTrigger = (CronTrigger)trigger;
-//        return new JobInfo().setName(name).setGroup(group).setState(triggerState.name()).setCron(cronTrigger.getCronExpression()).setTimezone(cronTrigger.getTimeZone().getID()).setClassName(jobDetail.getJobClass().getName());
-//
-//    }
+    @Override
+    public JobInfo getJob(String name, String group) throws SchedulerException {
+        var triggerKey = TriggerKey.triggerKey(name, group);
+        var jobKey =  JobKey.jobKey(name, group);
+        var jobDetail = scheduler.getJobDetail(jobKey);
+        var triggers = scheduler.getTriggersOfJob(jobKey);
+        if (triggers.isEmpty()) {
+            throw new SchedulerException("no trigger");
+        }
+        var trigger = triggers.getFirst();
+        var triggerState = scheduler.getTriggerState(trigger.getKey());
+        if (!(trigger instanceof CronTrigger)) {
+            throw new SchedulerException("no cronTrigger");
+        }
+        var cronTrigger = (CronTrigger)trigger;
+        return new JobInfo().setName(name).setGroup(group).setState(triggerState.name()).setCron(cronTrigger.getCronExpression()).setTimeZone(cronTrigger.getTimeZone().getID()).setClassName(jobDetail.getJobClass().getName());
+
+    }
 
     @Override
     public boolean modifyJob(String name, String group, String cron) throws SchedulerException {
@@ -113,43 +117,43 @@ public class QuartzServiceImpl implements IQuartzService {
         return true;
     }
 
-//    @Override
-//    public List<JobInfo> listJob() throws SchedulerException {
-//        var groupNames = scheduler.getJobGroupNames();
-//        var jobInfos = new ArrayList<JobInfo>(groupNames.size());
-//        groupNames.forEach(groupName -> {
-//            try {
-//                var jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
-//                jobKeys.forEach(jobKey -> {
-//                    try {
-//                        var jobName = jobKey.getName();
-//                        var jobGroup = jobKey.getGroup();
-//                        var jobDetail = scheduler.getJobDetail(jobKey);
-//                        var triggers = scheduler.getTriggersOfJob(jobKey);
-//                        triggers.forEach(trigger -> {
-//                            try {
-//                                var triggerState = scheduler.getTriggerState(trigger.getKey());
-//                                if (trigger instanceof CronTrigger) {
-//                                    var cronTrigger = (CronTrigger)trigger;
-//                                    jobInfos.add(new JobInfo().setName(jobName).setGroup(jobGroup).setState(triggerState.name()).setCron(cronTrigger.getCronExpression()).setTimezone(cronTrigger.getTimeZone().getID()).setClassName(jobDetail.getJobClass().getName()));
-//                                }
-//                            } catch (SchedulerException e) {
-//                                // TODO add logger
-//                                e.printStackTrace();
-//                            }
-//                        });
-//                    } catch (SchedulerException e) {
-//                        // TODO add logger
-//                        e.printStackTrace();
-//                    }
-//                });
-//            } catch (SchedulerException e) {
-//                // TODO add logger
-//                e.printStackTrace();
-//            }
-//        });
-//        return jobInfos;
-//    }
+    @Override
+    public List<JobInfo> listJob() throws SchedulerException {
+        var groupNames = scheduler.getJobGroupNames();
+        var jobInfos = new ArrayList<JobInfo>(groupNames.size());
+        groupNames.forEach(groupName -> {
+            try {
+                var jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
+                jobKeys.forEach(jobKey -> {
+                    try {
+                        var jobName = jobKey.getName();
+                        var jobGroup = jobKey.getGroup();
+                        var jobDetail = scheduler.getJobDetail(jobKey);
+                        var triggers = scheduler.getTriggersOfJob(jobKey);
+                        triggers.forEach(trigger -> {
+                            try {
+                                var triggerState = scheduler.getTriggerState(trigger.getKey());
+                                if (trigger instanceof CronTrigger) {
+                                    var cronTrigger = (CronTrigger)trigger;
+                                    jobInfos.add(new JobInfo().setName(jobName).setGroup(jobGroup).setState(triggerState.name()).setCron(cronTrigger.getCronExpression()).setTimeZone(cronTrigger.getTimeZone().getID()).setClassName(jobDetail.getJobClass().getName()));
+                                }
+                            } catch (SchedulerException e) {
+                                // TODO add logger
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (SchedulerException e) {
+                        // TODO add logger
+                        e.printStackTrace();
+                    }
+                });
+            } catch (SchedulerException e) {
+                // TODO add logger
+                e.printStackTrace();
+            }
+        });
+        return jobInfos;
+    }
 
 
     public QuartzServiceImpl(Scheduler scheduler) {

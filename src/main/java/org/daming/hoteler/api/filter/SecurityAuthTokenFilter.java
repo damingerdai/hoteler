@@ -61,17 +61,20 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         try {
             var requestUrl = request.getRequestURI();
             logger.debug("url: " + requestUrl + "\t" + isFilter(requestUrl));
-            if (!isFilter(requestUrl) && !requestUrl.contains("token") && !requestUrl.contains("/api/v1/job")) {
-                logger.info("verify url: " + requestUrl);
-                // verifyHttpHeaders(request);
-                var context = new HotelerContext();
-                ThreadLocalContextHolder.put(context);
-                context.setIn(in);
-                context.setRequestId(UUID.randomUUID().toString());
-                verifyToken(request, context);
-            } else {
-                logger.info("url: " + requestUrl + " is ignored");
-            }
+            var context = new HotelerContext();
+            ThreadLocalContextHolder.put(context);
+            context.setIn(in);
+            context.setRequestId(UUID.randomUUID().toString());
+//            if (!isFilter(requestUrl)
+//                    && !requestUrl.contains("token")
+//                    && (!requestUrl.contains("/api/v1/job") || requestUrl.contains("/api/v1/job/jobinfos"))) {
+//                logger.info("verify url: " + requestUrl);
+//                // verifyHttpHeaders(request);
+//                verifyToken(request, context);
+//            } else {
+//                logger.info("url: " + requestUrl + " is ignored");
+//            }
+            verifyToken(context, request);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (ExpiredJwtException ex) {
             SecurityContextHolder.clearContext();
@@ -86,7 +89,6 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
             }
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
         } catch (Exception ex) {
-            ex.printStackTrace();
             SecurityContextHolder.clearContext();
             if (logger.isErrorEnabled()) {
                 logger.error("<{}> ErrorMsg: {}", ex.getClass().getSimpleName(), ex.getMessage());
@@ -139,7 +141,7 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
         return !r.matcher(url).matches();
     }
 
-    private void verifyToken(HttpServletRequest httpRequest, HotelerContext context) {
+    private void verifyToken(HotelerContext context, HttpServletRequest httpRequest) {
         final String requestTokenHeader = httpRequest.getHeader("Authorization");
         if (Objects.isNull(requestTokenHeader) || !requestTokenHeader.startsWith("Bearer ")) {
             throw ExceptionBuilder.buildException(600002, "访问拒绝.");
