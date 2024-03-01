@@ -45,7 +45,7 @@ public class QuartzServiceImpl implements IQuartzService {
     public void addJob(String name, String group, String cron, Class<? extends Job> clazz) throws SchedulerException {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(name, group);
-            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(name, group).build();
+            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(name, group).storeDurably().build();
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey).withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (Exception e) {

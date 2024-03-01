@@ -81,6 +81,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/**.js", "/**.css", "/**.ico", "/**.woff2", "/**.svg").anonymous()
                             .requestMatchers("/api/v1/token").anonymous()//普通用户权限
                             .requestMatchers("/api/v1/job/jobinfos").hasRole("USERS")//普通用户权限
+                            .requestMatchers(HttpMethod.POST, "/api/v1/token").anonymous()
                             .requestMatchers("/api/login").permitAll()
                             .requestMatchers("/api/**").hasRole("USERS")//普通用户权限
                             .requestMatchers(authWhiteList).permitAll()

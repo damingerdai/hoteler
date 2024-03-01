@@ -76,7 +76,7 @@ secret:
   key: damingerdai
 
 logger:
-  level: debug
+  level: info
 
 springdoc:
   packagesToScan: org.daming.hoteler.api.web

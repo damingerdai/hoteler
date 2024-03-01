@@ -1,6 +1,6 @@
 package org.daming.hoteler.pojo.request;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.StringJoiner;
 
 /**
@@ -9,17 +9,17 @@ import java.util.StringJoiner;
  */
 public class AddPingJobTaskRequest {
 
-    private LocalDateTime runDateTime;
+    private ZonedDateTime runDateTime;
 
-    public LocalDateTime getRunDateTime() {
+    public ZonedDateTime getRunDateTime() {
         return runDateTime;
     }
 
-    public void setRunDateTime(LocalDateTime runDateTime) {
+    public void setRunDateTime(ZonedDateTime runDateTime) {
         this.runDateTime = runDateTime;
     }
 
-    public AddPingJobTaskRequest(LocalDateTime runDateTime) {
+    public AddPingJobTaskRequest(ZonedDateTime runDateTime) {
         super();
         this.runDateTime = runDateTime;
     }

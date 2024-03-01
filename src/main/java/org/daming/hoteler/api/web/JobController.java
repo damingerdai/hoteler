@@ -48,28 +48,31 @@ public class JobController {
         return "pong";
     }
 
+    @Operation(summary = "add ping job", security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("add-ping-task")
     public String addPingTask(@RequestBody AddPingJobTaskRequest request) {
         try {
             var runDateTime = request.getRunDateTime();
-            var zoneId = ZoneOffset.systemDefault().getId();
-            var triggerName = "ping" + zoneId +  runDateTime.toInstant(ZonedDateTime.now().getOffset());
+            var zoneId = ZoneOffset.systemDefault();
+            var localZonedDateTime = runDateTime.withZoneSameInstant(ZoneOffset.systemDefault());
+
+            var triggerName = "ping-" + zoneId + "-" + localZonedDateTime.toInstant();
             var cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
-                    .withSecond(FieldExpressionFactory.on(runDateTime.getSecond()))
-                    .withMinute(FieldExpressionFactory.on(runDateTime.getMinute()))
-                    .withHour(FieldExpressionFactory.on(runDateTime.getHour()))
-                    .withDoM(FieldExpressionFactory.on(runDateTime.getDayOfMonth()))
-                    .withMonth(FieldExpressionFactory.on(runDateTime.getMonth().getValue()))
+                    .withSecond(FieldExpressionFactory.on(localZonedDateTime.getSecond()))
+                    .withMinute(FieldExpressionFactory.on(localZonedDateTime.getMinute()))
+                    .withHour(FieldExpressionFactory.on(localZonedDateTime.getHour()))
+                    .withDoM(FieldExpressionFactory.on(localZonedDateTime.getDayOfMonth()))
+                    .withMonth(FieldExpressionFactory.on(localZonedDateTime.getMonth().getValue()))
                     .withDoW(FieldExpression.questionMark())
-                    .withYear(FieldExpressionFactory.on(runDateTime.getYear()))
+                    .withYear(FieldExpressionFactory.on(localZonedDateTime.getYear()))
                     .instance();
+
             var cronExpression = cron.asString();
             LoggerManager.getCommonLogger().info("add ping job: trigger {} -> cron {}", triggerName, cronExpression);
             this.quartzService.addJob(triggerName, "ping", cronExpression, PingJob.class);
             return "success";
         } catch (Exception ex) {
-            ex.printStackTrace();
-            return ex.getMessage();
+            throw this.errorService.createHotelerSystemException(ex.getMessage(), ex);
         }
 
     }
@@ -78,9 +81,7 @@ public class JobController {
     @GetMapping("jobinfos")
     public ListResponse<JobInfo> listQuartzJobs() throws HotelerException {
         try {
-            System.out.println("jobinfos");
             var jobs = this.quartzService.listJob();
-            System.out.println(jobs);
             return new ListResponse<>(jobs);
         } catch (Exception ex) {
             throw this.errorService.createHotelerSystemException(ex.getMessage(), ex);

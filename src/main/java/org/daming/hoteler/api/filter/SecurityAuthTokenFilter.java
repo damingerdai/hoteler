@@ -13,7 +13,6 @@ import org.daming.hoteler.service.IUserService;
 import org.daming.hoteler.utils.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,15 +64,6 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
             ThreadLocalContextHolder.put(context);
             context.setIn(in);
             context.setRequestId(UUID.randomUUID().toString());
-//            if (!isFilter(requestUrl)
-//                    && !requestUrl.contains("token")
-//                    && (!requestUrl.contains("/api/v1/job") || requestUrl.contains("/api/v1/job/jobinfos"))) {
-//                logger.info("verify url: " + requestUrl);
-//                // verifyHttpHeaders(request);
-//                verifyToken(request, context);
-//            } else {
-//                logger.info("url: " + requestUrl + " is ignored");
-//            }
             verifyToken(context, request);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (ExpiredJwtException ex) {
@@ -144,11 +134,13 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
     private void verifyToken(HotelerContext context, HttpServletRequest httpRequest) {
         final String requestTokenHeader = httpRequest.getHeader("Authorization");
         if (Objects.isNull(requestTokenHeader) || !requestTokenHeader.startsWith("Bearer ")) {
-            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+            // throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+            return;
         }
         var accessToken = requestTokenHeader.substring(7);
         if (!StringUtils.hasText(accessToken)) {
-            throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+            // throw ExceptionBuilder.buildException(600002, "访问拒绝.");
+            return;
         }
         context.setAccessToken(accessToken);
         var key = JwtUtil.generalKey(this.secretPropService.getKey());
@@ -161,20 +153,23 @@ public class SecurityAuthTokenFilter extends BasicAuthenticationFilter {
     }
 
     private void verifyGrantedAuthority(User user) {
-        if (StringUtils.hasLength(user.getUsername()) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 如果没过期，保持登录状态
-            // 将用户信息存入 authentication，方便后续校验
-            Set<GrantedAuthority> grantedAuthorities = user.getRoles()
-                    .stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().trim().toUpperCase()))
-                    .collect(Collectors.toSet());
-            var authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, grantedAuthorities);
-            // SecurityContextHolder 权限验证上下文
-            var securityContext = SecurityContextHolder.getContext();
-            // 指示用户已通过身份验证
-            securityContext.setAuthentication(authentication);
-
+        if (StringUtils.isEmpty(user.getUsername())) {
+            return;
         }
+        if (Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) {
+            return;
+        }
+        // 如果没过期，保持登录状态
+        // 将用户信息存入 authentication，方便后续校验
+        Set<GrantedAuthority> grantedAuthorities = user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().trim().toUpperCase()))
+                .collect(Collectors.toSet());
+        var authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, grantedAuthorities);
+        // SecurityContextHolder 权限验证上下文
+        var securityContext = SecurityContextHolder.getContext();
+        // 指示用户已通过身份验证
+        securityContext.setAuthentication(authentication);
     }
 
     public SecurityAuthTokenFilter(
