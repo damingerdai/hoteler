@@ -1,7 +1,7 @@
 package org.daming.hoteler.config;
 
 import org.daming.hoteler.api.filter.JWTLoginFilter;
-import org.daming.hoteler.api.filter.SecurityAuthTokenFilter;
+import org.daming.hoteler.api.filter.AuthenticationFilter;
 import org.daming.hoteler.config.service.ISecretPropService;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -109,7 +108,7 @@ public class WebSecurityConfig {
                 //TODO: add exception handing
         });
         http.addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthenticationFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement((sessionManagementCustomizer) -> {
             sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         });
