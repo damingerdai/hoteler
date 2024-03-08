@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.daming.hoteler.pojo.Role;
+import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.pojo.response.ListResponse;
 import org.daming.hoteler.service.IRoleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,16 +27,20 @@ public class RoleController {
 
     @Operation(summary = "获取角色", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("role/{id}")
-    public Role get(@PathVariable(value = "id")long id) {
+    public DataResponse<Role> get(@PathVariable(value = "id")long id) {
         var role = this.roleService.get(id);
-        return role;
+        var response = new DataResponse<>(role);
+
+        return response;
     }
 
     @Operation(summary = "获取所有角色", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("roles")
-    public List<Role> list() {
+    public ListResponse<Role> list() {
         var roles = this.roleService.list();
-        return roles;
+        var response = new ListResponse<>(roles);
+
+        return response;
     }
 
 
