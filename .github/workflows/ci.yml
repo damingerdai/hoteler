@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         java-version: [21]
-        go-version: ["1.21.6"]
+        go-version: ["1.22.0"]
         os: [ubuntu-latest]
     # https://github.com/actions/example-services/blob/master/.github/workflows/postgres-service.yml
     services:
