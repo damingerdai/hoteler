@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.17.0
-	github.com/jackc/pgx/v5 v5.5.4
+	github.com/jackc/pgx/v5 v5.5.5
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.0
 )
