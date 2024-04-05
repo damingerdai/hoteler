@@ -160,13 +160,14 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4.1.1
-      - name: Mount bazel cache
-        uses: actions/cache@v4
+      - uses: bazel-contrib/setup-bazel@0.8.1
         with:
-          path: "/home/runner/.cache/bazel"
-          key: ${{ runner.os }}-bazel-${{ hashFiles('WORKSPACE') }}
-          restore-keys: |
-            ${{ runner.os }}-bazel-
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
       - name: Build with bazel
         run: bazel build //:hoteler
 
