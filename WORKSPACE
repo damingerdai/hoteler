@@ -71,6 +71,7 @@ maven_install(
         "org.flywaydb:flyway-core:10.8.1",
         "com.cronutils:cron-utils:9.2.1",
         "org.bouncycastle:bcpkix-jdk18on:1.77",
+        "com.lmax:disruptor:4.0.0",
 
         "org.springframework.boot:spring-boot-devtools:3.2.4",
         "org.springframework.boot:spring-boot-starter-test:3.2.4",

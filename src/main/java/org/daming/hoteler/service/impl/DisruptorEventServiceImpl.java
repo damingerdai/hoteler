@@ -6,8 +6,11 @@ import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.field.expression.FieldExpression;
 import com.cronutils.model.field.expression.FieldExpressionFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.YieldingWaitStrategy;
+import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.dsl.ProducerType;
 import org.daming.hoteler.base.exceptions.HotelerException;
-import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.CustomerCheckinRecord;
 import org.daming.hoteler.pojo.HotelerMessage;
@@ -17,42 +20,38 @@ import org.daming.hoteler.service.IQuartzService;
 import org.daming.hoteler.task.job.CheckInTimeEventJob;
 import org.quartz.JobDataMap;
 import org.quartz.SchedulerException;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.concurrent.Executors;
 
-/**
- * @author gming001
- * @version 2023-07-23 17:53
- */
-@Primary
-@Service
-public class EventServiceImpl implements IEventService {
+@Service("DisruptorEventService")
+public class DisruptorEventServiceImpl implements IEventService, InitializingBean, DisposableBean {
 
-    private HotelerLogger logger = LoggerManager.getCommonLogger();
-
-    private final String HOTELER_ALL_EVENTS = "HOTLER-ALL-EVENTS";
-
-    private RedisTemplate<String, Object> redisTemplate;
+    private Disruptor<HotelerMessage> disruptor;
 
     private ObjectMapper jsonMapper;
-
     private IQuartzService quartzService;
 
     @Override
     public void publishEvent(HotelerMessage message) throws HotelerException {
+        RingBuffer<HotelerMessage> ringBuffer = disruptor.getRingBuffer();
+        long sequence = ringBuffer.next();
         try {
-            this.redisTemplate.convertAndSend(HOTELER_ALL_EVENTS, message);
-            logger.info("published event: {} -> {}", message.getEvent(), message.getContent());
-        } catch (Exception ex) {
-            logger.error(() -> String.format("fail to publish event: %s -> %s, error: %s", message.getEvent(), message.getContent(), ex.getMessage()), ex);
+            HotelerMessage ms = ringBuffer.get(sequence);
+            ms.setEvent(message.getEvent());
+            ms.setContent(message.getContent());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ringBuffer.publish(sequence);
         }
     }
 
     @Override
-    public void receiveEvent(HotelerMessage message) throws HotelerException{
+    public void receiveEvent(HotelerMessage message) throws HotelerException {
         try {
             var type = message.getEvent();
             var content = message.getContent();
@@ -65,7 +64,7 @@ public class EventServiceImpl implements IEventService {
         }
     }
 
-    private void processCheckInTimeEvent(HotelerEvent type,  CustomerCheckinRecord record) throws SchedulerException {
+    private void processCheckInTimeEvent(HotelerEvent type, CustomerCheckinRecord record) throws SchedulerException {
         var beginDate = record.getBeginDate();
         var triggerName = String.valueOf( record.getCustomerId() + record.getRoomId() + record.hashCode());
         var cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
@@ -85,10 +84,26 @@ public class EventServiceImpl implements IEventService {
         LoggerManager.getJobLogger().info("add CheckInTimeEventJob: {} -{}", cronAsString, record);
     }
 
-    public EventServiceImpl(RedisTemplate<String, Object> redisTemplate, ObjectMapper jsonMapper, IQuartzService quartzService) {
-        super();
-        this.redisTemplate = redisTemplate;
-        this.jsonMapper = jsonMapper;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.disruptor =new Disruptor<>(
+                HotelerMessage::new,
+                1024 * 1024,
+                Executors.defaultThreadFactory(),
+                ProducerType.SINGLE,
+                new YieldingWaitStrategy()
+        );
+        this.disruptor.start();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        this.disruptor.shutdown();
+    }
+
+    public DisruptorEventServiceImpl(IQuartzService quartzService, ObjectMapper jsonMapper) {
         this.quartzService = quartzService;
+        this.jsonMapper = jsonMapper;
     }
 }
