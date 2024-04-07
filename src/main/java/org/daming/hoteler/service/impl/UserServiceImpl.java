@@ -1,7 +1,7 @@
 package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.pojo.Role;
-import org.daming.hoteler.repository.jdbc.IRoleDao;
+import org.daming.hoteler.pojo.request.CreateUserRequest;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.repository.mapper.UserMapper;
 import org.daming.hoteler.pojo.User;
@@ -59,7 +59,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     }
 
     @Override
-    @Cacheable(cacheNames = { "user" }, key = "#username")
+    //@Cacheable(cacheNames = { "user" }, key = "#username")
     public User getUserByUsername(String username) {
         Assert.hasText("username", "params 'username' is required");
         var user =  this.userDao.getUserByUsername(username)
@@ -75,7 +75,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     }
 
     @Override
-    @Cacheable(cacheNames = { "user" }, key = "#id")
+   // @Cacheable(cacheNames = { "user" }, key = "#id")
     public User get(long id) {
         Assert.isTrue(id > 0, "params 'id' is required");
         var user =  userDao.get(id)
@@ -109,6 +109,36 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
                 ? List.of(this.roleService.getByName("admin"), this.roleService.getByName("users"))
                 : List.of(this.roleService.getByName("users"));
         roles.forEach((role ->  this.userRoleMapper.create(id, role.getId())));
+    }
+
+    @Override
+    @Transactional
+    public User create(CreateUserRequest createUserRequest) {
+        Assert.notNull(createUserRequest,"params 'createUserRequest' is required");
+        var user = new User()
+                .setId(this.snowflakeService.nextId())
+                .setUsername(createUserRequest.getUsername())
+                .setPassword(createUserRequest.getPassword())
+                .setPasswordType(createUserRequest.getPasswordType());
+        var existUser = this.userDao.getUserByUsername(user.getUsername());
+        if (existUser.isPresent()) {
+            throw this.errorService.createHotelerException(600012);
+        }
+        var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
+        var passwordService = this.getPasswordService(passwordType);
+        this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        var isFirstUser = this.userMapper.count() == 0;
+        var roleNames = createUserRequest.getRoles();
+        if (isFirstUser && !roleNames.contains("admin")) {
+            roleNames.add("admin");
+        }
+        roleNames.forEach(System.out::println);
+        var roles = roleNames.stream().map(roleName -> this.roleService.getByName(roleName)).toList();
+        roles.forEach(role ->  {
+           this.userRoleMapper.create(user.getId(), role.getId());
+        });
+        user.setRoles(roles);
+        return user;
     }
 
     private IPasswordService getPasswordService(String passwordType) {

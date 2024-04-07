@@ -50,10 +50,8 @@ public class UserController {
 
     @Operation(summary = "创建用户",security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("user")
-    public DataResponse<User> create(@RequestBody  CreateUserRequest request) {
-        var user = UserBuilder.fromCreateUserRequest(request);
-        user.setPasswordType("md5");
-        this.userService.create(user);
+    public DataResponse<User> create(@RequestBody CreateUserRequest request) {
+        var user = this.userService.create(request);
         return new DataResponse<>(user);
     }
 

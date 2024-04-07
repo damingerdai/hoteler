@@ -1,34 +1,60 @@
 package org.daming.hoteler.pojo.request;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class CreateUserRequest implements Serializable {
-
-    private static final long serialVersionUID = 3589158241998740233L;
+public class CreateUserRequest {
 
     private String username;
 
     private String password;
 
+    private String passwordType;
+
+    private List<String> roles;
+
     public String getUsername() {
         return username;
     }
 
-    public CreateUserRequest setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
-        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public CreateUserRequest setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return this;
+    }
+
+    public String getPasswordType() {
+        return passwordType;
+    }
+
+    public void setPasswordType(String passwordType) {
+        this.passwordType = passwordType;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public CreateUserRequest() {
         super();
+    }
+
+    @Override
+    public String toString() {
+        return "CreateUserRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", passwordType='" + passwordType + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
