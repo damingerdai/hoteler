@@ -1,4 +1,4 @@
-FROM node:21.1.0 AS front-build
+FROM node:21.7.3 AS front-build
 
 ENV SELF_SIGNED_CERT_IN_CHAIN=true
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
