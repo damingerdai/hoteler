@@ -1,0 +1,21 @@
+scalar Date
+
+type RoomNumsStat {
+    totalNums: Int!
+    inUseNums: Int!
+    notUsedNums: Int!
+}
+
+type PastWeekCustomerCount {
+    checkInDate: Date!
+    customerCount: Int!
+}
+
+type PastWeekCustomerCountStat {
+    pastWeekCustomerCounts: [PastWeekCustomerCount]
+}
+
+extend type Query {
+    getRoomStatusStat: RoomNumsStat!
+    getPastWeekCustomersCounts: PastWeekCustomerCountStat
+}
