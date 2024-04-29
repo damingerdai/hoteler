@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.pojo.stat.PastWeekCustomerCountStat;
 import org.daming.hoteler.pojo.stat.RoomNumsStat;
-import org.daming.hoteler.pojo.stat.RoomStatusStat;
 import org.daming.hoteler.service.stat.ICustomerStatService;
 import org.daming.hoteler.service.stat.IRoomStatusStatService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +29,6 @@ public class StatController {
     private IRoomStatusStatService roomStatusStatService;
 
     private ICustomerStatService customerStatService;
-
-    @Operation(summary = "获取房间状态", security = { @SecurityRequirement(name = "bearer-key") })
-    @GetMapping(path = "rooms")
-    public DataResponse<RoomStatusStat> getRoomStatusStat() {
-        var roomStatusStat = new RoomStatusStat().setCurrentWeekInUsedRoomNum(10).setLastWeekInUsedRoomNum(12);
-        return new DataResponse(roomStatusStat);
-    }
 
     @Operation(summary = "获取房间数量统计", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping(path = "rooms/nums")
