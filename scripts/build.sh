@@ -1,21 +1,30 @@
-echo "build web application"
+#!/bin/bash
 
-cd src/main/angular \
-  && yarn \
-  && yarn ng build --configuration production --output-path ../resources/static \
-  && cd ../../../
+# Set error flags
+set -o nounset
+set -o errexit
+set -o pipefail
 
-echo "copy web application to resources"
+echo "Building web application..."
 
-cd src/main/resources/static \
-  && mkdir error \
-  && cp index.html error/404.html \
-  && cd ../../../../
+# Navigate to the Angular project directory, build the project, and copy the build output
+(
+  cd src/main/angular
+  yarn
+  yarn ng build
+  cp -r dist/hoteler/browser/* ../resources/static/
+)
 
-# echo "build java application"
+echo "Copying web application to resources..."
 
-# mvn clean install package -DskipTests -Pstandalone
+# Create an error directory and copy index.html into it as 404.html
+(
+  cd src/main/resources/static
+  mkdir -p error
+  cp index.html error/404.html
+)
 
-echo "build java application with gradle"
+echo "Building Java application with Gradle..."
 
+# Build the Java application with Gradle
 gradle build -Pstandalone -x test
