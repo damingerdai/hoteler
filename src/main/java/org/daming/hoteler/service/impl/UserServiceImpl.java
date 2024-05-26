@@ -64,6 +64,10 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.hasText("username", "params 'username' is required");
         var user =  this.userDao.getUserByUsername(username)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
+        return getUser(user);
+    }
+
+    private User getUser(User user) {
         var roles = this.roleService.getRolesByUserId(user.getId());
         if (Objects.nonNull(roles) && !roles.isEmpty()) {
             user.setRoles(roles);
@@ -80,15 +84,7 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         Assert.isTrue(id > 0, "params 'id' is required");
         var user =  userDao.get(id)
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
-        var roles = this.roleService.getRolesByUserId(user.getId());
-        if (Objects.nonNull(roles) && !roles.isEmpty()) {
-            user.setRoles(roles);
-            var roleIds = roles.stream().mapToLong(Role::getId).toArray();
-            var permission = this.permissionService.listByRoleId(roleIds);
-            user.setPermissions(permission);
-
-        }
-        return user;
+        return getUser(user);
     }
 
     @Override
@@ -120,14 +116,17 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
                 .setUsername(createUserRequest.getUsername())
                 .setPassword(createUserRequest.getPassword())
                 .setPasswordType(createUserRequest.getPasswordType());
-        var existUser = this.userDao.getUserByUsername(user.getUsername());
-        if (existUser.isPresent()) {
-            throw this.errorService.createHotelerException(600012);
+        var isFirstUser = this.userMapper.count() == 0;
+        if (!isFirstUser) {
+            var existUser = this.userDao.getUserByUsername(user.getUsername());
+            if (existUser.isPresent()) {
+                throw this.errorService.createHotelerException(600012);
+            }
         }
+
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
         this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
-        var isFirstUser = this.userMapper.count() == 0;
         var roleNames = createUserRequest.getRoles();
         if (isFirstUser && !roleNames.contains("admin")) {
             roleNames.add("admin");
