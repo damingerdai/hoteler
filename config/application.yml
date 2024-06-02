@@ -1,0 +1,84 @@
+server:
+  port: 8443
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
+spring:
+  threads:
+    virtual:
+      enabled: true
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+      password:
+  datasource:
+    url: jdbc:postgresql://pgbouncer:5432/postgres
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+  main:
+    allow-bean-definition-overriding: true
+  graphql:
+    graphiql:
+      enabled: true
+  devtools:
+    restart:
+      enabled: false
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    job-store-type: jdbc
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          [
+            "health",
+            "info",
+            "metrics",
+            "prometheus",
+            "bindings",
+            "beans",
+            "env",
+            "loggers",
+            "streamsbindings",
+          ]
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+secret:
+  salt: dc513dcf1de6941978deb973fe98c1f6
+  personSalt: dc513dcf1de6941978deb973fe98c1f4
+  key: damingerdai
+
+logger:
+  level: info
+
+springdoc:
+  packagesToScan: org.daming.hoteler.api.web
+#  swagger-ui:
+#    path: /swagger-ui.html

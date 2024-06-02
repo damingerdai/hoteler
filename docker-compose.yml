@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - 8443:8443
+    volumes:
+      - ./config/application.yml:/app/config/application.yml
     networks:
       - hoteler-network
     env_file: .env
