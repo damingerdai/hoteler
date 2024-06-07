@@ -7,7 +7,7 @@ services:
     ports:
       - 8443:8443
     volumes:
-      - ./config/application.yml:/app/config/application.yml
+      - ./application-docker.yml:/app/config/application-docker.yml
     networks:
       - hoteler-network
     env_file: .env
