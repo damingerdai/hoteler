@@ -1,5 +1,0 @@
-[submodule "src/main/angular"]
-	path = src/main/angular
-	url = git@github.com:damingerdai/hoteler-web.git
-	branch = master
-	ignore=all
