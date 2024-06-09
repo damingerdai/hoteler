@@ -220,7 +220,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>10.11.1</version>
+                <version>10.14.0</version>
                 <configuration>
                     <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
                     <user>postgres</user>
