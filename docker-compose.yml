@@ -3,6 +3,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    container_name: hoteler
     restart: always
     ports:
       - 8443:8443
