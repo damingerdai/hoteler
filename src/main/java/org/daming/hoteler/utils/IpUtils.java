@@ -217,6 +217,6 @@ public class IpUtils {
      * @return 是否未知
      */
     public static boolean isUnknown(String checkString) {
-        return checkString == null || checkString.length() == 0 || "unknown".equalsIgnoreCase(checkString);
+        return checkString == null || checkString.isEmpty() || "unknown".equalsIgnoreCase(checkString);
     }
 }
