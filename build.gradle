@@ -21,7 +21,7 @@ group = 'org.daming'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '21'
 targetCompatibility = '21'
-def jsonwebtokenVersion = "0.12.5"
+def jsonwebtokenVersion = "0.12.6"
 
 repositories {
 	mavenLocal()
