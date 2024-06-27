@@ -1,4 +1,4 @@
-FROM maven:3.9.7-amazoncorretto-21-debian AS back-build
+FROM maven:3.9.8-amazoncorretto-21-debian AS back-build
 
 WORKDIR app
 COPY pom.xml /app
