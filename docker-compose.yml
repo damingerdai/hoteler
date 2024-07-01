@@ -8,14 +8,16 @@ services:
     ports:
       - 8443:8443
     volumes:
-      - ./application-docker.yml:/app/config/application-docker.yml
+      - ./application-docker.yml:/app/config/application.yml
     networks:
       - hoteler-network
     env_file: .env
-#    links:
-#      - db
+    #    links:
+    #      - db
     depends_on:
       - db
+      - pgbouncer
+      - redis
 
   db:
     image: postgres:16.3-alpine3.19
@@ -32,7 +34,7 @@ services:
       - hoteler-network
   pgbouncer:
     image: edoburu/pgbouncer:1.22.1-p0
-    container_name: 'pgbouncer'
+    container_name: "pgbouncer"
     environment:
       - DATABASE_URL=postgres://postgres:123456@db:5432/postgres
       - POOL_MODE=transaction
@@ -49,7 +51,7 @@ services:
 
   redis:
     image: redis:7.2.5-alpine3.20
-    container_name: 'redis'
+    container_name: "redis"
     ports:
       - 6379:6379
     networks:
