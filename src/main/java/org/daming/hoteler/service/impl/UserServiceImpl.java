@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,9 @@ import java.util.stream.Collectors;
 @Service
 @CacheConfig(cacheNames = {"UserCache"})
 public class UserServiceImpl extends ApplicationObjectSupport implements IUserService {
+
+    private final int MAX_ATTEMPT = 5;
+    private final int LOCK_TIME_DURATION = 5; // in minutes
 
     private ISnowflakeService snowflakeService;
 
@@ -138,6 +142,56 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         });
         user.setRoles(roles);
         return user;
+    }
+
+    @Override
+    public void loginFailed(User user) {
+        int newFailedLoginAttempts = user.getFailedLoginAttempts() + 1;
+        if (newFailedLoginAttempts >= MAX_ATTEMPT) {
+            newFailedLoginAttempts = MAX_ATTEMPT;
+            user.setAccountNonLocked(false);
+            user.setLockTime(LocalDateTime.now());
+        }
+        user.setFailedLoginAttempts(newFailedLoginAttempts);
+        this.userMapper.update(user);
+    }
+
+    @Override
+    public void resetFailedAttempts(User user) {
+        user.setFailedLoginAttempts(0);
+        user.setAccountNonLocked(true);
+        user.setLockTime(null);
+        this.userMapper.update(user);
+    }
+
+    @Override
+    public boolean isAccountLocked(long id) {
+        User user = this.userMapper.get(id);
+        if (!user.isAccountNonLocked()) {
+            if (user.getLockTime().isBefore(LocalDateTime.now().minusMinutes(LOCK_TIME_DURATION))) {
+                this.resetFailedAttempts(user);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isAccountLocked(User user) {
+        if (!user.isAccountNonLocked()) {
+            if (user.getLockTime().isBefore(LocalDateTime.now().minusMinutes(LOCK_TIME_DURATION))) {
+                this.resetFailedAttempts(user);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<User> getUnlockUsers() {
+        return this.userDao.getUnlockUsers();
     }
 
     private IPasswordService getPasswordService(String passwordType) {

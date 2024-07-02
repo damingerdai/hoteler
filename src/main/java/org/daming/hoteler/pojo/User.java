@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -21,6 +22,12 @@ public class User implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String passwordType;
+
+    private int failedLoginAttempts;
+
+    private boolean accountNonLocked;
+
+    private LocalDateTime lockTime;
 
     private List<Role> roles;
 
@@ -62,6 +69,33 @@ public class User implements Serializable {
         return this;
     }
 
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public User setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+        return this;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public User setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+        return this;
+    }
+
+    public LocalDateTime getLockTime() {
+        return lockTime;
+    }
+
+    public User setLockTime(LocalDateTime lockTime) {
+        this.lockTime = lockTime;
+        return this;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
@@ -92,6 +126,19 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
+    public User(long id, String username, String password, String passwordType, int failedLoginAttempts, boolean accountNonLocked, LocalDateTime lockTime, List<Role> roles, List<Permission> permissions) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.passwordType = passwordType;
+        this.failedLoginAttempts = failedLoginAttempts;
+        this.accountNonLocked = accountNonLocked;
+        this.lockTime = lockTime;
+        this.roles = roles;
+        this.permissions = permissions;
+    }
+
     public User(long id, String username, String password, String passwordType, List<Role> roles, List<Permission> permissions) {
         super();
         this.id = id;
@@ -109,6 +156,9 @@ public class User implements Serializable {
                 .add("username='" + username + "'")
                 .add("password='" + password + "'")
                 .add("passwordType='" + passwordType + "'")
+                .add("failedLoginAttempts=" + failedLoginAttempts)
+                .add("accountNonLocked=" + accountNonLocked)
+                .add("lockTime=" + lockTime)
                 .add("roles=" + roles)
                 .add("permissions=" + permissions)
                 .toString();

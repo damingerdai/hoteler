@@ -16,4 +16,14 @@ public interface IUserService {
     void create(User user);
 
     User create(CreateUserRequest createUserRequest);
+
+    void loginFailed(User user);
+
+    void resetFailedAttempts(User user);
+
+    boolean isAccountLocked(long id);
+
+    boolean isAccountLocked(User user);
+
+    List<User> getUnlockUsers();
 }
