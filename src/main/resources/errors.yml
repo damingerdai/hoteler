@@ -25,6 +25,8 @@ errors:
     message: 用户名已经被占.
   - code: 600013
     message: 访问过于频繁，请稍候再试
+  - code: 600014
+    message: 该用户已经被锁定，请联系管理员
   - code: 700001
     message: SQL '%s' error.
   - code: 800001
