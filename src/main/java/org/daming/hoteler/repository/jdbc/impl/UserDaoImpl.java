@@ -1,5 +1,6 @@
 package org.daming.hoteler.repository.jdbc.impl;
 
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.repository.jdbc.IUserDao;
 import org.daming.hoteler.pojo.User;
@@ -77,6 +78,21 @@ public class UserDaoImpl implements IUserDao {
             throw this.errorService.createSqlHotelerException(ex, sql);
         } finally {
             var params = new Object[] {  };
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
+        }
+    }
+
+    @Override
+    public void delete(long id) throws HotelerException {
+        var in = Instant.now();
+        var sql = "UPDATE users SET deleted_at = now(), update_dt = now(), update_user = 'system' WHERE id = ?";
+        var params = new Object[] { id };
+        try {
+            this.jdbcTemplate.update(sql, params);
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params, ex);
+            throw this.errorService.createSqlHotelerException(ex, sql);
+        } finally {
             SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
         }
     }

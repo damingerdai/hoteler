@@ -10,6 +10,7 @@ import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.pojo.builder.UserBuilder;
 import org.daming.hoteler.pojo.request.CreateUserRequest;
+import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.pojo.response.ListResponse;
 import org.daming.hoteler.service.IErrorService;
@@ -81,6 +82,21 @@ public class UserController {
             user.setPassword(null);
             user.setPasswordType(null);
             return new DataResponse<>(user);
+        } catch (Exception ex) {
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+        }
+    }
+
+    @Operation(summary = "删除用户",security = { @SecurityRequirement(name = "bearer-key") })
+    @DeleteMapping("/user/{id}")
+    public CommonResponse delete(@PathVariable("id") String userId) {
+        try {
+            var id = Long.parseLong(userId);
+            this.userService.delete(id);
+            return new CommonResponse();
+        } catch (NumberFormatException nfe) {
+            var params = new Object[] { nfe.getMessage() };
+            throw errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, params, nfe);
         } catch (Exception ex) {
             throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
         }

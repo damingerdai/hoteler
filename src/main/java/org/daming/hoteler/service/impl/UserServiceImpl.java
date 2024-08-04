@@ -1,5 +1,6 @@
 package org.daming.hoteler.service.impl;
 
+import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Role;
 import org.daming.hoteler.pojo.request.CreateUserRequest;
 import org.daming.hoteler.repository.jdbc.IUserDao;
@@ -192,6 +193,11 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     @Override
     public List<User> getUnlockUsers() {
         return this.userDao.getUnlockUsers();
+    }
+
+    @Override
+    public void delete(long id) throws HotelerException {
+        this.userDao.delete(id);
     }
 
     private IPasswordService getPasswordService(String passwordType) {
