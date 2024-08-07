@@ -50,7 +50,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}")
 	implementation 'commons-codec:commons-codec:1.17.1'
-	implementation 'org.apache.commons:commons-lang3:3.15.0'
+	implementation 'org.apache.commons:commons-lang3:3.16.0'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 	// Runtime, com.sun.xml.bind module
 	implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
