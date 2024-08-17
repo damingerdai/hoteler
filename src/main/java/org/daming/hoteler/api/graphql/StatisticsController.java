@@ -27,7 +27,6 @@ public class StatisticsController {
     @QueryMapping("getPastWeekCustomersCounts")
     public PastWeekCustomerCountStat getPastWeekCustomersCounts() {
         var pastWeekCustomerCountStat = this.customerStatService.countPastWeekCustomerCountStat();
-        System.out.println("pastWeekCustomerCountStat" + pastWeekCustomerCountStat);
         return pastWeekCustomerCountStat;
     }
 

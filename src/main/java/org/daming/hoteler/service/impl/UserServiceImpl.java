@@ -133,10 +133,12 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         var passwordService = this.getPasswordService(passwordType);
         this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
         var roleNames = createUserRequest.getRoles();
+        if (Objects.isNull(roleNames)) {
+            roleNames = List.of();
+        }
         if (isFirstUser && !roleNames.contains("admin")) {
             roleNames.add("admin");
         }
-        roleNames.forEach(System.out::println);
         var roles = roleNames.stream().map(roleName -> this.roleService.getByName(roleName)).toList();
         roles.forEach(role ->  {
            this.userRoleMapper.create(user.getId(), role.getId());

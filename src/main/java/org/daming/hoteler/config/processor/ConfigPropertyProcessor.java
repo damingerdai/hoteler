@@ -29,10 +29,6 @@ public class ConfigPropertyProcessor implements BeanPostProcessor {
             if (value == null) {
                 String propertyValue = resolvePropertyValue(annotation.prefix(), field.getName());
                 ReflectionUtils.setField(field, bean, propertyValue);
-                System.out.println(field);
-                System.out.println(value);
-                System.out.println(propertyValue);
-                System.out.println("-------");
             }
 
         }
