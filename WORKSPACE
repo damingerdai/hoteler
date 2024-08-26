@@ -75,7 +75,7 @@ maven_install(
 
         "org.springframework.boot:spring-boot-devtools:3.3.3",
         "org.springframework.boot:spring-boot-starter-test:3.3.3",
-        "org.springframework.security:spring-security-test:6.3.1",
+        "org.springframework.security:spring-security-test:6.3.3",
 
     ],
     fetch_sources = True,
