@@ -1,4 +1,4 @@
-FROM gradle:8.10.0-jdk21 AS builder
+FROM gradle:8.10.1-jdk21 AS builder
 
 COPY src /usr/src/app/src
 COPY *.gradle  /usr/src/app/
