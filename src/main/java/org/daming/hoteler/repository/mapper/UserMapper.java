@@ -11,23 +11,17 @@ public interface UserMapper {
 
     @Select("""
         SELECT
-            u.id, u.username, u.password, u.password_type,
-            u.failed_login_attempts, u.account_non_locked, u.lock_time,
-            COALESCE(ARRAY_TO_JSON(
-                COALESCE(
-                    ARRAY_AGG(
-                        JSON_BUILD_OBJECT('id', r.id, 'name', r.name, 'description', r.description)
-                    )
-                    FILTER
-                    (WHERE r.id IS NOT NULL)
-                )
-            ), '[]') AS roles
+          u.id, u.username, u.password, u.password_type,
+          u.failed_login_attempts, u.account_non_locked, u.lock_time,
+          COALESCE(ARRAY_TO_JSON(ARRAY_AGG(
+            JSON_BUILD_OBJECT('id', r.id, 'name', r.name, 'description', r.description)
+          ) FILTER (WHERE r.id IS NOT NULL)), '[]') AS roles
         FROM users u
         LEFT JOIN user_roles ur ON ur.user_id = u.id AND ur.deleted_at IS NULL
-        LEFT JOIN roles r on r.id = ur.role_id and r.deleted_at IS NULL
+        LEFT JOIN roles r on r.id = ur.role_id AND r.deleted_at IS NULL
         WHERE u.deleted_at IS NULL
         GROUP BY u.id
-      """)
+            """)
     @Results(
             value = {
                     @Result(property = "id", column = "id"),
