@@ -50,7 +50,7 @@ services:
     restart: on-failure
 
   redis:
-    image: redis:7.4.0-alpine3.20
+    image: redis:7.4.1-alpine3.20
     container_name: "redis"
     ports:
       - 6379:6379
