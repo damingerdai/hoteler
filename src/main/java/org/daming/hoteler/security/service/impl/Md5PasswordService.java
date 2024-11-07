@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 @Service("md5PasswordService")
 public class Md5PasswordService implements IPasswordService {
 
-    private IErrorService errorService;
+    private final IErrorService errorService;
 
     /**
      * 解密
