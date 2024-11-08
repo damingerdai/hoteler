@@ -1,16 +1,33 @@
 package org.daming.hoteler.security.service.impl;
 
+import org.daming.hoteler.config.prop.SecretProp;
+import org.daming.hoteler.config.service.ISecretPropService;
+import org.daming.hoteler.config.service.impl.SecretPropServiceImpl;
+import org.daming.hoteler.service.IErrorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-//@SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
+@ContextConfiguration(classes = Base64PasswordServiceTest.TestConfig.class)
 class Base64PasswordServiceTest {
+
+    @Configuration
+    static class TestConfig {
+
+        @Bean
+        public Base64PasswordService md5PasswordService() {
+            return new Base64PasswordService();
+        }
+    }
 
     @Autowired
     private Base64PasswordService base64PasswordService;

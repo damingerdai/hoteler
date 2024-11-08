@@ -45,7 +45,6 @@ class DESPasswordServiceTest {
 
         @Bean
         public DESPasswordService md5PasswordService(IErrorService errorService, ISecretPropService secretPropService) {
-
             return new DESPasswordService(errorService, secretPropService);
         }
     }
