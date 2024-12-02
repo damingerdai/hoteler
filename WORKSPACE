@@ -47,7 +47,7 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-data-redis:3.4.0",
         "org.springframework.boot:spring-boot-starter-graphql:3.4.0",
         "org.springframework.boot:spring-boot-starter-quartz:3.4.0",
-        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3",
+        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4",
         "com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f",
         #"org.springframework.boot:spring-boot:3.2.2",
         #"org.springframework.boot:spring-boot-starter:3.2.2",
