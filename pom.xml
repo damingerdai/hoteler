@@ -131,7 +131,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
-            <version>5.8.34</version>
+            <version>5.8.35</version>
         </dependency>
         <dependency>
             <groupId>com.cronutils</groupId>
