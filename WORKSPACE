@@ -66,7 +66,7 @@ maven_install(
 
         "org.glassfish.jaxb:jaxb-runtime:4.0.5",
         "com.github.ben-manes.caffeine:caffeine:3.1.8",
-        "cn.hutool:hutool-crypto:5.8.34",
+        "cn.hutool:hutool-crypto:5.8.35",
         "org.yaml:snakeyaml:2.3",
         "org.flywaydb:flyway-core:11.1.0",
         "com.cronutils:cron-utils:9.2.1",
