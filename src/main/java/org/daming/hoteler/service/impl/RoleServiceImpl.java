@@ -18,7 +18,7 @@ import java.util.List;
 @CacheConfig(cacheNames = {"RoleCache"})
 public class RoleServiceImpl implements IRoleService {
 
-    private IRoleDao roleDao;
+    private final IRoleDao roleDao;
 
     @Override
     public List<Role> list() throws HotelerException {

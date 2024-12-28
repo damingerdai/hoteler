@@ -136,6 +136,9 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         if (Objects.isNull(roleNames)) {
             roleNames = List.of();
         }
+        if (!roleNames.contains("users")) {
+            roleNames.add("users");
+        }
         if (isFirstUser && !roleNames.contains("admin")) {
             roleNames.add("admin");
         }
