@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
-import org.daming.hoteler.pojo.CustomerCheckinRecord;
+import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.service.IEventService;
@@ -57,7 +57,7 @@ public class EventServiceImpl implements IEventService {
             var type = message.getEvent();
             var content = message.getContent();
             if (type == HotelerEvent.CHECK_IN_TIME) {
-                var record = this.jsonMapper.readValue(content, CustomerCheckinRecord.class);;
+                var record = this.jsonMapper.readValue(content, Order.class);;
                 this.processCheckInTimeEvent(type, record);
             }
         } catch (Exception ex) {
@@ -65,7 +65,7 @@ public class EventServiceImpl implements IEventService {
         }
     }
 
-    private void processCheckInTimeEvent(HotelerEvent type,  CustomerCheckinRecord record) throws SchedulerException {
+    private void processCheckInTimeEvent(HotelerEvent type,  Order record) throws SchedulerException {
         var beginDate = record.getBeginDate();
         var triggerName = String.valueOf( record.getCustomerId() + record.getRoomId() + record.hashCode());
         var cron = CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))

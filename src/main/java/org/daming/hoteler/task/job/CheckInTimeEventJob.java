@@ -1,8 +1,8 @@
 package org.daming.hoteler.task.job;
 
 import org.daming.hoteler.base.logger.LoggerManager;
-import org.daming.hoteler.pojo.CustomerCheckinRecord;
-import org.daming.hoteler.service.ICustomerCheckinRecordService;
+import org.daming.hoteler.pojo.Order;
+import org.daming.hoteler.service.IOrderService;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -19,13 +19,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckInTimeEventJob extends QuartzJobBean implements Job {
 
-    private ICustomerCheckinRecordService customerCheckinRecordService;
+    private IOrderService customerCheckinRecordService;
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         JobDataMap jobDataMap = context.getMergedJobDataMap();
         try {
-            var record = (CustomerCheckinRecord)jobDataMap.get("record");
+            var record = (Order)jobDataMap.get("record");
             this.customerCheckinRecordService.create(record);
             LoggerManager.getJobLogger().info("run CheckInTimeEventJob: " + record);
         } catch (Exception ex) {
@@ -34,7 +34,7 @@ public class CheckInTimeEventJob extends QuartzJobBean implements Job {
        
     }
 
-    public CheckInTimeEventJob(ICustomerCheckinRecordService customerCheckinRecordService) {
+    public CheckInTimeEventJob(IOrderService customerCheckinRecordService) {
         super();
         this.customerCheckinRecordService = customerCheckinRecordService;
     }

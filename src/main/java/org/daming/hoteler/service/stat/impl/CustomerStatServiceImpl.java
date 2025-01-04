@@ -3,7 +3,7 @@ package org.daming.hoteler.service.stat.impl;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.PastWeekCustomerCount;
 import org.daming.hoteler.pojo.stat.PastWeekCustomerCountStat;
-import org.daming.hoteler.repository.mapper.CustomerCheckinRecordMapper;
+import org.daming.hoteler.repository.mapper.OrderMapper;
 import org.daming.hoteler.service.stat.ICustomerStatService;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerStatServiceImpl implements ICustomerStatService {
 
-    private CustomerCheckinRecordMapper customerCheckinRecordMapper;
+    private OrderMapper orderMapper;
 
     @Override
     public PastWeekCustomerCountStat countPastWeekCustomerCountStat() throws HotelerException {
         var pastWeek = getPastWeek();
         var pastWeekCustomerCounts = new ArrayList<PastWeekCustomerCount>(pastWeek.size());
         pastWeek.forEach(pw -> {
-            var nums = this.customerCheckinRecordMapper.getUserRoomCounts(pw, pw.plusDays(1));
+            var nums = this.orderMapper.getUserRoomCounts(pw, pw.plusDays(1));
             pastWeekCustomerCounts.add(new PastWeekCustomerCount(pw.toLocalDate(), nums));
         });
         var pastWeekCustomerCountStat = new PastWeekCustomerCountStat(pastWeekCustomerCounts);
@@ -47,8 +47,8 @@ public class CustomerStatServiceImpl implements ICustomerStatService {
         return Arrays.asList(7, 6, 5, 4, 3, 2, 1).stream().map(n -> currentDate.minusDays(n)).collect(Collectors.toList());
     }
 
-    public CustomerStatServiceImpl(CustomerCheckinRecordMapper customerCheckinRecordMapper) {
+    public CustomerStatServiceImpl(OrderMapper orderMapper) {
         super();
-        this.customerCheckinRecordMapper = customerCheckinRecordMapper;
+        this.orderMapper = orderMapper;
     }
 }

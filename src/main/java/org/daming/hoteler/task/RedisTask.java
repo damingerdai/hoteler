@@ -1,22 +1,18 @@
 package org.daming.hoteler.task;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
-import org.daming.hoteler.pojo.CustomerCheckinRecord;
+import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
-import org.daming.hoteler.pojo.UserToken;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.service.IPingService;
-import org.daming.hoteler.utils.JwtUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 import static org.daming.hoteler.constants.CommonConstants.HOTELER_ALL_EVENTS;
 
@@ -41,7 +37,7 @@ public class RedisTask {
         try {
             var m = new HotelerMessage();
             m.setEvent(HotelerEvent.CHECK_IN_TIME);
-            var r = new CustomerCheckinRecord();
+            var r = new Order();
            // r.setUserId(1L);
             r.setRoomId(1L);
             r.setBeginDate(LocalDateTime.now());

@@ -4,8 +4,8 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.constants.ErrorCodeConstants;
-import org.daming.hoteler.pojo.CustomerCheckinRecord;
-import org.daming.hoteler.repository.jdbc.ICustomerCheckinRecordDao;
+import org.daming.hoteler.pojo.Order;
+import org.daming.hoteler.repository.jdbc.IOrderDao;
 import org.daming.hoteler.service.IErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,23 +19,23 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 'customer checkin record'Dao 默认实现
+ * 'order'Dao 默认实现
  *
  * @author gming001
  * @create 2021-03-05 16:20
  **/
 @Repository
-public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
+public class OrderDaoImpl implements IOrderDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private IErrorService errorService;
 
     @Override
-    public void create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    public void create(Order order) throws HotelerException {
         var in = Instant.now();
-        var sql = "insert into customer_checkin_record (id, customer_id, room_id, begin_date, end_date, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
-        var params = new Object[] { customerCheckinRecord.getId(), customerCheckinRecord.getCustomerId(), customerCheckinRecord.getRoomId(), customerCheckinRecord.getBeginDate(), customerCheckinRecord.getEndDate() };
+        var sql = "insert into order (id, customer_id, room_id, begin_date, end_date, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
+        var params = new Object[] { order.getId(), order.getCustomerId(), order.getRoomId(), order.getBeginDate(), order.getEndDate() };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
@@ -47,10 +47,10 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
     }
 
     @Override
-    public void update(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    public void update(Order order) throws HotelerException {
         var in = Instant.now();
-        var sql = "update customer_checkin_record set customer_id= ?, room_id = ?, begin_date = ?, end_date = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
-        var params = new Object[] { customerCheckinRecord.getCustomerId(), customerCheckinRecord.getRoomId(), customerCheckinRecord.getBeginDate(), customerCheckinRecord.getEndDate(), customerCheckinRecord.getId() };
+        var sql = "update order set customer_id= ?, room_id = ?, begin_date = ?, end_date = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
+        var params = new Object[] { order.getCustomerId(), order.getRoomId(), order.getBeginDate(), order.getEndDate(), order.getId() };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
@@ -62,14 +62,14 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
     }
 
     @Override
-    public CustomerCheckinRecord get(long id) throws HotelerException {
+    public Order get(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, customer_id, room_id, begin_date, end_date from customer_checkin_record where id = ? and deleted_at is null";
+        var sql = "select id, customer_id, room_id, begin_date, end_date from order where id = ? and deleted_at is null";
         var params = new Object[] { id };
         try {
             return jdbcTemplate.query(sql, rs -> {
                 while (rs.next()) {
-                    return getCustomerCheckinRecord(rs);
+                    return getOrder(rs);
                 }
                 return null;
             }, params);
@@ -85,53 +85,53 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
 
     @Override
     public void delete(long id) throws HotelerException {
-        var sql = "update customer_checkin_record set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
+        var sql = "update order set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
         var params = new Object[] { id };
         try {
             jdbcTemplate.update(sql, params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to delete 'customer checkin record' with id'" + id + "', err: " + ex.getMessage(), ex);
+            LoggerManager.getJdbcLogger().error(() -> "fail to delete 'order' with id'" + id + "', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
     }
 
     @Override
-    public List<CustomerCheckinRecord> list() throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from customer_checkin_record where deleted_at is null order by create_dt desc, update_dt desc ";
+    public List<Order> list() throws HotelerException {
+        var sql = "select id, customer_id, room_id, begin_date, end_date from order where deleted_at is null order by create_dt desc, update_dt desc ";
         try {
-            return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs));
+            return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs));
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list 'customer checkin record'', err: " + ex.getMessage(), ex);
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
     }
 
     @Override
-    public List<CustomerCheckinRecord> list(LocalDate date) throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from customer_checkin_record where begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
+    public List<Order> list(LocalDate date) throws HotelerException {
+        var sql = "select id, customer_id, room_id, begin_date, end_date from order where begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { date, date };
         try {
-            return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
+            return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list 'customer checkin record'', err: " + ex.getMessage(), ex);
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
     }
 
     @Override
-    public List<CustomerCheckinRecord> listByRoom(long roomId, LocalDate date) throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from customer_checkin_record where room_id = ? and begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
+    public List<Order> listByRoom(long roomId, LocalDate date) throws HotelerException {
+        var sql = "select id, customer_id, room_id, begin_date, end_date from order where room_id = ? and begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { roomId, date, date };
         try {
-            return this.jdbcTemplate.query(sql, (rs, i) -> getCustomerCheckinRecord(rs), params);
+            return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list 'customer checkin record'', err: " + ex.getMessage(), ex);
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
     }
 
-    private CustomerCheckinRecord getCustomerCheckinRecord(ResultSet rs) throws SQLException {
-        return new CustomerCheckinRecord()
+    private Order getOrder(ResultSet rs) throws SQLException {
+        return new Order()
                 .setId(rs.getLong("id"))
                 .setCustomerId(rs.getLong("customer_id"))
                 .setRoomId(rs.getLong("room_id"))
@@ -139,7 +139,7 @@ public class CustomerCheckinRecordDaoImpl implements ICustomerCheckinRecordDao {
                 .setEndDate(rs.getTimestamp("end_date").toLocalDateTime());
     }
 
-    public CustomerCheckinRecordDaoImpl(JdbcTemplate jdbcTemplate) {
+    public OrderDaoImpl(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
     }

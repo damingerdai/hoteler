@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  * @author gming001
  * @create 2021-03-05 15:39
  **/
-public class CustomerCheckinRecord implements Serializable {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = -314732081658919026L;
 
@@ -33,7 +33,7 @@ public class CustomerCheckinRecord implements Serializable {
         return id;
     }
 
-    public CustomerCheckinRecord setId(long id) {
+    public Order setId(long id) {
         this.id = id;
         return this;
     }
@@ -42,7 +42,7 @@ public class CustomerCheckinRecord implements Serializable {
         return customerId;
     }
 
-    public CustomerCheckinRecord setCustomerId(long customerId) {
+    public Order setCustomerId(long customerId) {
         this.customerId = customerId;
         return this;
     }
@@ -51,7 +51,7 @@ public class CustomerCheckinRecord implements Serializable {
         return roomId;
     }
 
-    public CustomerCheckinRecord setRoomId(long roomId) {
+    public Order setRoomId(long roomId) {
         this.roomId = roomId;
         return this;
     }
@@ -60,7 +60,7 @@ public class CustomerCheckinRecord implements Serializable {
         return beginDate;
     }
 
-    public CustomerCheckinRecord setBeginDate(LocalDateTime beginDate) {
+    public Order setBeginDate(LocalDateTime beginDate) {
         this.beginDate = beginDate;
         return this;
     }
@@ -69,16 +69,16 @@ public class CustomerCheckinRecord implements Serializable {
         return endDate;
     }
 
-    public CustomerCheckinRecord setEndDate(LocalDateTime endDate) {
+    public Order setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
         return this;
     }
 
-    public CustomerCheckinRecord() {
+    public Order() {
         super();
     }
 
-    public CustomerCheckinRecord(long id, long customerId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
+    public Order(long id, long customerId, long roomId, LocalDateTime beginDate, LocalDateTime endDate) {
         super();
         this.id = id;
         this.customerId = customerId;
@@ -89,7 +89,7 @@ public class CustomerCheckinRecord implements Serializable {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", CustomerCheckinRecord.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Order.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("customerId=" + customerId)
                 .add("roomId=" + roomId)

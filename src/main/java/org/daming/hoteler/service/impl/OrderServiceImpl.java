@@ -3,16 +3,16 @@ package org.daming.hoteler.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.exceptions.HotelerException;
-import org.daming.hoteler.pojo.CustomerCheckinRecord;
+import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.pojo.enums.RoomStatus;
-import org.daming.hoteler.repository.jdbc.ICustomerCheckinRecordDao;
+import org.daming.hoteler.repository.jdbc.IOrderDao;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IEventService;
 import org.daming.hoteler.service.IRoomService;
 import org.daming.hoteler.service.ISnowflakeService;
-import org.daming.hoteler.service.ICustomerCheckinRecordService;
+import org.daming.hoteler.service.IOrderService;
 import org.daming.hoteler.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +29,9 @@ import java.util.Objects;
  * @create 2021-03-05 15:56
  **/
 @Service
-public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordService {
+public class OrderServiceImpl implements IOrderService {
 
-    private ICustomerCheckinRecordDao customerCheckinRecordDao;
+    private IOrderDao customerCheckinRecordDao;
 
     private IRoomService roomService;
 
@@ -44,7 +44,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
     private IErrorService errorService;
 
     @Override
-    public void create(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    public void create(Order customerCheckinRecord) throws HotelerException {
         var beginDate = customerCheckinRecord.getBeginDate().toLocalDate();
         var endDate =  customerCheckinRecord.getEndDate().toLocalDate();
         var durations = DateUtils.getDates(beginDate, endDate);
@@ -52,7 +52,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
             var end = begin.plusDays(1L);
             var beginDateTime = begin.atTime(12, 0, 0);
             var endDateTime = end.atTime(12, 0, 0);
-            var record = new CustomerCheckinRecord();
+            var record = new Order();
             record.setBeginDate(beginDateTime);
             record.setEndDate(endDateTime);
             record.setRoomId(customerCheckinRecord.getRoomId());
@@ -66,7 +66,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
         }
     }
 
-    private void doCreate(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    private void doCreate(Order customerCheckinRecord) throws HotelerException {
         var id  = this.snowflakeService.nextId();
         customerCheckinRecord.setId(id);
         this.processBeginDateAndEndDate(customerCheckinRecord);
@@ -74,7 +74,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
         this.roomService.updateStatus(customerCheckinRecord.getRoomId(), RoomStatus.InUsed);
     }
 
-    private void dispatchCustomerCheckinRecord(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    private void dispatchCustomerCheckinRecord(Order customerCheckinRecord) throws HotelerException {
         try {
             var message = new HotelerMessage();
             message.setEvent(HotelerEvent.CHECK_IN_TIME);
@@ -87,14 +87,14 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
     }
 
     @Override
-    public void update(CustomerCheckinRecord customerCheckinRecord) throws HotelerException {
+    public void update(Order customerCheckinRecord) throws HotelerException {
         this.processBeginDateAndEndDate(customerCheckinRecord);
         this.customerCheckinRecordDao.update(customerCheckinRecord);
         this.roomService.updateStatus(customerCheckinRecord.getRoomId(), RoomStatus.InUsed);
     }
 
     @Override
-    public CustomerCheckinRecord get(long id) throws HotelerException {
+    public Order get(long id) throws HotelerException {
         return this.customerCheckinRecordDao.get(id);
     }
 
@@ -108,7 +108,7 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
 
     }
 
-    private void processBeginDateAndEndDate(CustomerCheckinRecord customerCheckinRecord) {
+    private void processBeginDateAndEndDate(Order customerCheckinRecord) {
         var beginDate = customerCheckinRecord.getBeginDate();
         customerCheckinRecord.setBeginDate(LocalDateTime.of(beginDate.toLocalDate(), LocalTime.of(12, 0)));
         var endDate = customerCheckinRecord.getEndDate();
@@ -116,22 +116,22 @@ public class CustomerCheckinRecordServiceImpl implements ICustomerCheckinRecordS
     }
 
     @Override
-    public List<CustomerCheckinRecord> list() throws HotelerException {
+    public List<Order> list() throws HotelerException {
         return this.customerCheckinRecordDao.list();
     }
 
     @Override
-    public List<CustomerCheckinRecord> listCurrentDate() throws HotelerException {
+    public List<Order> listCurrentDate() throws HotelerException {
         return this.customerCheckinRecordDao.list(LocalDate.now());
     }
 
     @Override
-    public List<CustomerCheckinRecord> listByRoomIdAndDate(long roomId, LocalDate date) {
+    public List<Order> listByRoomIdAndDate(long roomId, LocalDate date) {
         return this.customerCheckinRecordDao.listByRoom(roomId, date);
     }
 
-    public CustomerCheckinRecordServiceImpl(
-            ICustomerCheckinRecordDao customerCheckinRecordDao,
+    public OrderServiceImpl(
+            IOrderDao customerCheckinRecordDao,
             IRoomService roomService,
             ISnowflakeService snowflakeService,
             IEventService eventService,
