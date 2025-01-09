@@ -13,7 +13,7 @@ buildscript {
 plugins {
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'org.flywaydb.flyway' version '11.1.0'
+	id 'org.flywaydb.flyway' version '11.1.1'
 	id 'java'
 }
 
@@ -57,7 +57,7 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine'
 	implementation 'cn.hutool:hutool-crypto:5.8.35'
 	implementation 'org.yaml:snakeyaml:2.3'
-	implementation 'org.flywaydb:flyway-database-postgresql:11.1.0'
+	implementation 'org.flywaydb:flyway-database-postgresql:11.1.1'
 	implementation 'com.cronutils:cron-utils:9.2.1'
 	implementation 'org.bouncycastle:bcpkix-jdk18on:1.79'
 	implementation 'com.lmax:disruptor:4.0.0'
