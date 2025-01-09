@@ -17,10 +17,10 @@ http_archive(
 
 http_archive(
     name = "rules_spring",
-    sha256 = "98143672b2edd2eb84762a6ebe6afc3a194d1ec06bdfaaf0cc87d4d750476db0",
+    sha256 = "a1305e2283fea77ebe2aa29dd03ffb2ac8c248b9a3d1d7fd28ff6478962dd27b",
     urls = [
-        "https://github.com/salesforce/rules_spring/releases/download/2.6.1/rules-spring-2.6.1.zip",
-        "https://mirror.ghproxy.com/https://github.com/salesforce/rules_spring/releases/download/2.6.1/rules-spring-2.6.1.zip",
+        "https://github.com/salesforce/rules_spring/releases/download/2.6.2/rules-spring-2.6.2.zip",
+        "https://mirror.ghproxy.com/https://github.com/salesforce/rules_spring/releases/download/2.6.2/rules-spring-2.6.2.zip",
     ],
 )
 
