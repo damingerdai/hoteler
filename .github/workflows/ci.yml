@@ -160,7 +160,7 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: bazel-contrib/setup-bazel@0.10.0
+      - uses: bazel-contrib/setup-bazel@0.12.1
         with:
           # Avoid downloading Bazel every time.
           bazelisk-cache: true
