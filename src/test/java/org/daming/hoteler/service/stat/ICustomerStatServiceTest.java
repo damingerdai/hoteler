@@ -1,6 +1,6 @@
 package org.daming.hoteler.service.stat;
 
-import org.daming.hoteler.repository.mapper.CustomerCheckinRecordMapper;
+import org.daming.hoteler.repository.mapper.OrderMapper;
 import org.daming.hoteler.service.stat.impl.CustomerStatServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +22,25 @@ class ICustomerStatServiceTest {
     @Configuration
     static class TestConfig {
         @Bean
-        public ICustomerStatService yourService(CustomerCheckinRecordMapper customerCheckinRecordMapper) {
-            return new CustomerStatServiceImpl(customerCheckinRecordMapper);  // 传入 AService 作为依赖
+        public ICustomerStatService yourService(OrderMapper orderMapper) {
+            return new CustomerStatServiceImpl(orderMapper);  // 传入 AService 作为依赖
         }
 
         @MockBean  // 模拟 AService
-        private CustomerCheckinRecordMapper customerCheckinRecordMapper;  // 使用 @MockBean 自动模拟 AService 的行为
+        private OrderMapper orderMapper;  // 使用 @MockBean 自动模拟 AService 的行为
     }
 
     @Autowired
     private ICustomerStatService customerStatService;
 
     @Autowired
-    private CustomerCheckinRecordMapper customerCheckinRecordMapper;
+    private OrderMapper orderMapper;
 
     @Test
     public void countPastWeekCustomerCountStatTest() {
-        when(customerCheckinRecordMapper.getUserRoomCounts(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(1);
+        when(orderMapper.getUserRoomCounts(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(1);
         this.customerStatService.countPastWeekCustomerCountStat();
-        verify(customerCheckinRecordMapper, times(7)).getUserRoomCounts(any(LocalDateTime.class), any(LocalDateTime.class));
+        verify(orderMapper, times(7)).getUserRoomCounts(any(LocalDateTime.class), any(LocalDateTime.class));
     }
 
 }

@@ -1,0 +1,1 @@
+ALTER TABLE orders RENAME TO customer_checkin_record;

@@ -5,7 +5,7 @@ import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.service.IRoomService;
-import org.daming.hoteler.service.ICustomerCheckinRecordService;
+import org.daming.hoteler.service.IOrderService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class RoomStatusTask {
 
     private final HotelerLogger logger = LoggerManager.getJobLogger();
 
-    private ICustomerCheckinRecordService userRoomService;
+    private IOrderService userRoomService;
 
     private IRoomService roomService;
 
@@ -42,7 +42,7 @@ public class RoomStatusTask {
     }
 
     public RoomStatusTask(
-            ICustomerCheckinRecordService userRoomService,
+            IOrderService userRoomService,
             IRoomService roomService) {
         super();
         this.userRoomService = userRoomService;
