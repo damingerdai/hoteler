@@ -8,13 +8,10 @@ import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.OrderListRequest;
+import org.daming.hoteler.pojo.vo.OrderVO;
 import org.daming.hoteler.repository.jdbc.IOrderDao;
 import org.daming.hoteler.repository.mapper.OrderMapper;
-import org.daming.hoteler.service.IErrorService;
-import org.daming.hoteler.service.IEventService;
-import org.daming.hoteler.service.IRoomService;
-import org.daming.hoteler.service.ISnowflakeService;
-import org.daming.hoteler.service.IOrderService;
+import org.daming.hoteler.service.*;
 import org.daming.hoteler.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +32,11 @@ public class OrderServiceImpl implements IOrderService {
 
     private final IOrderDao orderDao;
     
-    private final  OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
     private IRoomService roomService;
+
+    private ICustomerService customerService;
 
     private ISnowflakeService snowflakeService;
 
@@ -130,7 +129,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public List<Order> list(OrderListRequest request) throws HotelerException {
+    public List<OrderVO> list(OrderListRequest request) throws HotelerException {
         if (Objects.nonNull(request.getPageSize())) {
             request.setPageSize(10);
         }
@@ -140,7 +139,24 @@ public class OrderServiceImpl implements IOrderService {
         if (Objects.nonNull(request.getSort())) {
             request.setSort("create_dt");
         }
-        return this.orderDao.list(request);
+        var orders = this.orderDao.list(request);
+        return orders.stream().map(order -> {
+            var orderVo = new OrderVO();
+            orderVo.setId(order.getId());
+            orderVo.setCustomerId(order.getCustomerId());
+            orderVo.setRoomId(order.getRoomId());
+            orderVo.setBeginDate(order.getBeginDate());
+            orderVo.setEndDate(order.getEndDate());
+            var customer = this.customerService.get(order.getCustomerId());
+            if (Objects.nonNull(customer)) {
+                orderVo.setCustomer(customer);
+            }
+            var room = this.roomService.get(order.getRoomId());
+            if (Objects.nonNull(room)) {
+                orderVo.setRoom(room);
+            }
+            return orderVo;
+        }).toList();
     }
 
     @Override
@@ -157,6 +173,7 @@ public class OrderServiceImpl implements IOrderService {
             IOrderDao orderDao,
             OrderMapper orderMapper,
             IRoomService roomService,
+            ICustomerService customerService,
             ISnowflakeService snowflakeService,
             IEventService eventService,
             ObjectMapper jsonMapper,
@@ -165,6 +182,7 @@ public class OrderServiceImpl implements IOrderService {
         this.orderDao = orderDao;
         this.orderMapper = orderMapper;
         this.roomService = roomService;
+        this.customerService = customerService;
         this.snowflakeService = snowflakeService;
         this.eventService = eventService;
         this.jsonMapper = jsonMapper;
