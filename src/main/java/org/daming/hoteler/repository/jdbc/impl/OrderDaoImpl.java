@@ -37,7 +37,7 @@ public class OrderDaoImpl implements IOrderDao {
     @Override
     public void create(Order order) throws HotelerException {
         var in = Instant.now();
-        var sql = "insert into order (id, customer_id, room_id, begin_date, end_date, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
+        var sql = "insert into orders (id, customer_id, room_id, begin_date, end_date, create_dt, create_user, update_dt, update_user) values ( ?, ?, ?, ?, ?, statement_timestamp(), 'system', statement_timestamp(), 'system')";
         var params = new Object[] { order.getId(), order.getCustomerId(), order.getRoomId(), order.getBeginDate(), order.getEndDate() };
         try {
             jdbcTemplate.update(sql, params);
@@ -52,7 +52,7 @@ public class OrderDaoImpl implements IOrderDao {
     @Override
     public void update(Order order) throws HotelerException {
         var in = Instant.now();
-        var sql = "update order set customer_id= ?, room_id = ?, begin_date = ?, end_date = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
+        var sql = "update orders set customer_id= ?, room_id = ?, begin_date = ?, end_date = ?, update_dt = statement_timestamp(), update_user = 'system' where id = ?";
         var params = new Object[] { order.getCustomerId(), order.getRoomId(), order.getBeginDate(), order.getEndDate(), order.getId() };
         try {
             jdbcTemplate.update(sql, params);
@@ -88,7 +88,7 @@ public class OrderDaoImpl implements IOrderDao {
 
     @Override
     public void delete(long id) throws HotelerException {
-        var sql = "update order set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
+        var sql = "update orders set update_dt = statement_timestamp(), update_user = 'system', deleted_at = statement_timestamp() where id = ?";
         var params = new Object[] { id };
         try {
             jdbcTemplate.update(sql, params);
