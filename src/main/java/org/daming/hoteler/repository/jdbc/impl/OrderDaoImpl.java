@@ -64,7 +64,7 @@ public class OrderDaoImpl implements IOrderDao {
     @Override
     public Order get(long id) throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, customer_id, room_id, begin_date, end_date from order where id = ? and deleted_at is null";
+        var sql = "select id, customer_id, room_id, begin_date, end_date from orders where id = ? and deleted_at is null";
         var params = new Object[] { id };
         try {
             return jdbcTemplate.query(sql, rs -> {
@@ -97,7 +97,7 @@ public class OrderDaoImpl implements IOrderDao {
 
     @Override
     public List<Order> list() throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from order where deleted_at is null order by create_dt desc, update_dt desc ";
+        var sql = "select id, customer_id, room_id, begin_date, end_date from orders where deleted_at is null order by create_dt desc, update_dt desc";
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs));
         } catch (Exception ex) {
@@ -108,7 +108,7 @@ public class OrderDaoImpl implements IOrderDao {
 
     @Override
     public List<Order> list(LocalDate date) throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from order where begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
+        var sql = "select id, customer_id, room_id, begin_date, end_date from orders where begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
@@ -120,7 +120,7 @@ public class OrderDaoImpl implements IOrderDao {
 
     @Override
     public List<Order> listByRoom(long roomId, LocalDate date) throws HotelerException {
-        var sql = "select id, customer_id, room_id, begin_date, end_date from order where room_id = ? and begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
+        var sql = "select id, customer_id, room_id, begin_date, end_date from orders where room_id = ? and begin_date <= ? and ? <= end_date and deleted_at is null order by create_dt desc, update_dt desc";
         var params = new Object[] { roomId, date, date };
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
