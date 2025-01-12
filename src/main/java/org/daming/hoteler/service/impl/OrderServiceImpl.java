@@ -7,7 +7,9 @@ import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.pojo.enums.RoomStatus;
+import org.daming.hoteler.pojo.request.OrderListRequest;
 import org.daming.hoteler.repository.jdbc.IOrderDao;
+import org.daming.hoteler.repository.mapper.OrderMapper;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IEventService;
 import org.daming.hoteler.service.IRoomService;
@@ -31,7 +33,9 @@ import java.util.Objects;
 @Service
 public class OrderServiceImpl implements IOrderService {
 
-    private IOrderDao customerCheckinRecordDao;
+    private final IOrderDao orderDao;
+    
+    private final  OrderMapper orderMapper;
 
     private IRoomService roomService;
 
@@ -44,9 +48,9 @@ public class OrderServiceImpl implements IOrderService {
     private IErrorService errorService;
 
     @Override
-    public void create(Order customerCheckinRecord) throws HotelerException {
-        var beginDate = customerCheckinRecord.getBeginDate().toLocalDate();
-        var endDate =  customerCheckinRecord.getEndDate().toLocalDate();
+    public void create(Order order) throws HotelerException {
+        var beginDate = order.getBeginDate().toLocalDate();
+        var endDate =  order.getEndDate().toLocalDate();
         var durations = DateUtils.getDates(beginDate, endDate);
         for (LocalDate begin : durations) {
             var end = begin.plusDays(1L);
@@ -55,30 +59,30 @@ public class OrderServiceImpl implements IOrderService {
             var record = new Order();
             record.setBeginDate(beginDateTime);
             record.setEndDate(endDateTime);
-            record.setRoomId(customerCheckinRecord.getRoomId());
-            record.setCustomerId(customerCheckinRecord.getCustomerId());
+            record.setRoomId(order.getRoomId());
+            record.setCustomerId(order.getCustomerId());
 
             if (DateUtils.isToday(begin)) {
                 this.doCreate(record);
             } else {
-                this.dispatchCustomerCheckinRecord(record);
+                this.dispatchorder(record);
             }
         }
     }
 
-    private void doCreate(Order customerCheckinRecord) throws HotelerException {
+    private void doCreate(Order order) throws HotelerException {
         var id  = this.snowflakeService.nextId();
-        customerCheckinRecord.setId(id);
-        this.processBeginDateAndEndDate(customerCheckinRecord);
-        this.customerCheckinRecordDao.create(customerCheckinRecord);
-        this.roomService.updateStatus(customerCheckinRecord.getRoomId(), RoomStatus.InUsed);
+        order.setId(id);
+        this.processBeginDateAndEndDate(order);
+        this.orderDao.create(order);
+        this.roomService.updateStatus(order.getRoomId(), RoomStatus.InUsed);
     }
 
-    private void dispatchCustomerCheckinRecord(Order customerCheckinRecord) throws HotelerException {
+    private void dispatchorder(Order order) throws HotelerException {
         try {
             var message = new HotelerMessage();
             message.setEvent(HotelerEvent.CHECK_IN_TIME);
-            var content = this.jsonMapper.writeValueAsString(customerCheckinRecord);
+            var content = this.jsonMapper.writeValueAsString(order);
             message.setContent(content);
             this.eventService.publishEvent(message);
         } catch (JsonProcessingException ex) {
@@ -87,58 +91,79 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void update(Order customerCheckinRecord) throws HotelerException {
-        this.processBeginDateAndEndDate(customerCheckinRecord);
-        this.customerCheckinRecordDao.update(customerCheckinRecord);
-        this.roomService.updateStatus(customerCheckinRecord.getRoomId(), RoomStatus.InUsed);
+    public void update(Order order) throws HotelerException {
+        this.processBeginDateAndEndDate(order);
+        this.orderDao.update(order);
+        this.roomService.updateStatus(order.getRoomId(), RoomStatus.InUsed);
     }
 
     @Override
     public Order get(long id) throws HotelerException {
-        return this.customerCheckinRecordDao.get(id);
+        return this.orderDao.get(id);
     }
 
     @Override
     public void delete(long id) throws HotelerException {
-        var record = this.customerCheckinRecordDao.get(id);
+        var record = this.orderDao.get(id);
         if (Objects.nonNull(record)) {
             this.roomService.updateStatus(record.getRoomId(), RoomStatus.InUsed);
-            this.customerCheckinRecordDao.delete(id);
+            this.orderDao.delete(id);
         }
 
     }
 
-    private void processBeginDateAndEndDate(Order customerCheckinRecord) {
-        var beginDate = customerCheckinRecord.getBeginDate();
-        customerCheckinRecord.setBeginDate(LocalDateTime.of(beginDate.toLocalDate(), LocalTime.of(12, 0)));
-        var endDate = customerCheckinRecord.getEndDate();
-        customerCheckinRecord.setEndDate(LocalDateTime.of(endDate.toLocalDate(), LocalTime.of(12, 0)));
+    @Override
+    public int count() throws HotelerException {
+        return this.orderMapper.count();
+    }
+
+    private void processBeginDateAndEndDate(Order order) {
+        var beginDate = order.getBeginDate();
+        order.setBeginDate(LocalDateTime.of(beginDate.toLocalDate(), LocalTime.of(12, 0)));
+        var endDate = order.getEndDate();
+        order.setEndDate(LocalDateTime.of(endDate.toLocalDate(), LocalTime.of(12, 0)));
     }
 
     @Override
     public List<Order> list() throws HotelerException {
-        return this.customerCheckinRecordDao.list();
+        return this.orderDao.list();
+    }
+
+    @Override
+    public List<Order> list(OrderListRequest request) throws HotelerException {
+        if (Objects.nonNull(request.getPageSize())) {
+            request.setPageSize(10);
+        }
+        if (Objects.nonNull(request.getPage())) {
+            request.setPage(1);
+        }
+        if (Objects.nonNull(request.getSort())) {
+            request.setSort("create_dt");
+        }
+        return this.orderDao.list(request);
     }
 
     @Override
     public List<Order> listCurrentDate() throws HotelerException {
-        return this.customerCheckinRecordDao.list(LocalDate.now());
+        return this.orderDao.list(LocalDate.now());
     }
 
     @Override
     public List<Order> listByRoomIdAndDate(long roomId, LocalDate date) {
-        return this.customerCheckinRecordDao.listByRoom(roomId, date);
+        return this.orderDao.listByRoom(roomId, date);
     }
 
     public OrderServiceImpl(
-            IOrderDao customerCheckinRecordDao,
+            IOrderDao orderDao,
+            OrderMapper orderMapper,
             IRoomService roomService,
             ISnowflakeService snowflakeService,
             IEventService eventService,
             ObjectMapper jsonMapper,
             IErrorService errorService) {
         super();
-        this.customerCheckinRecordDao = customerCheckinRecordDao;
+        this.orderDao = orderDao;
+        this.orderMapper = orderMapper;
         this.roomService = roomService;
         this.snowflakeService = snowflakeService;
         this.eventService = eventService;

@@ -13,7 +13,7 @@ public class PingTask {
 
     private final IPingService pingService;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "0 0 * * * ?")
     public void runPing() {
         try {
             this.logger.info("run ping redis and db task");

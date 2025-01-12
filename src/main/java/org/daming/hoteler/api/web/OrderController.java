@@ -6,19 +6,14 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.request.CreateCustomerCheckinRecordRequest;
+import org.daming.hoteler.pojo.request.OrderListRequest;
 import org.daming.hoteler.pojo.request.UpdateCustomerCheckinRecordRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.pojo.response.ListPageResponse;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IOrderService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户房间关联
@@ -90,13 +85,17 @@ public class OrderController {
 
     @Operation(summary = "获取所有用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("orders")
-    public CommonResponse list() throws HotelerException {
+    public CommonResponse list(@RequestParam(name = "page", required = false)Integer page,
+                               @RequestParam(name = "pageSize", required = false)Integer pageSize,
+                               @RequestParam(name = "sort", required = false)String sort) throws HotelerException {
         try {
-            var ur = this.orderService.list();
-            return new DataResponse<>(ur);
-        } catch (NumberFormatException nfe) {
-            var params = new Object[] { nfe.getMessage() };
-            throw errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, params, nfe);
+            var request = new OrderListRequest();
+            request.setPage(page);
+            request.setPageSize(pageSize);
+            request.setSort(sort);
+            var count = this.orderService.count();
+            var orders = this.orderService.list(request);
+            return new ListPageResponse<>(orders, count);
         } catch (Exception ex) {
             throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
         }

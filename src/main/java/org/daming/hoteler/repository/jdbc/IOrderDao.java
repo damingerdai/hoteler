@@ -2,6 +2,7 @@ package org.daming.hoteler.repository.jdbc;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Order;
+import org.daming.hoteler.pojo.request.OrderListRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,8 @@ public interface IOrderDao {
     void delete(long id) throws HotelerException;
 
     List<Order> list() throws HotelerException;
+
+    List<Order> list(OrderListRequest request) throws HotelerException;
 
     List<Order> list(LocalDate date) throws HotelerException;
 
