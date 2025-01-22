@@ -33,7 +33,7 @@ services:
     networks:
       - hoteler-network
   pgbouncer:
-    image: edoburu/pgbouncer:v1.23.1-p0
+    image: edoburu/pgbouncer:v1.24.0-p0
     container_name: "pgbouncer"
     environment:
       - DATABASE_URL=postgres://postgres:123456@db:5432/postgres
