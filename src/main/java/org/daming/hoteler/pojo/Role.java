@@ -1,9 +1,11 @@
 package org.daming.hoteler.pojo;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import java.io.Serializable;
 import java.util.StringJoiner;
 
-public class Role implements Serializable {
+public class Role implements GrantedAuthority {
 
     private long id;
 
@@ -56,5 +58,10 @@ public class Role implements Serializable {
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .toString();
+    }
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + this.name;
     }
 }

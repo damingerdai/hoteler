@@ -2,14 +2,17 @@ package org.daming.hoteler.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class User implements Serializable {
-    private static final long serialVersionUID = 120505218967153077L;
+public class User implements UserDetails {
+
 
     // 该注解是必须的， long类型前端会有精度损失
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -46,9 +49,19 @@ public class User implements Serializable {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
     public User setUsername(String username) {
         this.username = username;
         return this;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
     }
 
     public String getPassword() {
@@ -78,8 +91,19 @@ public class User implements Serializable {
         return this;
     }
 
+    @Override
     public boolean isAccountNonLocked() {
         return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public User setAccountNonLocked(boolean accountNonLocked) {
