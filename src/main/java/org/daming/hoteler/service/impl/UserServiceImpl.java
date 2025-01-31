@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.ApplicationObjectSupport;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -91,6 +94,13 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
                 .orElseThrow(() -> this.errorService.createHotelerException(600005));
         return getUser(user);
     }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        var user = this.getUserByUsername(username);
+//
+//        return user;
+//    }
 
     @Override
     @Transactional
@@ -235,4 +245,6 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
         this.userDao = userDao;
         this.userRoleMapper = userRoleMapper;
     }
+
+
 }

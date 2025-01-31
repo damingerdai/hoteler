@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,19 +28,15 @@ public class SecurityUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = this.userService.getUserByUsername(username);
-        if(user==null){
-            throw new UsernameNotFoundException("用户名或密码错误！！");
+        if(Objects.isNull(user)){
+            throw new UsernameNotFoundException("username or password is incorrect");
         }
-        Set<GrantedAuthority> grantedAuthorities = user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+ role.getName().trim().toUpperCase()))
-                .collect(Collectors.toSet());
-        var securityUser = new SecurityUser(
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>(user.getAuthorities());
+        return new SecurityUser(
                 username,
                 this.passwordEncoder.encode(user.getPassword()),
                 grantedAuthorities
         );
-        return securityUser;
     }
 
     public SecurityUserService(IUserService userService, PasswordEncoder passwordEncoder) {

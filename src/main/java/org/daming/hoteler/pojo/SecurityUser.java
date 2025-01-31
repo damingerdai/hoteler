@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -39,7 +40,7 @@ public class SecurityUser extends User implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return Objects.isNull(this.getLockTime());
     }
 
     /**
@@ -57,10 +58,10 @@ public class SecurityUser extends User implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return true;
+        return Objects.isNull(this.getLockTime());
     }
 
-    public SecurityUser(String password, String username, Set<GrantedAuthority> authorities) {
+    public SecurityUser(String username, String password, Set<GrantedAuthority> authorities) {
         super();
         this.setUsername(username);
         this.setPassword(password);

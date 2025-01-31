@@ -3,6 +3,7 @@ package org.daming.hoteler.config;
 import org.daming.hoteler.api.filter.JWTLoginFilter;
 import org.daming.hoteler.api.filter.AuthenticationFilter;
 import org.daming.hoteler.config.service.ISecretPropService;
+import org.daming.hoteler.security.provider.HotelerAuthenticationProvider;
 import org.daming.hoteler.security.service.SecurityUserService;
 import org.daming.hoteler.service.ITokenService;
 import org.daming.hoteler.service.IUserService;
@@ -10,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 /**
  * WebSecurityConfig
@@ -64,7 +67,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http, SecurityUserService securityUserService, PasswordEncoder passwordEncoder,
-            ITokenService tokenService, IUserService userService) throws Exception {
+            ITokenService tokenService,  JWTLoginFilter jwtLoginFilter, IUserService userService) throws Exception {
         var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(securityUserService).passwordEncoder(passwordEncoder);
         var authenticationManager = authenticationManagerBuilder.build();
@@ -87,8 +90,7 @@ public class WebSecurityConfig {
                             .requestMatchers(authWhiteList).permitAll()
                             //其他的需要授权后访问
                             .anyRequest().anonymous();
-                })// 授权
-                ;
+                });// 授权
 //                .and()// 异常
 //                .exceptionHandling()
 //                .accessDeniedHandler(accessDeny)//授权异常处理
@@ -108,7 +110,7 @@ public class WebSecurityConfig {
         http.exceptionHandling(exceptionHandlingCustomizer -> {
                 //TODO: add exception handing
         });
-        http.addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager, tokenService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new AuthenticationFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement((sessionManagementCustomizer) -> {
             sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -117,6 +119,23 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
+    }
+
+    @Bean
+    public JWTLoginFilter jwtLoginFilter(HttpSecurity http,  SecurityUserService securityUserService, PasswordEncoder passwordEncoder,  ITokenService tokenService) throws Exception {
+        var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(securityUserService).passwordEncoder(passwordEncoder);
+        var authenticationManager = authenticationManagerBuilder.build();
+        var filter = new JWTLoginFilter("/api/login", authenticationManager, tokenService);
+        filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+        return filter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HotelerAuthenticationProvider authenticationProvider) {;
+        ProviderManager pm = new ProviderManager(authenticationProvider);
+
+        return pm;
     }
 
     private AuthenticationEntryPoint unauthorizedEntryPoint() {
