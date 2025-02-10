@@ -91,22 +91,6 @@ public class WebSecurityConfig {
                             //其他的需要授权后访问
                             .anyRequest().anonymous();
                 });// 授权
-//                .and()// 异常
-//                .exceptionHandling()
-//                .accessDeniedHandler(accessDeny)//授权异常处理
-//                .authenticationEntryPoint(anonymousAuthenticationEntryPoint)// 认证异常处理
-//                .and()
-//                .logout()
-                //.logoutSuccessHandler(authenticationLogout)
-//                .and()
-//                .addFilterBefore()
-//                .addFilterBefore(new SecurityAuthTokenFilter(authenticationManager, tokenService, userService, this.secretPropService), UsernamePasswordAuthenticationFilter.class)
-//                .sessionManagement()
-                // 设置Session的创建策略为：Spring Security不创建HttpSession
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authenticationManager(authenticationManager)
-//                .csrf().disable();// 关闭 csrf
         http.exceptionHandling(exceptionHandlingCustomizer -> {
                 //TODO: add exception handing
         });
