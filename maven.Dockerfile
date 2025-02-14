@@ -2,7 +2,7 @@ FROM maven:3.9.9-amazoncorretto-21-debian AS back-build
 
 WORKDIR app
 COPY pom.xml /app
-RUN mvn clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
+RUN mvn clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -Dcheckstyle.skip=true
 COPY src /app/src
 RUN mvn package -Dmaven.test.skip=true
 
