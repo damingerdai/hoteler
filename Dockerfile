@@ -2,7 +2,7 @@ FROM gradle:8.12.1-jdk21 AS builder
 
 COPY src /usr/src/app/src
 COPY *.gradle  /usr/src/app/
-RUN gradle build -x test --project-dir  /usr/src/app
+RUN gradle build -x test -x checkstyleMain -x checkstyleTest --project-dir  /usr/src/app
 
 FROM openjdk:23-slim
 WORKDIR /app

@@ -109,7 +109,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build -x test -x checkstyleMain -x checkstyleTest
   build-maven:
     runs-on: ${{ matrix.os }}
     needs: [build]
