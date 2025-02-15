@@ -58,7 +58,6 @@ class DESPasswordServiceTest {
 
     @BeforeEach
     public void beforeEach() {
-        System.out.println("desPasswordService" + desPasswordService);
         assertNotNull(desPasswordService);
     }
 
