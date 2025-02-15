@@ -5,18 +5,18 @@ import org.daming.hoteler.service.stat.impl.CustomerStatServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ContextConfiguration(classes = ICustomerStatServiceTest.TestConfig.class)  // 指定测试配置类
-//@SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
+@SpringJUnitConfig(classes = ICustomerStatServiceTest.TestConfig.class)  // 指定测试配置类
 class ICustomerStatServiceTest {
 
     @Configuration
@@ -26,14 +26,14 @@ class ICustomerStatServiceTest {
             return new CustomerStatServiceImpl(orderMapper);  // 传入 AService 作为依赖
         }
 
-        @MockitoBean  // 模拟 AService
+        @MockitoSpyBean  // 模拟 AService
         private OrderMapper orderMapper;  // 使用 @MockBean 自动模拟 AService 的行为
     }
 
     @Autowired
     private ICustomerStatService customerStatService;
 
-    @Autowired
+    @MockitoBean
     private OrderMapper orderMapper;
 
     @Test
