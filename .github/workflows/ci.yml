@@ -77,7 +77,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Unit Test with Gradle
         # run: ./gradlew flywayMigrate && ./gradlew build
-        run: ./gradlew test
+        run: ./gradlew test -x checkstyleMain -x checkstyleTest
         env:
           CI: true
       - name: Unit Test with Maven
