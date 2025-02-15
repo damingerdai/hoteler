@@ -9,20 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ContextConfiguration(classes = Md5PasswordServiceTest.TestConfig.class)
+@SpringJUnitConfig(classes = Md5PasswordServiceTest.TestConfig.class)
 class Md5PasswordServiceTest {
 
     @Configuration
     static class TestConfig {
 
-        @MockitoBean
+        @MockitoSpyBean
         public IErrorService errorService;
 
         @Bean
@@ -34,7 +35,7 @@ class Md5PasswordServiceTest {
     @Autowired
     private Md5PasswordService md5PasswordService;
 
-    @Autowired
+    @MockitoBean
     private IErrorService errorService;
 
     @BeforeEach
