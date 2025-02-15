@@ -1,6 +1,6 @@
 module github.com/damingerdai/hoteler/migration
 
-go 1.23.5
+go 1.24.0
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.2
