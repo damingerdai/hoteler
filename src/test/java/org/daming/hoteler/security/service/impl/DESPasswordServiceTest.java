@@ -12,20 +12,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ContextConfiguration(classes = DESPasswordServiceTest.TestConfig.class)
+@SpringJUnitConfig(classes = DESPasswordServiceTest.TestConfig.class)
 class DESPasswordServiceTest {
 
     @Configuration
     @ConfigurationProperties(prefix = "secret")
     static class TestConfig {
 
-        @MockitoBean
+        @MockitoSpyBean
         public IErrorService errorService;
 
         @Bean
@@ -52,8 +53,12 @@ class DESPasswordServiceTest {
     @Autowired
     private DESPasswordService desPasswordService;
 
+    @MockitoBean
+    private IErrorService errorService;
+
     @BeforeEach
     public void beforeEach() {
+        System.out.println("desPasswordService" + desPasswordService);
         assertNotNull(desPasswordService);
     }
 
