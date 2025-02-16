@@ -60,7 +60,7 @@ dependencies {
 	implementation 'org.yaml:snakeyaml:2.3'
 	implementation 'org.flywaydb:flyway-database-postgresql:11.1.1'
 	implementation 'com.cronutils:cron-utils:9.2.1'
-	implementation 'org.bouncycastle:bcpkix-jdk18on:1.79'
+	implementation 'org.bouncycastle:bcpkix-jdk18on:1.80'
 	implementation 'com.lmax:disruptor:4.0.0'
 
 	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
