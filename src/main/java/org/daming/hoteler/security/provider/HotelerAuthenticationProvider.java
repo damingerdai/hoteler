@@ -1,6 +1,5 @@
 package org.daming.hoteler.security.provider;
 
-
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.utils.CommonUtils;

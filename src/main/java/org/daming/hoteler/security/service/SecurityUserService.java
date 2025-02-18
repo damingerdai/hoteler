@@ -31,11 +31,15 @@ public class SecurityUserService implements UserDetailsService {
             throw new UsernameNotFoundException("username or password is incorrect");
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>(user.getAuthorities());
-        return new SecurityUser(
+        var securityUser = new SecurityUser(
                 username,
                 this.passwordEncoder.encode(user.getPassword()),
                 grantedAuthorities
         );
+        securityUser.setId(user.getId());
+        securityUser.setPasswordType(user.getPasswordType());
+
+        return securityUser;
     }
 
     public SecurityUserService(IUserService userService, PasswordEncoder passwordEncoder) {
