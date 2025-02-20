@@ -38,21 +38,21 @@ Jsonwebtoken_Version = "0.12.5"
 
 maven_install(
     artifacts = [
-        "org.springframework.boot:spring-boot-starter-web:3.4.2",
-        "org.springframework.boot:spring-boot-starter-jdbc:3.4.2",
-        "org.springframework.boot:spring-boot-starter-aop:3.4.2",
-        "org.springframework.boot:spring-boot-starter-security:3.4.2",
-        "org.springframework.boot:spring-boot-starter-cache:3.4.2",
-        "org.springframework.boot:spring-boot-starter-actuator:3.4.2",
-        "org.springframework.boot:spring-boot-starter-data-redis:3.4.2",
-        "org.springframework.boot:spring-boot-starter-graphql:3.4.2",
-        "org.springframework.boot:spring-boot-starter-quartz:3.4.2",
+        "org.springframework.boot:spring-boot-starter-web:3.4.3",
+        "org.springframework.boot:spring-boot-starter-jdbc:3.4.3",
+        "org.springframework.boot:spring-boot-starter-aop:3.4.3",
+        "org.springframework.boot:spring-boot-starter-security:3.4.3",
+        "org.springframework.boot:spring-boot-starter-cache:3.4.3",
+        "org.springframework.boot:spring-boot-starter-actuator:3.4.3",
+        "org.springframework.boot:spring-boot-starter-data-redis:3.4.3",
+        "org.springframework.boot:spring-boot-starter-graphql:3.4.3",
+        "org.springframework.boot:spring-boot-starter-quartz:3.4.3",
         "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4",
         "com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f",
         #"org.springframework.boot:spring-boot:3.2.2",
         #"org.springframework.boot:spring-boot-starter:3.2.2",
-        "org.springframework.boot:spring-boot-loader:3.4.2",
-        "org.springframework.boot:spring-boot-loader-tools:3.4.2",
+        "org.springframework.boot:spring-boot-loader:3.4.3",
+        "org.springframework.boot:spring-boot-loader-tools:3.4.3",
 
         "org.postgresql:postgresql:42.7.5",
 
@@ -73,8 +73,8 @@ maven_install(
         "org.bouncycastle:bcpkix-jdk18on:1.80",
         "com.lmax:disruptor:4.0.0",
 
-        "org.springframework.boot:spring-boot-devtools:3.4.2",
-        "org.springframework.boot:spring-boot-starter-test:3.4.2",
+        "org.springframework.boot:spring-boot-devtools:3.4.3",
+        "org.springframework.boot:spring-boot-starter-test:3.4.3",
         "org.springframework.security:spring-security-test:6.4.2",
 
     ],
