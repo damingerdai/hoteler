@@ -1,12 +1,16 @@
 name: Build and Publish
 
+#on:
+#  push:
+#    branches: [ master ]
+#    paths:
+#      - 'src/**'
+#      - 'pom.xml'
+#      - 'build.gradle'
 on:
   push:
-    branches: [ master ]
-    paths:
-      - 'src/**'
-      - 'pom.xml'
-      - 'build.gradle'
+    tags:
+      - v*
 
 jobs:
   build-and-push-docker-image:
@@ -31,6 +35,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
+      - name: Extract tag name
+        id: extract_tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Extracted tag name: $TAG_NAME"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v6
@@ -38,7 +48,7 @@ jobs:
         with:
           context: .
           tags: |
-            ghcr.io/damingerdai/hoteler:${{ github.sha }}
+            ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.tag_name }}
           push: ${{ github.ref == 'refs/heads/master' }}
           platforms: linux/amd64,linux/arm64
           provenance: true
@@ -55,7 +65,13 @@ jobs:
         uses: Azure/k8s-set-context@v4
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: Extract tag name
+        id: extract_tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Extracted tag name: $TAG_NAME"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
       - name: Deploy to k3s
         run: |-
-          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ github.sha }} -n hoteler-namespace
+          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.tag_name }} -n hoteler-namespace
           kubectl rollout status deployment/hoteler-api -n hoteler-namespace
