@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd .. && mvn git-changelog-maven-plugin:git-changelog
+cd .. && mvn release:prepare -DpushChanges=false && mvn git-changelog-maven-plugin:git-changelog
