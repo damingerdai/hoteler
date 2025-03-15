@@ -22,6 +22,13 @@
         <changelog.version>2.2.4</changelog.version>
     </properties>
 
+    <scm>
+        <connection>scm:git:https://github.com/damingerdai/hoteler.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:damingerdai/hoteler.git</developerConnection>
+        <url>https://github.com/damingerdai/hoteler</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -262,10 +269,19 @@
                             <toRef>refs/heads/master</toRef>
                             <readableTagName>-([^-]+?)$</readableTagName>
                             <file>CHANGELOG.md</file>
-<!--                            <ignoreCommitsIfMessageMatches>^\[maven-release-plugin\].*</ignoreCommitsIfMessageMatches>-->
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <tagBase>https://github.com/damingerdai/hoteler/tags</tagBase>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
             </plugin>
         </plugins>
     </build>
