@@ -19,7 +19,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <changelog.version>2.2.4</changelog.version>
+        <changelog.version>2.2.5</changelog.version>
     </properties>
 
     <scm>
