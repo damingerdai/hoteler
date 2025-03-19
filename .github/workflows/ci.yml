@@ -90,7 +90,7 @@ jobs:
     needs: [test]
     strategy:
       matrix:
-        java-version: [21, 23]
+        java-version: [21, 24]
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4.2.2
