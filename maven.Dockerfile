@@ -6,7 +6,7 @@ RUN mvn clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=tru
 COPY src /app/src
 RUN mvn package -Dmaven.test.skip=true -Dcheckstyle.skip=true
 
-FROM openjdk:22-slim
+FROM openjdk:21-slim
 WORKDIR /app
 COPY --from=back-build /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
