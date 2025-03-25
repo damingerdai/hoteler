@@ -16,6 +16,7 @@ java_library(
         "@maven//:org_springframework_boot_spring_boot_starter_data_redis",
         "@maven//:org_springframework_boot_spring_boot_starter_graphql",
         "@maven//:org_springframework_boot_spring_boot_starter_quartz",
+        "@maven//:io_micrometer_micrometer_registry_prometheus",
         "@maven//:org_mybatis_spring_boot_mybatis_spring_boot_starter",
 
         "@maven//:org_postgresql_postgresql",
