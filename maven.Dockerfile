@@ -1,14 +1,15 @@
-FROM maven:3.9.9-amazoncorretto-21-debian AS back-build
+FROM openjdk:22-slim AS builder
 
 WORKDIR app
-COPY pom.xml /app
-RUN mvn clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -Dcheckstyle.skip=true
-COPY src /app/src
-RUN mvn package -Dmaven.test.skip=true -Dcheckstyle.skip=true
+COPY .mvn ./.mvn
+COPY pom.xml mvnw .
+RUN  ls && ./mvnw clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -Dcheckstyle.skip=true
+COPY src .
+RUN ./mvnw package -Dmaven.test.skip=true -Dcheckstyle.skip=true
 
 FROM openjdk:22-slim
 WORKDIR /app
-COPY --from=back-build /app/target/*.jar /app/app.jar
+COPY --from=builder /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
 RUN ln -snf /usr/shar/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 HEALTHCHECK CMD curl --fail http://localhost:8443/ping || exit 1
