@@ -1,21 +1,21 @@
 buildscript {
-	repositories {
-		mavenLocal()
-		maven{url "https://jitpack.io"}
-		maven { url 'https://repo.spring.io/milestone' }
-		maven { url 'https://repo.spring.io/snapshot' }
-		mavenCentral()
-		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-		maven { url 'https://plugins.gradle.org/m2/' }
-	}
+    repositories {
+        mavenLocal()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://repo.spring.io/snapshot' }
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
 }
 
 plugins {
-	id 'org.springframework.boot' version '3.4.4'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'org.flywaydb.flyway' version '11.4.0'
-	id 'java'
-	id 'checkstyle'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.flywaydb.flyway' version '11.4.0'
+    id 'java'
+    id 'checkstyle'
 }
 
 group = 'org.daming'
@@ -25,89 +25,89 @@ targetCompatibility = '21'
 def jsonwebtokenVersion = "0.12.6"
 
 repositories {
-	mavenLocal()
-  	maven { url 'https://repo.spring.io/milestone' }
-  	maven { url 'https://repo.spring.io/snapshot' }
-	mavenCentral()
-	maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+    mavenLocal()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+    maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-graphql'
-	implementation 'org.springframework.boot:spring-boot-starter-quartz'
-  implementation 'io.micrometer:micrometer-registry-prometheus:1.14.5'
-	implementation 'com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.14.5'
+    implementation 'com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
 
-	implementation 'org.postgresql:postgresql:42.7.5'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
-	implementation("io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}")
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}")
-	implementation 'commons-codec:commons-codec:1.18.0'
-	implementation 'org.apache.commons:commons-lang3:3.17.0'
-	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
-	// Runtime, com.sun.xml.bind module
-	implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
-	implementation 'com.github.ben-manes.caffeine:caffeine'
-	implementation 'cn.hutool:hutool-crypto:5.8.36'
-	implementation 'org.yaml:snakeyaml:2.4'
-	implementation 'org.flywaydb:flyway-database-postgresql:11.4.1'
-	implementation 'com.cronutils:cron-utils:9.2.1'
-	implementation 'org.bouncycastle:bcpkix-jdk18on:1.80'
-	implementation 'com.lmax:disruptor:4.0.0'
+    implementation 'org.postgresql:postgresql:42.7.5'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+    implementation("io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}")
+    implementation 'commons-codec:commons-codec:1.18.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    // Runtime, com.sun.xml.bind module
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation 'cn.hutool:hutool-crypto:5.8.36'
+    implementation 'org.yaml:snakeyaml:2.4'
+    implementation 'org.flywaydb:flyway-database-postgresql:11.4.1'
+    implementation 'com.cronutils:cron-utils:9.2.1'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.80'
+    implementation 'com.lmax:disruptor:4.0.0'
 
-	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    //developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 flyway {
-	url = 'jdbc:postgresql://127.0.0.1:5432/postgres'
-	user = 'postgres'
-	password = '123456'
-	baselineOnMigrate = true
-	skipExecutingMigrations = true
+    url = 'jdbc:postgresql://127.0.0.1:5432/postgres'
+    user = 'postgres'
+    password = '123456'
+    baselineOnMigrate = true
+    skipExecutingMigrations = true
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 bootJar {
-	mainClass = 'org.daming.hoteler.HotelerApplication'
+    mainClass = 'org.daming.hoteler.HotelerApplication'
 }
 
 jar {
-	// https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#packaging-executable.and-plain-archives
-	enabled = false
+    // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#packaging-executable.and-plain-archives
+    enabled = false
 }
 
 if (project.hasProperty('standalone')) {
-	sourceSets {
-		main {
-			resources {
-				exclude '**/application*.yml'
-				exclude '**/*.yml.back'
-			}
-		}
-	}
-	bootJar {
-		archiveFileName = "hoteler-standalone.jar"
-		mainClass = 'org.daming.hoteler.HotelerApplication'
-	}
+    sourceSets {
+        main {
+            resources {
+                exclude '**/application*.yml'
+                exclude '**/*.yml.back'
+            }
+        }
+    }
+    bootJar {
+        archiveFileName = "hoteler-standalone.jar"
+        mainClass = 'org.daming.hoteler.HotelerApplication'
+    }
 }
 
 test {
-	useJUnitPlatform()
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-	}
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
 }
