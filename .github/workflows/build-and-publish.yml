@@ -32,6 +32,13 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/damingerdai/hoteler
+          tags: |
+            type=semver,pattern={{raw}}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+            type=ref,event=tag
+            type=sha
+        env:
+          DOCKER_METADATA_SHORT_SHA_LENGTH: 40
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
@@ -48,11 +55,7 @@ jobs:
         id: docker_build
         with:
           context: .
-          tags: |
-            type=semver,pattern={{raw}}
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
-            type=ref,event=tag
-            type=sha
+          tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/master' }}
           platforms: linux/amd64,linux/arm64
           provenance: true
