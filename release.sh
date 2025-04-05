@@ -57,10 +57,9 @@ git add CHANGELOG.md
 git commit -m "chore(release): v$NEW_VERSION"
 
 # 创建带注释的标签
-git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION" \
-    -m "包含以下变更:" -m "$(git log --pretty=format:%s 'v$BASE_VERSION..HEAD')"
+git tag "v$NEW_VERSION"
 
 # 推送变更
-git push origin main && git push origin "v$NEW_VERSION"
+echo "please run git push origin master && git push origin v$NEW_VERSION"
 
 echo "成功发布版本 v$NEW_VERSION!"
