@@ -9,8 +9,6 @@ name: Build and Publish
 #      - 'build.gradle'
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - v*
 
