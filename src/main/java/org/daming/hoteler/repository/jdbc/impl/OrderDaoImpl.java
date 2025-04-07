@@ -129,7 +129,6 @@ public class OrderDaoImpl implements IOrderDao {
             paramsList.add((request.getPage() - 1) * request.getPageSize());
         }
         var params = paramsList.toArray();
-        System.out.println(sql);
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
         } catch (Exception ex) {

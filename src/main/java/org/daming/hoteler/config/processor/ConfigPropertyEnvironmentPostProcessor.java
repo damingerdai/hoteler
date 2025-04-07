@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class ConfigPropertyEnvironmentPostProcessor implements EnvironmentPostProcessor {
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        System.out.println(ConfigPropertyEnvironmentPostProcessor.class);
         var ps = environment.getPropertySources();
         ps.forEach(System.out::println);
     }
