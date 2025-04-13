@@ -296,12 +296,34 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>aliyunmaven</id>  
+            <name>阿里云公共仓库</name>  
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+            <!--这里配置只下载releases版本的构件，忽略snapshots版本-->
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
             <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
