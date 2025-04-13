@@ -10,8 +10,7 @@ sha=$(git rev-parse HEAD)
 image_name="hoteler-api"
 
 # Build the Docker image with the current commit SHA as the tag
-docker build -t ${image_name}:${sha} -f maven.Dockerfile .
+docker build --platform linux/amd64,linux/arm64 -t ${image_name}:${sha} -f maven.Dockerfile .
 
 # Print a success message
 echo "Docker image ${image_name}:${sha} built successfully."
-
