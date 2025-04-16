@@ -56,7 +56,7 @@ jobs:
           context: .
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/master' }}
-          load: ${{ github.ref != 'refs/heads/master' }}
+          load: true
           platforms: linux/amd64,linux/arm64
           provenance: true
         env:
