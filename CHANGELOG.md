@@ -2,6 +2,25 @@
 
 Changelog of hoteler.
 
+## v0.0.2 (2025-04-16)
+
+### Bug Fixes
+
+-  **deps**  update dependency io.micrometer:micrometer-registry-prometheus to v1.14.6 (#1225) ([3a133](https://github.com/damingerdai/hoteler/commit/3a133ee2f77eb9b) renovate[bot])  
+-  **deps**  update flyway to v11.7.0 (#1223) ([53d1a](https://github.com/damingerdai/hoteler/commit/53d1a3aa8332410) renovate[bot])  
+-  **deps**  update flyway to v11.6.0 (#1221) ([0275b](https://github.com/damingerdai/hoteler/commit/0275b71ba539e69) renovate[bot])  
+-  **deps**  update dependency cn.hutool:hutool-crypto to v5.8.37 (#1220) ([35ddb](https://github.com/damingerdai/hoteler/commit/35ddb81160e5f18) renovate[bot])  
+
+### Dependency updates
+
+- update dependency io_bazel_rules_go to v0.54.0 (#1226) ([1f03b](https://github.com/damingerdai/hoteler/commit/1f03b64d6bc2c48) renovate[bot])  
+- update dependency bazel_gazelle to v0.43.0 (#1227) ([298ff](https://github.com/damingerdai/hoteler/commit/298ffaea85a0207) renovate[bot])  
+- update dependency org.apache.maven.plugins:maven-surefire-report-plugin to v3.5.3 (#1218) ([4913b](https://github.com/damingerdai/hoteler/commit/4913b4a8ad533c5) renovate[bot])  
+- update dependency org.codehaus.mojo:versions-maven-plugin to v2.18.0 (#1222) ([9aee7](https://github.com/damingerdai/hoteler/commit/9aee7fc9eec26e4) renovate[bot])  
+- update dependency bazel to v7.6.1 (#1219) ([0644e](https://github.com/damingerdai/hoteler/commit/0644e73e55a8951) renovate[bot])  
+### Other changes
+
+
 ## v0.0.1 (2025-04-05)
 
 ### Breaking changes
