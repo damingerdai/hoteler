@@ -49,15 +49,15 @@ mvn versions:set -DnewVersion="$NEW_VERSION" -DgenerateBackupPoms=false
 
 # 提交版本变更
 git add pom.xml
-git commit -m "chore(release): prepare version $NEW_VERSION"
-
-# 生成变更日志
-mvn git-changelog-maven-plugin:git-changelog -Dchangelog.range="v$BASE_VERSION..HEAD"
-git add CHANGELOG.md
+# git commit -m "chore(release): prepare version $NEW_VERSION"
 git commit -m "chore(release): v$NEW_VERSION"
 
 # 创建带注释的标签
 git tag "v$NEW_VERSION"
+# 生成变更日志
+mvn git-changelog-maven-plugin:git-changelog -Dchangelog.range="v$BASE_VERSION..HEAD"
+git add CHANGELOG.md
+git commit -m "chore(release): cut release changelog for v$NEW_VERSION"
 
 # 推送变更
 echo "please run git push origin master && git push origin v$NEW_VERSION"
