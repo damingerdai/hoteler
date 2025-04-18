@@ -69,7 +69,7 @@ maven_install(
         "com.github.ben-manes.caffeine:caffeine:3.2.0",
         "cn.hutool:hutool-crypto:5.8.37",
         "org.yaml:snakeyaml:2.4",
-        "org.flywaydb:flyway-core:11.6.0",
+        "org.flywaydb:flyway-core:11.7.2",
         "com.cronutils:cron-utils:9.2.1",
         "org.bouncycastle:bcpkix-jdk18on:1.80",
         "com.lmax:disruptor:4.0.0",
