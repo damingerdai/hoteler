@@ -65,6 +65,9 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Output image tag
+        run: echo "image_tag=$(echo ${{ steps.meta.outputs.tags }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+        id: output_tag
 
   deploy-to-kubernetes:
     needs: build-and-push-docker-image
@@ -82,6 +85,7 @@ jobs:
           echo "Extracted tag name: $TAG_NAME"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
       - name: Deploy to k3s
+      - name: Deploy to k3s
         run: |-
-          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.tag_name }} -n hoteler-namespace
-          kubectl rollout status deployment/hoteler-api -n hoteler-namespace
+          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ needs.build-and-push-docker-image.outputs.image_tag }} -n hoteler-namespace
+          kubectl rollout status deployment/hoteler-api -n hoteler-namespace --timeout=10m --request-timeout=10m
