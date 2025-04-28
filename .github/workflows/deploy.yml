@@ -1,0 +1,45 @@
+name: damingerdai hoteler deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build docker
+        id: build-docker
+        run: |-
+          docker build . -t hoteler:${{ github.sha }} -f Dockerfile
+      - name: Image digest
+        run: echo ${{ steps.build-docker.outputs.digest }}
+      - name: Save docker image to tar file
+        run: |
+          docker save hoteler:${{ github.sha }} -o hoteler.tar
+          chmod 664 hoteler.tar
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: hoteler.tar
+          target: ${{ secrets.SERVER_TARGET_FOLDER_PATHs }}
+      - name: deploy by ssh
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          sripts: |-
+            cd /root/Workspace/hoteler; \
+            docker load -o hoteler.tar; \
+            kubectl set image deployment/hoteler-api hoteler-api=hoteler:${{ github.sha }} -n hoteler-namespace \
+            kubectl rollout status deployment/hoteler-api -n hoteler-namespace
