@@ -7,7 +7,6 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.CreateRoomRequest;
-import org.daming.hoteler.pojo.request.ListRoomRequest;
 import org.daming.hoteler.pojo.request.UpdateRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
 import org.daming.hoteler.pojo.response.DataResponse;
@@ -19,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+
+import java.util.Optional;
 
 /**
  * room controller
@@ -54,8 +55,9 @@ public class RoomController {
 
     @Operation(summary = "获取所有的房间", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("rooms")
-    public CommonResponse list(ListRoomRequest request) {
-        var room = new Room().setStatus(request.getStatus());
+    public CommonResponse list(@RequestParam Optional<RoomStatus> status) {
+        var room = new Room();
+        status.ifPresent(room::setStatus);
         var rooms = this.roomService.list(room);
         return new DataResponse<>(rooms);
     }
