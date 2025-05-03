@@ -38,7 +38,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          sripts: |-
+          script: |-
             cd /root/Workspace/hoteler; \
             docker load -o hoteler.tar; \
             kubectl set image deployment/hoteler-api hoteler-api=hoteler:${{ github.sha }} -n hoteler-namespace \
