@@ -1,7 +1,9 @@
 package org.daming.hoteler.service;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.Room;
+import org.daming.hoteler.pojo.Sortable;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 
 import java.util.List;
@@ -21,6 +23,8 @@ public interface IRoomService {
     void update(Room room) throws HotelerException;
 
     List<Room> list(Room room) throws HotelerException;
+
+    List<Room> list(Room room, Pageable pageable, Sortable sortable) throws HotelerException;
 
     List<Room> list() throws HotelerException;
 

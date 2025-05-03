@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Room;
 import org.daming.hoteler.pojo.enums.RoomStatus;
+import org.daming.hoteler.pojo.enums.SortType;
 import org.daming.hoteler.pojo.request.CreateRoomRequest;
 import org.daming.hoteler.pojo.request.UpdateRoomRequest;
 import org.daming.hoteler.pojo.response.CommonResponse;
@@ -55,7 +56,13 @@ public class RoomController {
 
     @Operation(summary = "获取所有的房间", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("rooms")
-    public CommonResponse list(@RequestParam Optional<RoomStatus> status) {
+    public CommonResponse list(@RequestParam Optional<RoomStatus> status,
+                               @RequestParam(required = true, defaultValue = "1") Integer pageNo,
+                               @RequestParam(required = true, defaultValue = "10") Integer pageSize,
+                               @RequestParam(required = false) String orderBy,
+                               @RequestParam(required = false, defaultValue = "dscss") SortType sortType
+                               ) {
+
         var room = new Room();
         status.ifPresent(room::setStatus);
         var rooms = this.roomService.list(room);

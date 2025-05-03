@@ -1,7 +1,9 @@
 package org.daming.hoteler.service.impl;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.Room;
+import org.daming.hoteler.pojo.Sortable;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.repository.jdbc.IRoomDao;
 import org.daming.hoteler.repository.mapper.RoomMapper;
@@ -85,6 +87,11 @@ public class RoomServiceImpl implements IRoomService {
     //@Cacheable(cacheNames = { "rooms" }, key = "#room")
     public List<Room> list(Room room) {
         return this.roomDao.list(room);
+    }
+
+    @Override
+    public List<Room> list(Room room, Pageable pageable, Sortable sortable) throws HotelerException {
+        return this.roomDao.list(room, pageable, sortable);
     }
 
     @Override

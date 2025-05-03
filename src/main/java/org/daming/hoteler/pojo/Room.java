@@ -24,7 +24,7 @@ public class Room implements Serializable {
 
     private RoomStatus status;
 
-    public double price;
+    private double price;
 
     public long getId() {
         return id;

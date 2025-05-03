@@ -5,6 +5,8 @@ import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.Order;
+import org.daming.hoteler.pojo.Pageable;
+import org.daming.hoteler.pojo.Sortable;
 import org.daming.hoteler.pojo.request.OrderListRequest;
 import org.daming.hoteler.repository.jdbc.IOrderDao;
 import org.daming.hoteler.service.IErrorService;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 'order'Dao 默认实现
@@ -131,6 +134,37 @@ public class OrderDaoImpl implements IOrderDao {
         var params = paramsList.toArray();
         try {
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs), params);
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
+    @Override
+    public List<Order> list(Pageable pageable) throws HotelerException {
+        var sql = " select id, customer_id, room_id, begin_date, end_date from orders where deleted_at is null ";
+        if (Objects.nonNull(pageable)) {
+            sql += " limit  " + pageable.toLimit() +  " offset " + pageable.toOffset();
+        }
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs));
+        } catch (Exception ex) {
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        }
+    }
+
+    @Override
+    public List<Order> list(Pageable pageable, Sortable sortable) throws HotelerException {
+        var sql = " select id, customer_id, room_id, begin_date, end_date from orders where deleted_at is null ";
+        if (Objects.nonNull(pageable)) {
+            sql += " limit  " + pageable.toLimit() +  " offset " + pageable.toOffset();
+        }
+        if (Objects.nonNull(sortable)) {
+            sql += " order by " + sortable.getOrderBy() + " " + sortable.getOrderDir();
+        }
+        try {
+            return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs));
         } catch (Exception ex) {
             LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);

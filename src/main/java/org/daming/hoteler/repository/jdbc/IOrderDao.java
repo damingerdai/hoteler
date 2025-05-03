@@ -2,6 +2,9 @@ package org.daming.hoteler.repository.jdbc;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Order;
+import org.daming.hoteler.pojo.Pageable;
+import org.daming.hoteler.pojo.Room;
+import org.daming.hoteler.pojo.Sortable;
 import org.daming.hoteler.pojo.request.OrderListRequest;
 
 import java.time.LocalDate;
@@ -23,7 +26,12 @@ public interface IOrderDao {
 
     List<Order> list() throws HotelerException;
 
+    @Deprecated
     List<Order> list(OrderListRequest request) throws HotelerException;
+
+    List<Order> list(Pageable pageable) throws HotelerException;
+
+    List<Order> list(Pageable pageable, Sortable sortable) throws HotelerException;
 
     List<Order> list(LocalDate date) throws HotelerException;
 
