@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+env:
+  REGISTRY_NAME: github.com
 
 jobs:
   deploy:
@@ -17,12 +19,12 @@ jobs:
       - name: Build docker
         id: build-docker
         run: |-
-          docker build . -t hoteler:${{ github.sha }} -f Dockerfile
+          docker build . -t ${{ env.REGISTRY_NAME }}/damingerda/hoteler-api:${{ github.sha }} -f Dockerfile
       - name: Image digest
         run: echo ${{ steps.build-docker.outputs.digest }}
       - name: Save docker image to tar file
         run: |
-          docker save hoteler:${{ github.sha }} -o hoteler.tar
+          docker save ${{ env.REGISTRY_NAME }}/damingerda/hoteler-api:${{ github.sha }} -o hoteler.tar
           chmod 664 hoteler.tar
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
@@ -39,7 +41,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |-
-            cd /root/Workspace/hoteler; \
-            docker load -i hoteler.tar; \
-            kubectl set image deployment/hoteler-api hoteler-api=hoteler:${{ github.sha }} -n hoteler-namespace \
+            cd /root/Workspace/hoteler \
+            docker load -i hoteler.tar \
+            kubectl set image deployment/hoteler-api hoteler-api=${{ env.REGISTRY_NAME }}/damingerda/hoteler-api:${{ github.sha }} -n hoteler-namespace \
             kubectl rollout status deployment/hoteler-api -n hoteler-namespace
