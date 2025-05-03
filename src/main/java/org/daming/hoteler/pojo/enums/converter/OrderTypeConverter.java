@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class SortTypeConverter implements Converter<String, SortType>  {
+public class OrderTypeConverter implements Converter<String, SortType>  {
     @Override
     public SortType convert(String source) {
         if (!StringUtils.hasText(source)) {

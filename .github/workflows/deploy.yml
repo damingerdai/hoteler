@@ -40,6 +40,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |-
             cd /root/Workspace/hoteler; \
-            docker load -o hoteler.tar; \
+            docker load -i hoteler.tar; \
             kubectl set image deployment/hoteler-api hoteler-api=hoteler:${{ github.sha }} -n hoteler-namespace \
             kubectl rollout status deployment/hoteler-api -n hoteler-namespace
