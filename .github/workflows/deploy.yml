@@ -40,8 +40,9 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: |-
+          script: |
             cd /root/Workspace/hoteler \
             docker load -i hoteler.tar \
             kubectl set image deployment/hoteler-api hoteler-api=${{ env.REGISTRY_NAME }}/damingerda/hoteler-api:${{ github.sha }} -n hoteler-namespace \
             kubectl rollout status deployment/hoteler-api -n hoteler-namespace
+
