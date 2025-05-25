@@ -14,9 +14,9 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-    env:
-      SHORT_SHA: ${{ github.sha:0:7 }}
     steps:
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: Build docker
         id: build-docker
