@@ -9,7 +9,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath("org.postgresql:postgresql:42.7.5")
+        classpath("org.postgresql:postgresql:42.7.6")
         classpath("org.flywaydb:flyway-database-postgresql:11.7.2")
     }
 }
@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
 
-    implementation 'org.postgresql:postgresql:42.7.5'
+    implementation 'org.postgresql:postgresql:42.7.6'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation("io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}")
