@@ -1,6 +1,5 @@
 package org.daming.hoteler.service.impl;
 
-import cn.hutool.core.util.DesensitizedUtil;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
@@ -14,7 +13,7 @@ import org.daming.hoteler.service.ICustomerService;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.ISnowflakeService;
 import org.daming.hoteler.utils.AesUtil;
-import org.daming.hoteler.utils.IDCard;
+import org.daming.hoteler.utils.DesensitizationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -95,11 +94,9 @@ public class CustomerServiceImpl implements ICustomerService {
             }
             this.customerDao.update(customer);
         } catch (HotelerException he) {
-            he.printStackTrace();
             LoggerManager.getCommonLogger().error(() -> "fail to update customer:" + customer.getId(), he);
             throw he;
         } catch (Exception ex) {
-            ex.printStackTrace();
             LoggerManager.getCommonLogger().error(() -> "fail to update a customer: " + customer.getId() + ", error: " + ex.getMessage(), ex);
             throw errorService.createHotelerException(CustomerErrorCodeConstants.UPDATE_CUSTOMER_ERROR_CODE, ex);
         }
@@ -116,7 +113,7 @@ public class CustomerServiceImpl implements ICustomerService {
             if (cardId.length() == 64) {
                 cardId = this.unCryptoCardId(cardId);
             }
-            customer.setCardId(isAdmin ? cardId : DesensitizedUtil.idCardNum(cardId, 3, 4));
+            customer.setCardId(isAdmin ? cardId : DesensitizationUtil.idCardNum(cardId, 3, 4));
             return customer;
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error(() -> "fail to get a customer whose id is " + id, he);
@@ -132,9 +129,7 @@ public class CustomerServiceImpl implements ICustomerService {
     public List<Customer> list() throws HotelerException {
         try {
             var user = ThreadLocalContextHolder.get().getUser();
-            var isAdmin = Objects.isNull(user)
-                    ? false
-                    : user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
+            var isAdmin = Objects.nonNull(user) && user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
             var customers = this.customerDao.list()
                     .stream()
                     .peek(customer -> {
@@ -142,7 +137,7 @@ public class CustomerServiceImpl implements ICustomerService {
                         if (cardId.length() == 64) {
                             cardId = this.unCryptoCardId(cardId);
                         }
-                        customer.setCardId(isAdmin ? cardId : DesensitizedUtil.idCardNum(cardId, 3, 4));
+                        customer.setCardId(isAdmin ? cardId : DesensitizationUtil.idCardNum(cardId, 3, 4));
                     }).toList();
             return customers;
         } catch (HotelerException he) {
