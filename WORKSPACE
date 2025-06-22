@@ -11,7 +11,7 @@ http_archive(
     sha256 = RULES_JVM_EXTERNAL_SHA,
     urls = [
         "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
-        "https://mirror.ghproxy.com/https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
+        "https://ghproxy.link/https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
     ]
 )
 
@@ -20,7 +20,7 @@ http_archive(
     sha256 = "2d0805b4096db89b8e407ed0c243ce81c3d20f346e4c259885041d5eabc59436",
     urls = [
         "https://github.com/salesforce/rules_spring/releases/download/2.6.3/rules-spring-2.6.3.zip",
-        "https://mirror.ghproxy.com/https://github.com/salesforce/rules_spring/releases/download/2.6.3/rules-spring-2.6.3.zip",
+        "https://ghproxy.link/https://github.com/salesforce/rules_spring/releases/download/2.6.3/rules-spring-2.6.3.zip",
     ],
 )
 
