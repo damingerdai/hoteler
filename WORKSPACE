@@ -62,7 +62,7 @@ maven_install(
         "io.jsonwebtoken:jjwt-impl:%s" % (Jsonwebtoken_Version),
         "io.jsonwebtoken:jjwt-jackson:%s" % (Jsonwebtoken_Version),
         "commons-codec:commons-codec:1.18.0",
-        "org.apache.commons:commons-lang3:3.17.0",
+        "org.apache.commons:commons-lang3:3.18.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.2",
 
         "org.glassfish.jaxb:jaxb-runtime:4.0.5",
