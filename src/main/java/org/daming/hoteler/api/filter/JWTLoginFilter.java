@@ -10,12 +10,13 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -34,7 +35,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
      * @param authenticationManager 权限管理器
      */
     public JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager, ITokenService tokenService) {
-        super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
+        super(PathPatternRequestMatcher.withDefaults().matcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);
         this.tokenService = tokenService;
     }

@@ -1,11 +1,10 @@
 package org.daming.hoteler.utils;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,24 +21,23 @@ public final class RequestMatchers {
     }
 
     /**
-     * Create a {@link List} of {@link AntPathRequestMatcher} instances.
+     * Create a {@link List} of {@link PathPatternRequestMatcher} instances.
      * @param httpMethod the {@link HttpMethod} to use or {@code null} for any
      * {@link HttpMethod}.
-     * @param antPatterns the ant patterns to create {@link AntPathRequestMatcher}
+     * @param antPatterns the ant patterns to create {@link PathPatternRequestMatcher}
      * from
-     * @return a {@link List} of {@link AntPathRequestMatcher} instances
+     * @return a {@link List} of {@link PathPatternRequestMatcher} instances
      */
     public static List<RequestMatcher> antMatchers(HttpMethod httpMethod, String... antPatterns) {
-        String method = (httpMethod != null) ? httpMethod.toString() : null;
-        return Arrays.stream(antPatterns).map((pattern) -> new AntPathRequestMatcher(pattern, method)).collect(Collectors.toList());
+        return Arrays.stream(antPatterns).map((pattern) -> PathPatternRequestMatcher.withDefaults().matcher(httpMethod, pattern)).collect(Collectors.toList());
     }
 
     /**
-     * Create a {@link List} of {@link AntPathRequestMatcher} instances that do not
+     * Create a {@link List} of {@link PathPatternRequestMatcher} instances that do not
      * specify an {@link HttpMethod}.
-     * @param antPatterns the ant patterns to create {@link AntPathRequestMatcher}
+     * @param antPatterns the ant patterns to create {@link PathPatternRequestMatcher}
      * from
-     * @return a {@link List} of {@link AntPathRequestMatcher} instances
+     * @return a {@link List} of {@link PathPatternRequestMatcher} instances
      */
     public static List<RequestMatcher> antMatchers(String... antPatterns) {
         return antMatchers(null, antPatterns);
