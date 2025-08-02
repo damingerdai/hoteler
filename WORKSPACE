@@ -53,7 +53,7 @@ maven_install(
         #"org.springframework.boot:spring-boot-starter:3.2.2",
         "org.springframework.boot:spring-boot-loader:3.5.3",
         "org.springframework.boot:spring-boot-loader-tools:3.5.3",
-        "io.micrometer:micrometer-registry-prometheus:1.15.1",
+        "io.micrometer:micrometer-registry-prometheus:1.15.2",
 
         "org.postgresql:postgresql:42.7.7",
 
