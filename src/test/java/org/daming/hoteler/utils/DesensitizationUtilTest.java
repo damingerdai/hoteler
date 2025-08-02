@@ -29,10 +29,10 @@ public class DesensitizationUtilTest {
         assertEquals("410***********0007", DesensitizationUtil.idCardNum("410328200001010007"));
 
         // 15位身份证号
-        assertEquals("410*******0007", DesensitizationUtil.idCardNum("410328001010007"));
+        assertEquals("410********0007", DesensitizationUtil.idCardNum("410328001010007"));
 
         // 自定义前后保留位数
-        assertEquals("410328********07", DesensitizationUtil.idCardNum("410328200001010007", 6, 2));
+        assertEquals("410328**********07", DesensitizationUtil.idCardNum("410328200001010007", 6, 2));
 
         // 短于保留位数的身份证号
         assertEquals("123", DesensitizationUtil.idCardNum("123"));
@@ -140,16 +140,25 @@ public class DesensitizationUtilTest {
         // 正常脱敏
         assertEquals("123****890", DesensitizationUtil.hide("1234567890", 3, 7));
 
-        // 开始位置大于结束位置
+        // 开始位置大于结束位置，应该返回原字符串
         assertEquals("1234567890", DesensitizationUtil.hide("1234567890", 7, 3));
 
-        // 开始位置为0
+        // 开始位置为0，应该从开头开始脱敏
         assertEquals("****567890", DesensitizationUtil.hide("1234567890", 0, 4));
 
-        // 结束位置超过字符串长度
-        assertEquals("123****", DesensitizationUtil.hide("1234567890", 3, 15));
+        // 结束位置超过字符串长度，应该脱敏到字符串末尾
+        assertEquals("123*******", DesensitizationUtil.hide("1234567890", 3, 15));
 
-        // null值处理
+        // null值处理，应该返回null
         assertNull(DesensitizationUtil.hide(null, 1, 2));
+
+        // 空字符串处理，应该返回空字符串
+        assertEquals("", DesensitizationUtil.hide("", 1, 2));
+
+        // 开始位置和结束位置都为负数，应该返回原字符串
+        assertEquals("1234567890", DesensitizationUtil.hide("1234567890", -1, -5));
+
+        // 开始位置超过字符串长度，应该返回原字符串
+        assertEquals("1234567890", DesensitizationUtil.hide("1234567890", 15, 20));
     }
 }
