@@ -79,11 +79,8 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
       - name: Extract tag name
         id: extract_tag
-        run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "Extracted tag name: $TAG_NAME"
-          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       - name: Deploy to k3s
         run: |-
-          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ needs.build-and-push-docker-image.outputs.image_tag }} -n hoteler-namespace
+          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.TAG_NAME }} -n hoteler-namespace
           kubectl rollout status deployment/hoteler-api -n hoteler-namespace --timeout=10m --request-timeout=10m
