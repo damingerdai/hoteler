@@ -24,7 +24,7 @@ plugins {
 
 group = 'org.daming'
 version = '0.0.1-SNAPSHOT'
-def jsonwebtokenVersion = "0.12.6"
+def jsonwebtokenVersion = "0.13.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21 // Or another desired Java version
