@@ -19,7 +19,7 @@
         <kotlin.version>1.3.70</kotlin.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
+        <jsonwebtoken.version>0.13.0</jsonwebtoken.version>
         <jacoco.version>0.8.11</jacoco.version>
         <changelog.version>2.2.11</changelog.version>
     </properties>
