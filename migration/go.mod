@@ -3,7 +3,7 @@ module github.com/damingerdai/hoteler/migration
 go 1.25.0
 
 require (
-	github.com/golang-migrate/migrate/v4 v4.18.3
+	github.com/golang-migrate/migrate/v4 v4.19.0
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.10.1
