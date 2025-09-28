@@ -55,7 +55,7 @@ maven_install(
         "org.springframework.boot:spring-boot-loader-tools:3.5.5",
         "io.micrometer:micrometer-registry-prometheus:1.15.3",
 
-        "org.postgresql:postgresql:42.7.7",
+        "org.postgresql:postgresql:42.7.8",
 
         "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13",
         "io.jsonwebtoken:jjwt-api:%s" % (Jsonwebtoken_Version),
