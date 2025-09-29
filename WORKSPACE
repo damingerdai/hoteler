@@ -70,7 +70,7 @@ maven_install(
         "org.yaml:snakeyaml:2.5",
         "org.flywaydb:flyway-core:11.13.2",
         "com.cronutils:cron-utils:9.2.1",
-        "org.bouncycastle:bcpkix-jdk18on:1.81",
+        "org.bouncycastle:bcpkix-jdk18on:1.82",
         "com.lmax:disruptor:4.0.0",
 
         "org.springframework.boot:spring-boot-devtools:3.5.5",
