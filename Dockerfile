@@ -1,4 +1,4 @@
-FROM openjdk:24-slim AS builder
+FROM openjdk:25-slim AS builder
 WORKDIR /app
 
 COPY gradle ./gradle
@@ -13,7 +13,7 @@ RUN ./gradlew build \
     --parallel \
     --configure-on-demand
 
-FROM openjdk:24-slim
+FROM openjdk:25-slim
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar app.jar
 

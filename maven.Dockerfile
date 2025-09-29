@@ -1,4 +1,4 @@
-FROM openjdk:24-slim AS builder
+FROM openjdk:25-slim AS builder
 
 WORKDIR app
 COPY .mvn ./.mvn
@@ -7,7 +7,7 @@ RUN  ./mvnw clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure
 COPY src .
 RUN ./mvnw package -Dmaven.test.skip=true -Dcheckstyle.skip=true
 
-FROM openjdk:24-slim
+FROM openjdk:25-slim
 WORKDIR /app
 COPY --from=builder /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
