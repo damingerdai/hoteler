@@ -66,7 +66,7 @@ maven_install(
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.4",
 
         "org.glassfish.jaxb:jaxb-runtime:4.0.6",
-        "com.github.ben-manes.caffeine:caffeine:3.2.2",
+        "com.github.ben-manes.caffeine:caffeine:3.2.3",
         "org.yaml:snakeyaml:2.5",
         "org.flywaydb:flyway-core:11.15.0",
         "com.cronutils:cron-utils:9.2.1",
