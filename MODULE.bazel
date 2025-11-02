@@ -3,33 +3,39 @@ module(
     compatibility_level = 1,
 )
 
-# 1. 引入 rules_jvm_external 模块
+# 1. 显式添加 rules_java 核心依赖
+# 这是所有 Java 相关规则 (包括 rules_spring) 的基础。
+# 采用当前稳定版本 7.7.1
 bazel_dep(
-    name = "rules_jvm_external",
-    version = "5.3",
+    name = "rules_java",
+    version = "7.7.1",
 )
 
-# 2. 引入 rules_spring 模块
+# 2. 升级 rules_jvm_external 版本
+# 解决警告中提到的版本不匹配问题。
+bazel_dep(
+    name = "rules_jvm_external",
+    version = "6.3",
+)
+
+# 3. 引入 rules_spring 模块
 bazel_dep(
     name = "rules_spring",
     version = "2.6.3",
 )
 
-# 3. 使用 rules_jvm_external 提供的 'maven' 扩展
-#    注意：使用 'dev_dependency = True' 标记此扩展为开发依赖，更符合惯例。
-#    核心：使用 'reexport_name = "maven"' 将扩展命名为 'maven' 供下面使用。
+# 4. 使用 rules_jvm_external 提供的 'maven' 扩展
+# 这是 Bzlmod 的标准用法，用于配置 Maven 依赖。
 maven_extension = use_extension(
     "@rules_jvm_external//:extensions.bzl",
     "maven",
     dev_dependency = True
 )
 
-# 核心：通过 reexport_name="maven" 定义的别名来调用配置函数。
-# 这里使用 maven.install(...) 来代替旧 WORKSPACE 文件中的 maven_install(...)。
+# 定义 Maven 依赖列表 (为避免变量，使用硬编码版本)
 maven_extension.install(
     maven_install_json = "//:maven_install.json",
     artifacts = [
-        # ... 保持你的 Maven Artifacts 列表不变 ...
         "org.springframework.boot:spring-boot-starter-web:3.5.5",
         "org.springframework.boot:spring-boot-starter-jdbc:3.5.5",
         "org.springframework.boot:spring-boot-starter-aop:3.5.5",
@@ -46,10 +52,9 @@ maven_extension.install(
         "io.micrometer:micrometer-registry-prometheus:1.15.4",
         "org.postgresql:postgresql:42.7.8",
         "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13",
-        # 定义 Jsonwebtoken_Version
-        "io.jsonwebtoken:jjwt-api:0.12.5", # 直接使用版本号
-        "io.jsonwebtoken:jjwt-impl:0.12.5", # 直接使用版本号
-        "io.jsonwebtoken:jjwt-jackson:0.12.5", # 直接使用版本号
+        "io.jsonwebtoken:jjwt-api:0.12.5",
+        "io.jsonwebtoken:jjwt-impl:0.12.5",
+        "io.jsonwebtoken:jjwt-jackson:0.12.5",
         "commons-codec:commons-codec:1.19.0",
         "org.apache.commons:commons-lang3:3.18.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.4",
