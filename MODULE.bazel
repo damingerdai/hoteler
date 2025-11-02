@@ -4,3 +4,38 @@
 #
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
+module(
+    name = "hoteler",
+    compatibility_level = 1,
+)
+
+bazel_dep(
+    name = "rules_jvm_external",
+    version = "5.3",
+)
+
+bazel_dep(
+    name = "rules_spring",
+    version = "2.6.3",
+)
+
+load("@rules_jvm_external//:extensions.bzl", "maven")
+load("//:bazel_deps.bzl", "get_maven_artifacts")
+
+
+maven.install(
+    name = "maven",
+    maven_install_json = "//:maven_install.json",
+    # 调用函数获取依赖列表
+    artifacts = get_maven_artifacts(),
+    fetch_sources = True,
+    # 仓库列表
+    repositories = [
+        "https://maven.aliyun.com/repository/central",
+        "https://maven.aliyun.com/repository/public",
+        "https://repo1.maven.org/maven2",
+        "http://uk.maven.org/maven2",
+        "https://jcenter.bintray.com/",
+        "https://maven.google.com",
+    ],
+)
