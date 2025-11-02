@@ -153,7 +153,7 @@ jobs:
         run: echo ${{ steps.build-docker-m.outputs.digest }}
   build-bazel:
     runs-on: ${{ matrix.os }}
-#    needs: [build]
+    needs: [build]
     strategy:
       matrix:
         java-version: [25]
