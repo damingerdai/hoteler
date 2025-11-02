@@ -1,0 +1,16 @@
+app:
+  namespace: hoteler-namespace
+  name: hoteler-api
+  configMapName: hoteler-api-config
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/damingerdai/hoteler
+  tag: "0.0.3"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8443
+  nodePort: 30006
