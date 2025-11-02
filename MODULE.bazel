@@ -15,20 +15,21 @@ bazel_dep(
     version = "2.6.3",
 )
 
-# 3. 使用 rules_jvm_external 模块提供的 'maven' 扩展
-# 注意：Bzlmod 约定，扩展的 load 目标是隐藏的，通过 module_name//:extensions.bzl 自动加载。
-# 我们直接使用 'maven' 扩展并配置其参数。
+# 3. 使用 rules_jvm_external 提供的 'maven' 扩展
+#    注意：使用 'dev_dependency = True' 标记此扩展为开发依赖，更符合惯例。
+#    核心：使用 'reexport_name = "maven"' 将扩展命名为 'maven' 供下面使用。
+maven_extension = use_extension(
+    "@rules_jvm_external//:extensions.bzl",
+    "maven",
+    dev_dependency = True
+)
 
-# 使用 '@rules_jvm_external//:extensions.bzl' 中定义的 'maven' 扩展
-use_extension("@rules_jvm_external//:extensions.bzl", "maven")
-
-# 定义 Maven 依赖列表 (将定义移到顶层)
-Jsonwebtoken_Version = "0.12.5"
-
-# 使用 'maven' 扩展并配置参数
-maven.install(
+# 核心：通过 reexport_name="maven" 定义的别名来调用配置函数。
+# 这里使用 maven.install(...) 来代替旧 WORKSPACE 文件中的 maven_install(...)。
+maven_extension.install(
     maven_install_json = "//:maven_install.json",
     artifacts = [
+        # ... 保持你的 Maven Artifacts 列表不变 ...
         "org.springframework.boot:spring-boot-starter-web:3.5.5",
         "org.springframework.boot:spring-boot-starter-jdbc:3.5.5",
         "org.springframework.boot:spring-boot-starter-aop:3.5.5",
@@ -45,9 +46,10 @@ maven.install(
         "io.micrometer:micrometer-registry-prometheus:1.15.4",
         "org.postgresql:postgresql:42.7.8",
         "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13",
-        "io.jsonwebtoken:jjwt-api:%s" % (Jsonwebtoken_Version),
-        "io.jsonwebtoken:jjwt-impl:%s" % (Jsonwebtoken_Version),
-        "io.jsonwebtoken:jjwt-jackson:%s" % (Jsonwebtoken_Version),
+        # 定义 Jsonwebtoken_Version
+        "io.jsonwebtoken:jjwt-api:0.12.5", # 直接使用版本号
+        "io.jsonwebtoken:jjwt-impl:0.12.5", # 直接使用版本号
+        "io.jsonwebtoken:jjwt-jackson:0.12.5", # 直接使用版本号
         "commons-codec:commons-codec:1.19.0",
         "org.apache.commons:commons-lang3:3.18.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.4",
