@@ -1,28 +1,31 @@
-###############################################################################
-# Bazel now uses Bzlmod by default to manage external dependencies.
-# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
-#
-# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
-###############################################################################
 module(
     name = "hoteler",
     compatibility_level = 1,
 )
 
+# 1. 引入 rules_jvm_external 模块
 bazel_dep(
     name = "rules_jvm_external",
     version = "5.3",
 )
 
+# 2. 引入 rules_spring 模块
 bazel_dep(
     name = "rules_spring",
     version = "2.6.3",
 )
 
+# 3. 使用 rules_jvm_external 模块提供的 'maven' 扩展
+# 注意：Bzlmod 约定，扩展的 load 目标是隐藏的，通过 module_name//:extensions.bzl 自动加载。
+# 我们直接使用 'maven' 扩展并配置其参数。
+
+# 使用 '@rules_jvm_external//:extensions.bzl' 中定义的 'maven' 扩展
 use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 
+# 定义 Maven 依赖列表 (将定义移到顶层)
 Jsonwebtoken_Version = "0.12.5"
 
+# 使用 'maven' 扩展并配置参数
 maven.install(
     maven_install_json = "//:maven_install.json",
     artifacts = [
