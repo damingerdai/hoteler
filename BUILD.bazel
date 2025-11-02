@@ -44,7 +44,22 @@ java_library(
     ],
 )
 
-# ... (java_binary and springboot rules remain unchanged)
+java_binary(
+    name = "hoteler-jar",
+    main_class = "org.daming.hoteler.HotelerApplication",
+    resources = [
+        "//src/main/resources:resource",
+    ],
+    runtime_deps = [":java-maven-lib"],
+)
+
+springboot(
+    name = "hoteler",
+    boot_app_class = "org.daming.hoteler.HotelerApplication",
+    # refrence the library
+    java_library = ":java-maven-lib",
+    boot_launcher_class = 'org.springframework.boot.loader.launch.JarLauncher',
+)
 
 java_test(
     name = "tests",
