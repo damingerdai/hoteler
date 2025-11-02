@@ -22,21 +22,11 @@ bazel_dep(
 )
 
 # 4. 激活 rules_jvm_external 提供的 'maven' 扩展
-maven_extension = use_extension(
-    "@rules_jvm_external//:extensions.bzl",
-    "maven",
-    dev_dependency = True
-)
-
-# ⭐ 最终修正：将导入名称改回 rules_jvm_external 的传统名称 'maven'
-#    这是最有可能在 BUILD 文件中被正确解析的别名。
-maven_extension.imports(
-    name = "maven",
-)
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 
 # 6. 配置 Maven 依赖列表 (保持不变)
-maven_extension.install(
-    maven_install_json = "//:maven_install.json",
+maven.install(
+    lock_file = "//:maven_install.json",
     # ... artifacts 和 repositories 保持不变 ...
     artifacts = [
         "org.springframework.boot:spring-boot-starter-web:3.5.5",
@@ -95,3 +85,5 @@ maven_extension.install(
         "https://maven.google.com",
     ],
 )
+
+use_repo(maven, "maven")
