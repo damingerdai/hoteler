@@ -50,7 +50,7 @@ java_test(
     name = "tests",
     srcs = glob([
         "src/test/java/org/daming/hoteler/*.java",
-        "src/test/java/org/daming.hoteler/config/*.java",
+        "src/test/java/org/daming/hoteler/config/*.java",
 
     ]),
     test_class = "org.daming.hoteler.HotelerApplicationTests",
