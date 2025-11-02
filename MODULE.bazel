@@ -4,18 +4,17 @@ module(
 )
 
 # 1. 显式添加 rules_java 核心依赖
-# 这是所有 Java 相关规则 (包括 rules_spring) 的基础。
-# 采用当前稳定版本 8.16.1
+# 根据您的要求更新版本为 8.16.1
 bazel_dep(
     name = "rules_java",
     version = "8.16.1",
 )
 
-# 2. 升级 rules_jvm_external 版本
-# 解决警告中提到的版本不匹配问题。
+# 2. 引入 rules_jvm_external 模块
+# 使用解析到的最新版本 6.7，消除警告
 bazel_dep(
     name = "rules_jvm_external",
-    version = "6.3",
+    version = "6.7",
 )
 
 # 3. 引入 rules_spring 模块
@@ -24,15 +23,19 @@ bazel_dep(
     version = "2.6.3",
 )
 
-# 4. 使用 rules_jvm_external 提供的 'maven' 扩展
-# 这是 Bzlmod 的标准用法，用于配置 Maven 依赖。
+# 4. 激活 rules_jvm_external 提供的 'maven' 扩展
 maven_extension = use_extension(
     "@rules_jvm_external//:extensions.bzl",
     "maven",
     dev_dependency = True
 )
 
-# 定义 Maven 依赖列表 (为避免变量，使用硬编码版本)
+# 5. 【修复 @maven 引用问题】导入由 maven 扩展创建的代码库，使其在 BUILD 文件中可见。
+maven_extension.imports(
+    name = "maven",
+)
+
+# 6. 配置 Maven 依赖列表
 maven_extension.install(
     maven_install_json = "//:maven_install.json",
     artifacts = [
