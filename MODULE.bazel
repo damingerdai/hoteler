@@ -4,14 +4,12 @@ module(
 )
 
 # 1. 显式添加 rules_java 核心依赖
-# 根据您的要求更新版本为 8.16.1
 bazel_dep(
     name = "rules_java",
     version = "8.16.1",
 )
 
 # 2. 引入 rules_jvm_external 模块
-# 使用解析到的最新版本 6.7，消除警告
 bazel_dep(
     name = "rules_jvm_external",
     version = "6.7",
@@ -30,14 +28,16 @@ maven_extension = use_extension(
     dev_dependency = True
 )
 
-# 5. 【修复 @maven 引用问题】导入由 maven 扩展创建的代码库，使其在 BUILD 文件中可见。
+# 5. 【核心修正】使用 rules_jvm_external 推荐的名称 'unpinned_maven'
+#    这会创建一个名为 '@unpinned_maven' 的代码库，包含所有 Maven 依赖。
 maven_extension.imports(
-    name = "maven",
+    name = "unpinned_maven",
 )
 
-# 6. 配置 Maven 依赖列表
+# 6. 配置 Maven 依赖列表 (不变)
 maven_extension.install(
     maven_install_json = "//:maven_install.json",
+    # ... artifacts 和 repositories 保持不变 ...
     artifacts = [
         "org.springframework.boot:spring-boot-starter-web:3.5.5",
         "org.springframework.boot:spring-boot-starter-jdbc:3.5.5",
@@ -62,7 +62,7 @@ maven_extension.install(
         "org.apache.commons:commons-lang3:3.18.0",
         "jakarta.xml.bind:jakarta.xml.bind-api:4.0.4",
         "org.glassfish.jaxb:jaxb-runtime:4.0.6",
-        "com.github.ben-manes.caffeine:caffeine:3.2.2",
+        "com.github.ben_manes_caffeine:caffeine:3.2.2",
         "org.yaml:snakeyaml:2.5",
         "org.flywaydb:flyway-core:11.13.2",
         "com.cronutils:cron-utils:9.2.1",
