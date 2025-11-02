@@ -5,10 +5,10 @@ module(
 
 # 1. 显式添加 rules_java 核心依赖
 # 这是所有 Java 相关规则 (包括 rules_spring) 的基础。
-# 采用当前稳定版本 7.7.1
+# 采用当前稳定版本 8.16.1
 bazel_dep(
     name = "rules_java",
-    version = "7.7.1",
+    version = "8.16.1",
 )
 
 # 2. 升级 rules_jvm_external 版本
