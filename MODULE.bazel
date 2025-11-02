@@ -28,13 +28,13 @@ maven_extension = use_extension(
     dev_dependency = True
 )
 
-# 5. 【核心修正】使用 rules_jvm_external 推荐的名称 'unpinned_maven'
-#    这会创建一个名为 '@unpinned_maven' 的代码库，包含所有 Maven 依赖。
+# ⭐ 最终修正：将导入名称改回 rules_jvm_external 的传统名称 'maven'
+#    这是最有可能在 BUILD 文件中被正确解析的别名。
 maven_extension.imports(
-    name = "unpinned_maven",
+    name = "maven",
 )
 
-# 6. 配置 Maven 依赖列表 (不变)
+# 6. 配置 Maven 依赖列表 (保持不变)
 maven_extension.install(
     maven_install_json = "//:maven_install.json",
     # ... artifacts 和 repositories 保持不变 ...
@@ -71,6 +71,19 @@ maven_extension.install(
         "org.springframework.boot:spring-boot-devtools:3.5.5",
         "org.springframework.boot:spring-boot-starter-test:3.5.5",
         "org.springframework.security:spring-security-test:6.5.5",
+        # 补充：确保所有 BUILD.bazel 中引用的依赖都在这里
+        "cn.hutool:hutool-crypto:5.8.27", # 假设版本为 5.8.27
+        # 补充：添加 BUILD.bazel 中额外的 Spring 依赖（以防它们不是传递依赖）
+        "org.springframework.boot:spring-boot:3.5.5",
+        "org.springframework.boot:spring-boot-autoconfigure:3.5.5",
+        "org.springframework:spring-beans:6.5.5",
+        "org.springframework:spring-web:6.5.5",
+        "org.springframework:spring-context:6.5.5",
+        "org.springframework:spring-tx:6.5.5",
+        "org.springframework.boot:spring-boot-test:3.5.5",
+        "org.springframework:spring-test:6.5.5",
+        "org.junit.jupiter:junit-jupiter:5.11.0",
+        "org.junit.jupiter:junit-jupiter-api:5.11.0",
     ],
     fetch_sources = True,
     repositories = [
