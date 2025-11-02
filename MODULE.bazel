@@ -1,6 +1,89 @@
-###############################################################################
-# Bazel now uses Bzlmod by default to manage external dependencies.
-# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
-#
-# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
-###############################################################################
+module(
+    name = "hoteler",
+    compatibility_level = 1,
+)
+
+# 1. 显式添加 rules_java 核心依赖
+bazel_dep(
+    name = "rules_java",
+    version = "8.16.1",
+)
+
+# 2. 引入 rules_jvm_external 模块
+bazel_dep(
+    name = "rules_jvm_external",
+    version = "6.7",
+)
+
+# 3. 引入 rules_spring 模块
+bazel_dep(
+    name = "rules_spring",
+    version = "2.6.3",
+)
+
+# 4. 激活 rules_jvm_external 提供的 'maven' 扩展
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+# 6. 配置 Maven 依赖列表 (保持不变)
+maven.install(
+    lock_file = "//:maven_install.json",
+    # ... artifacts 和 repositories 保持不变 ...
+    artifacts = [
+        "org.springframework.boot:spring-boot-starter-web:3.5.5",
+        "org.springframework.boot:spring-boot-starter-jdbc:3.5.5",
+        "org.springframework.boot:spring-boot-starter-aop:3.5.5",
+        "org.springframework.boot:spring-boot-starter-security:3.5.5",
+        "org.springframework.boot:spring-boot-starter-cache:3.5.5",
+        "org.springframework.boot:spring-boot-starter-actuator:3.5.5",
+        "org.springframework.boot:spring-boot-starter-data-redis:3.5.5",
+        "org.springframework.boot:spring-boot-starter-graphql:3.5.5",
+        "org.springframework.boot:spring-boot-starter-quartz:3.5.5",
+        "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5",
+        "com.graphql-java:graphql-java-extended-scalars:2023-01-24T02-11-56-babda5f",
+        "org.springframework.boot:spring-boot-loader:3.5.5",
+        "org.springframework.boot:spring-boot-loader-tools:3.5.5",
+        "io.micrometer:micrometer-registry-prometheus:1.15.4",
+        "org.postgresql:postgresql:42.7.8",
+        "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13",
+        "io.jsonwebtoken:jjwt-api:0.12.5",
+        "io.jsonwebtoken:jjwt-impl:0.12.5",
+        "io.jsonwebtoken:jjwt-jackson:0.12.5",
+        "commons-codec:commons-codec:1.19.0",
+        "org.apache.commons:commons-lang3:3.18.0",
+        "jakarta.xml.bind:jakarta.xml.bind-api:4.0.4",
+        "org.glassfish.jaxb:jaxb-runtime:4.0.6",
+        "com.github.ben_manes_caffeine:caffeine:3.2.2",
+        "org.yaml:snakeyaml:2.5",
+        "org.flywaydb:flyway-core:11.13.2",
+        "com.cronutils:cron-utils:9.2.1",
+        "org.bouncycastle:bcpkix-jdk18on:1.81",
+        "com.lmax:disruptor:4.0.0",
+        "org.springframework.boot:spring-boot-devtools:3.5.5",
+        "org.springframework.boot:spring-boot-starter-test:3.5.5",
+        "org.springframework.security:spring-security-test:6.5.5",
+        # 补充：确保所有 BUILD.bazel 中引用的依赖都在这里
+        "cn.hutool:hutool-crypto:5.8.27", # 假设版本为 5.8.27
+        # 补充：添加 BUILD.bazel 中额外的 Spring 依赖（以防它们不是传递依赖）
+        "org.springframework.boot:spring-boot:3.5.5",
+        "org.springframework.boot:spring-boot-autoconfigure:3.5.5",
+        "org.springframework:spring-beans:6.5.5",
+        "org.springframework:spring-web:6.5.5",
+        "org.springframework:spring-context:6.5.5",
+        "org.springframework:spring-tx:6.5.5",
+        "org.springframework.boot:spring-boot-test:3.5.5",
+        "org.springframework:spring-test:6.5.5",
+        "org.junit.jupiter:junit-jupiter:5.11.0",
+        "org.junit.jupiter:junit-jupiter-api:5.11.0",
+    ],
+    fetch_sources = True,
+    repositories = [
+        "https://maven.aliyun.com/repository/central",
+        "https://maven.aliyun.com/repository/public",
+        "https://repo1.maven.org/maven2",
+        "http://uk.maven.org/maven2",
+        "https://jcenter.bintray.com/",
+        "https://maven.google.com",
+    ],
+)
+
+use_repo(maven, "maven")

@@ -6,6 +6,7 @@ package(default_visibility = ["//visibility:public"])
 java_library(
     name = "java-maven-lib",
     srcs = glob(["src/main/java/org/daming/hoteler/*.java"]),
+    # 依赖列表已从 @unpinned_maven 恢复为 @maven
     deps = [
         "@maven//:org_springframework_boot_spring_boot_starter_web",
         "@maven//:org_springframework_boot_spring_boot_starter_jdbc",
@@ -51,14 +52,13 @@ java_binary(
     runtime_deps = [":java-maven-lib"],
 )
 
-springboot(  
-    name = "hoteler",  
+springboot(
+    name = "hoteler",
     boot_app_class = "org.daming.hoteler.HotelerApplication",
-    # refrence the library
+    # 引用 java_library
     java_library = ":java-maven-lib",
     boot_launcher_class = 'org.springframework.boot.loader.launch.JarLauncher',
 )
-
 
 java_test(
     name = "tests",
