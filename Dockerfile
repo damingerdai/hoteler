@@ -1,4 +1,4 @@
-FROM openjdk:25-slim AS builder
+FROM azul/zulu-openjdk:25.0.1-jdk AS builder
 WORKDIR /app
 
 COPY gradle ./gradle
@@ -13,7 +13,7 @@ RUN ./gradlew build \
     --parallel \
     --configure-on-demand
 
-FROM openjdk:25-slim
+FROM azul/zulu-openjdk:25.0.1-jdk
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar app.jar
 

@@ -23,7 +23,7 @@ COPY --from=front-build /app/dist/hoteler /app/src/main/resources/static
 COPY --from=front-build /app/dist/hoteler/index.html /app/src/main/resources/static/error/404.html
 RUN mvn package -Dmaven.test.skip=true
 
-FROM openjdk:25-slim
+FROM azul/zulu-openjdk:25.0.1-jdk
 WORKDIR /app
 COPY --from=back-build /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
