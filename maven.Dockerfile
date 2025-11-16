@@ -1,4 +1,4 @@
-FROM openjdk:25-slim AS builder
+FROM azul/zulu-openjdk:25.0.1-jdk AS builder
 
 WORKDIR app
 COPY .mvn ./.mvn
@@ -7,7 +7,7 @@ RUN  ./mvnw clean install -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure
 COPY src .
 RUN ./mvnw package -Dmaven.test.skip=true -Dcheckstyle.skip=true
 
-FROM openjdk:25-slim
+FROM azul/zulu-openjdk:25.0.1-jdk
 WORKDIR /app
 COPY --from=builder /app/target/*.jar /app/app.jar
 ENV TZ=Aisa/Shanghai
