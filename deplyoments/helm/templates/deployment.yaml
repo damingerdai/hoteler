@@ -4,16 +4,17 @@ metadata:
   name: {{ .Values.app.name }}
   namespace: {{ .Values.app.namespace }}
   labels:
-    {{ .Values.app.name }}
+    app: {{ .Values.app.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{ .Values.app.name }}
+      app: {{ .Values.app.name }}
   template:
     metadata:
       labels:
-        {{ .Values.app.name }}
+        app: {{ .Values.app.name }}
+      name: {{ .Values.app.name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -29,11 +30,11 @@ spec:
               protocol: TCP
           resources:
             requests:
-              cpu: 200m
-              memory: 500Mi
+              cpu: "200m"
+              memory: "500Mi"
             limits:
-              cpu: "0.5"
-              memory: "1.5g"
+              cpu: "500m"
+              memory: "1536Mi"
           volumeMounts:
             - mountPath: /app/config
               name: config

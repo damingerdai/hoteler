@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app.name }}-hpa
   namespace: {{ .Values.app.namespace }}
   labels:
-    {{ .Values.app.name }}-hpa
+    app: {{ .Values.app.name }}-hpa
 spec:
   maxReplicas: 5
   minReplicas: 1
