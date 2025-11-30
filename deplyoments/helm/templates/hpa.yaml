@@ -6,8 +6,8 @@ metadata:
   labels:
     app: {{ .Values.app.name }}-hpa
 spec:
-  maxReplicas: 5
-  minReplicas: 1
+  maxReplicas: {{ .Values.hpa.replicaCount.max }}
+  minReplicas: {{ .Values.hpa.replicaCount.min }}
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment

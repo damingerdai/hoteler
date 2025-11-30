@@ -23,7 +23,7 @@ data:
       datasource:
         url: {{ .Values.datasource.url }}
         username: {{ .Values.datasource.username }}
-        password: {{ .Values.datasource.username }}
+        password: {{ .Values.datasource.password }}
         driver-class-name: org.postgresql.Driver
       flyway:
         enabled: false

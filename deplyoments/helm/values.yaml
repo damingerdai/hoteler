@@ -25,3 +25,8 @@ service:
   type: NodePort
   port: 8443
   nodePort: 30006
+
+hpa:
+  replicaCount:
+    max: 1
+    min: 1

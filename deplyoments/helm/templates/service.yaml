@@ -14,4 +14,4 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
-     app: {{ .Values.app.name }}
+    app: {{ .Values.app.name }}
