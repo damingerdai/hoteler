@@ -14,6 +14,9 @@ type EnvDb struct {
 }
 
 func (db *EnvDb) GetDBUrl() string {
+	if postgresUrl := os.Getenv("POSTGRES_URL"); postgresUrl != "" {
+		return postgresUrl
+	}
 	dbUrl := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s",
 		os.Getenv("POSTGRES_USER"),
