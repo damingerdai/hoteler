@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.graphql-java</groupId>
             <artifactId>graphql-java-extended-scalars</artifactId>
-            <version>2023-01-24T02-11-56-babda5f</version>
+            <version>0.0.0-2024-07-03T06-42-34-e7d9e3e</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
