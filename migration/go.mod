@@ -1,6 +1,6 @@
 module github.com/damingerdai/hoteler/migration
 
-go 1.25.0
+go 1.25.5
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.19.0
@@ -18,7 +18,6 @@ require (
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
-	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
