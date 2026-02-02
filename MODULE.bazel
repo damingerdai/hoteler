@@ -54,7 +54,7 @@ maven.install(
         "org.glassfish.jaxb:jaxb-runtime:4.0.6",
         "com.github.ben_manes_caffeine:caffeine:3.2.2",
         "org.yaml:snakeyaml:2.5",
-        "org.flywaydb:flyway-core:11.13.2",
+        "org.flywaydb:flyway-core:11.20.3",
         "com.cronutils:cron-utils:9.2.1",
         "org.bouncycastle:bcpkix-jdk18on:1.81",
         "com.lmax:disruptor:4.0.0",
