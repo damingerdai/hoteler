@@ -1,7 +1,5 @@
 package org.daming.hoteler.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
@@ -14,6 +12,7 @@ import org.daming.hoteler.repository.mapper.OrderMapper;
 import org.daming.hoteler.service.*;
 import org.daming.hoteler.utils.DateUtils;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +41,7 @@ public class OrderServiceImpl implements IOrderService {
 
     private IEventService eventService;
 
-    private ObjectMapper jsonMapper;
+    private JsonMapper jsonMapper;
 
     private IErrorService errorService;
 
@@ -78,15 +77,11 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     private void dispatchorder(Order order) throws HotelerException {
-        try {
-            var message = new HotelerMessage();
-            message.setEvent(HotelerEvent.CHECK_IN_TIME);
-            var content = this.jsonMapper.writeValueAsString(order);
-            message.setContent(content);
-            this.eventService.publishEvent(message);
-        } catch (JsonProcessingException ex) {
-            throw this.errorService.createHotelerSystemException(ex.getMessage(), ex);
-        }
+        var message = new HotelerMessage();
+        message.setEvent(HotelerEvent.CHECK_IN_TIME);
+        var content = this.jsonMapper.writeValueAsString(order);
+        message.setContent(content);
+        this.eventService.publishEvent(message);
     }
 
     @Override
@@ -176,7 +171,7 @@ public class OrderServiceImpl implements IOrderService {
             ICustomerService customerService,
             ISnowflakeService snowflakeService,
             IEventService eventService,
-            ObjectMapper jsonMapper,
+            JsonMapper jsonMapper,
             IErrorService errorService) {
         super();
         this.orderDao = orderDao;

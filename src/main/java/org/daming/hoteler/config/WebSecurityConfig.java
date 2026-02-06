@@ -48,7 +48,7 @@ public class WebSecurityConfig {
             "/csrf",
 
             // other
-            "**.html",
+            "/*/**.html",
             "/css/**",
             "/js/**",
             "/html/**",

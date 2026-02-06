@@ -1,6 +1,5 @@
 package org.daming.hoteler.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.Order;
@@ -8,9 +7,9 @@ import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.service.IPingService;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +26,7 @@ public class RedisTask {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private final ObjectMapper jsonMapper;
+    private final JsonMapper jsonMapper;
 
     private final IPingService pingService;
 
@@ -53,7 +52,7 @@ public class RedisTask {
 
     }
 
-    public RedisTask(RedisTemplate<String, Object> redisTemplate, ObjectMapper jsonMapper, IPingService pingService) {
+    public RedisTask(RedisTemplate<String, Object> redisTemplate, JsonMapper jsonMapper, IPingService pingService) {
         super();
         this.redisTemplate = redisTemplate;
         this.jsonMapper = jsonMapper;
