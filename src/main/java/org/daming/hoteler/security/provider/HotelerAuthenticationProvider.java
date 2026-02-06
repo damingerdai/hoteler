@@ -3,9 +3,8 @@ package org.daming.hoteler.security.provider;
 import org.daming.hoteler.pojo.User;
 import org.daming.hoteler.security.service.IPasswordService;
 import org.daming.hoteler.utils.CommonUtils;
-import org.springframework.beans.BeansException;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,29 +18,34 @@ import org.springframework.util.Assert;
 import java.util.Objects;
 
 @Component
-public class HotelerAuthenticationProvider extends DaoAuthenticationProvider implements AuthenticationProvider, ApplicationContextAware {
+public class HotelerAuthenticationProvider extends DaoAuthenticationProvider implements AuthenticationProvider {
 
-    private ApplicationContext applicationContext;
+    private final UserDetailsService userDetailsService;
+    private final ApplicationContext applicationContext;
 
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(@NonNull UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         if (authentication.getCredentials() == null) {
             this.logger.debug("Failed to authenticate since no credentials provided");
             throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
+        var presentedPassword = authentication.getCredentials().toString();
+        if (presentedPassword == null) {
+            throw new BadCredentialsException("Bad credentials");
+        }
         var user =  (User)userDetails;
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
-        var presentedPassword = authentication.getCredentials().toString();
-        if (!user.getPassword().equals(passwordService.encodePassword(presentedPassword))) {
+        if (!Objects.equals(user.getPassword(), passwordService.encodePassword(presentedPassword))) {
             this.logger.debug("Failed to authenticate since password does not match stored value");
             throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
-
         }
+
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public boolean supports(Class<?> authentication) {
+        // 声明该 Provider 支持用户名密码模式
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     @Override
@@ -54,8 +58,9 @@ public class HotelerAuthenticationProvider extends DaoAuthenticationProvider imp
         return Objects.requireNonNull(this.applicationContext).getBean(passwordType + "PasswordService", IPasswordService.class);
     }
 
-    public HotelerAuthenticationProvider(UserDetailsService userDetailsService) {
-        super();
-        this.setUserDetailsService(userDetailsService);
+    public HotelerAuthenticationProvider(UserDetailsService userDetailsService, ApplicationContext applicationContext) {
+        super(userDetailsService);
+        this.userDetailsService = userDetailsService;
+        this.applicationContext = applicationContext;
     }
 }

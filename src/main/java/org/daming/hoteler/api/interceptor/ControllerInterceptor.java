@@ -15,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.json.JsonMapper;
+
 import java.util.UUID;
 
 /**
@@ -27,7 +29,7 @@ import java.util.UUID;
 @Component
 public class ControllerInterceptor {
 
-    private ObjectMapper jsonMapper;
+    private final JsonMapper jsonMapper;
 
     @Pointcut("execution(* org.daming.hoteler.api.web..*(..)) && (@annotation(org.springframework.web.bind.annotation.RequestMapping) || @annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping) || @annotation(org.springframework.web.bind.annotation.PutMapping) || @annotation(org.springframework.web.bind.annotation.DeleteMapping))")
     public void controllerMethodPointcut(){}
@@ -72,14 +74,10 @@ public class ControllerInterceptor {
         var sb = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             sb.append("arg[").append(i).append("]: ");
-            try {
-                if (args[i] instanceof MultipartFile multipartFile) {
-                    sb.append(jsonMapper.writeValueAsString(multipartFile.getOriginalFilename()));
-                } else {
-                    sb.append(jsonMapper.writeValueAsString(args[i])).append(",");
-                }
-            } catch (JsonProcessingException ex) {
-                LoggerManager.getApiLogger().warn("getMethodArgs[{}] json error: {}", i, ex.getMessage());
+            if (args[i] instanceof MultipartFile multipartFile) {
+                sb.append(jsonMapper.writeValueAsString(multipartFile.getOriginalFilename()));
+            } else {
+                sb.append(jsonMapper.writeValueAsString(args[i])).append(",");
             }
             sb.append(",");
         }
@@ -89,7 +87,7 @@ public class ControllerInterceptor {
         return sb.toString();
     }
 
-    public ControllerInterceptor(ObjectMapper jsonMapper) {
+    public ControllerInterceptor(JsonMapper jsonMapper) {
         super();
         this.jsonMapper = jsonMapper;
     }
