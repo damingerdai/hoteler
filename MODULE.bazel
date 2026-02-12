@@ -12,7 +12,7 @@ bazel_dep(
 # 2. 引入 rules_jvm_external 模块
 bazel_dep(
     name = "rules_jvm_external",
-    version = "6.7",
+    version = "6.10",
 )
 
 # 3. 引入 rules_spring 模块
