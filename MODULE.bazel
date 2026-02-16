@@ -72,8 +72,8 @@ maven.install(
         "org.springframework:spring-tx:6.5.5",
         "org.springframework.boot:spring-boot-test:3.5.9",
         "org.springframework:spring-test:6.5.5",
-        "org.junit.jupiter:junit-jupiter:5.11.0",
-        "org.junit.jupiter:junit-jupiter-api:5.11.0",
+        "org.junit.jupiter:junit-jupiter:5.14.3",
+        "org.junit.jupiter:junit-jupiter-api:5.14.3",
     ],
     fetch_sources = True,
     repositories = [
