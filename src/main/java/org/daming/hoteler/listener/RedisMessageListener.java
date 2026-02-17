@@ -1,6 +1,5 @@
 package org.daming.hoteler.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.pojo.HotelerMessage;
 import org.daming.hoteler.service.IEventService;
 import org.slf4j.Logger;
@@ -9,9 +8,9 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * @author daming
@@ -24,7 +23,7 @@ public class RedisMessageListener implements MessageListener {
 
     private RedisTemplate<String, Object> redisTemplate;
 
-    private ObjectMapper jsonMapper;
+    private JsonMapper jsonMapper;
 
     private IEventService eventService;
 
@@ -50,7 +49,7 @@ public class RedisMessageListener implements MessageListener {
 
     }
 
-    public RedisMessageListener(RedisTemplate<String, Object> redisTemplate, ObjectMapper jsonMapper, IEventService eventService) {
+    public RedisMessageListener(RedisTemplate<String, Object> redisTemplate, JsonMapper jsonMapper, IEventService eventService) {
         super();
         this.redisTemplate = redisTemplate;
         this.jsonMapper = jsonMapper;

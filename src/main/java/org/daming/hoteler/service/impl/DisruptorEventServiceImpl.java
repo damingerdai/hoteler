@@ -5,7 +5,6 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.field.expression.FieldExpression;
 import com.cronutils.model.field.expression.FieldExpressionFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -23,6 +22,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -32,7 +32,7 @@ public class DisruptorEventServiceImpl implements IEventService, InitializingBea
 
     private Disruptor<HotelerMessage> disruptor;
 
-    private ObjectMapper jsonMapper;
+    private JsonMapper jsonMapper;
     private IQuartzService quartzService;
 
     @Override
@@ -102,7 +102,7 @@ public class DisruptorEventServiceImpl implements IEventService, InitializingBea
         this.disruptor.shutdown();
     }
 
-    public DisruptorEventServiceImpl(IQuartzService quartzService, ObjectMapper jsonMapper) {
+    public DisruptorEventServiceImpl(IQuartzService quartzService, JsonMapper jsonMapper) {
         this.quartzService = quartzService;
         this.jsonMapper = jsonMapper;
     }

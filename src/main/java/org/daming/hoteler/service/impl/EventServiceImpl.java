@@ -5,7 +5,6 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.field.expression.FieldExpression;
 import com.cronutils.model.field.expression.FieldExpressionFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.HotelerLogger;
 import org.daming.hoteler.base.logger.LoggerManager;
@@ -20,6 +19,7 @@ import org.quartz.SchedulerException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 
@@ -37,7 +37,7 @@ public class EventServiceImpl implements IEventService {
 
     private RedisTemplate<String, Object> redisTemplate;
 
-    private ObjectMapper jsonMapper;
+    private JsonMapper jsonMapper;
 
     private IQuartzService quartzService;
 
@@ -85,7 +85,7 @@ public class EventServiceImpl implements IEventService {
         LoggerManager.getJobLogger().info("add CheckInTimeEventJob: {} -{}", cronAsString, record);
     }
 
-    public EventServiceImpl(RedisTemplate<String, Object> redisTemplate, ObjectMapper jsonMapper, IQuartzService quartzService) {
+    public EventServiceImpl(RedisTemplate<String, Object> redisTemplate, JsonMapper jsonMapper, IQuartzService quartzService) {
         super();
         this.redisTemplate = redisTemplate;
         this.jsonMapper = jsonMapper;
