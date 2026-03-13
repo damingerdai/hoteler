@@ -60,7 +60,7 @@ maven.install(
         "com.lmax:disruptor:4.0.0",
         "org.springframework.boot:spring-boot-devtools:4.0.0",
         "org.springframework.boot:spring-boot-starter-test:4.0.0",
-        "org.springframework.security:spring-security-test:6.5.5",
+        "org.springframework.security:spring-security-test:6.5.8",
         # 补充：确保所有 BUILD.bazel 中引用的依赖都在这里
         "cn.hutool:hutool-crypto:5.8.41", # 假设版本为 5.8.27
         # 补充：添加 BUILD.bazel 中额外的 Spring 依赖（以防它们不是传递依赖）
