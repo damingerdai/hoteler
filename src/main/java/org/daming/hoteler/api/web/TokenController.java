@@ -9,6 +9,7 @@ import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.pojo.response.UserTokenResponse;
 import org.daming.hoteler.service.ITokenService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Token Controller")
@@ -30,8 +32,14 @@ public class TokenController {
     private ITokenService tokenService;
 
     @Operation(summary = "创建token")
-    @PostMapping("token")
-    public UserTokenResponse createToken(@RequestHeader String username, @RequestHeader String password, HttpSession session) {
+    @PostMapping(value = "token", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public UserTokenResponse createToken(@RequestParam(value = "username", required = false) String formUser,
+                                         @RequestParam(value = "password", required = false) String formPass,
+                                         @RequestHeader(value = "username", required = false) String headUser,
+                                         @RequestHeader(value = "password", required = false) String headPass,
+                                         HttpSession session) {
+        var username = (headUser != null) ? headUser : formUser;
+        var password = (headPass != null) ? headPass : formPass;
         try {
             var unauthenticated = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
             var authenticate = authenticationManager.authenticate(unauthenticated);

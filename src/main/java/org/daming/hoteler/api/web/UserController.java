@@ -73,7 +73,8 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "获取当前用户",security = { @SecurityRequirement(name = "bearer-key") })
+    // @Operation(summary = "获取当前用户",security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(summary = "获取当前用户")
     @GetMapping("/user")
     public DataResponse<User> get() {
         var context = ThreadLocalContextHolder.get();
