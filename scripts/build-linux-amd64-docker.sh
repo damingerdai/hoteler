@@ -4,7 +4,7 @@
 set -e
 
 # Get the current commit SHA
-sha=$(git rev-parse HEAD)
+sha=$(git rev-parse --short HEAD)
 
 # Define the Docker image name
 image_name="hoteler-api"
