@@ -57,7 +57,7 @@ dependencies {
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
 
     implementation 'org.postgresql:postgresql:42.7.10'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17'
     implementation("io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}")
