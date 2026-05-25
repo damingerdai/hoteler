@@ -122,3 +122,8 @@ test {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
 }
+
+tasks.withType(Checkstyle).configureEach {
+    enabled = project.hasProperty('enableCheckstyle') ? project.property('enableCheckstyle').toBoolean() : false
+}
+

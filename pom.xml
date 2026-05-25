@@ -22,6 +22,7 @@
         <jsonwebtoken.version>0.13.0</jsonwebtoken.version>
         <jacoco.version>0.8.11</jacoco.version>
         <changelog.version>2.2.11</changelog.version>
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <scm>

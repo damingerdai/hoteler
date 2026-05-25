@@ -47,3 +47,5 @@ bazel-testlogs
 ### Others ###
 logs/
 .DS_Store
+
+.antigravitycli/
