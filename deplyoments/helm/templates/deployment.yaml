@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.app.name }}
-  namespace: {{ .Values.app.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Values.app.name }}
 spec:
@@ -42,3 +42,41 @@ spec:
         - configMap:
             name: {{ .Values.app.configMapName }}
           name: config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.web.name }}
+  labels:
+    app:  {{ .Values.app.web.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.web.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.web.name }}
+      name: {{ .Values.app.web.name }}
+    spec:
+      containers:
+        - name: {{ .Values.app.web.name }}
+          image: {{ .Values.image.web.repository }}:{{ .Values.image.web.tag | default .Chart.AppVersion}}
+          imagePullPolicy: {{ .Values.image.web.pullPolicy }}
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          env:
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.app.web.configMapName }}
+                  key: backend_url

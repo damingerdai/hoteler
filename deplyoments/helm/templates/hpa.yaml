@@ -2,7 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ .Values.app.name }}-hpa
-  namespace: {{ .Values.app.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Values.app.name }}-hpa
 spec:

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.web.name }}
+spec:
+  rules:
+    - host: {{ .Values.app.web.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.app.web.name }}
+                port:
+                  number: 80

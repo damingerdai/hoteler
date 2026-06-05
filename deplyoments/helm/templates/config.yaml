@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hoteler-api-config
-  namespace: hoteler-namespace
+  name: {{ .Values.app.configMapName }}
+  namespace: {{ .Release.Namespace }}
 data:
   application.yml: |
     server:
-      port: 8443
+      port: {{ .Values.service.port }}
       compression:
         enabled: true
         mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,application/javascript
@@ -20,6 +20,8 @@ data:
           port: {{ .Values.redis.port }}
           database: {{ .Values.redis.database }}
           password: {{ .Values.redis.password }}
+          ssl:
+            enabled: {{ .Values.redis.ssl | default false }}
       datasource:
         url: {{ .Values.datasource.url }}
         username: {{ .Values.datasource.username }}
@@ -44,6 +46,8 @@ data:
                 isClustered: true
                 clusterCheckinInterval: 10000
                 useProperties: false
+                misfireThreshold: 60000
+                txIsolationLevelSerializable: false # 降低隔离级别可以提升跨网络性能
               threadPool:
                 class: org.quartz.simpl.SimpleThreadPool
                 threadCount: 10
@@ -61,3 +65,11 @@ data:
       packagesToScan: org.daming.hoteler.api.web
       swagger-ui:
         path: /swagger-ui.html
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.web.configMapName }}
+data:
+  backend_url: http://{{ .Values.app.name }}:{{ .Values.service.port }}
