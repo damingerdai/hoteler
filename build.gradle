@@ -10,14 +10,14 @@ buildscript {
     }
     dependencies {
         classpath("org.postgresql:postgresql:42.7.13")
-        classpath("org.flywaydb:flyway-database-postgresql:11.20.3")
+        classpath("org.flywaydb:flyway-database-postgresql:13.2.0")
     }
 }
 
 plugins {
     id 'org.springframework.boot' version '4.0.6'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.flywaydb.flyway' version '11.20.3'
+    id 'org.flywaydb.flyway' version '13.2.0'
     id 'java'
     id 'checkstyle'
 }
@@ -68,7 +68,7 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.7'
     implementation 'com.github.ben-manes.caffeine:caffeine'
     implementation 'org.yaml:snakeyaml:2.6'
-    implementation 'org.flywaydb:flyway-database-postgresql:11.20.3'
+    implementation 'org.flywaydb:flyway-database-postgresql:13.2.0'
     implementation 'com.cronutils:cron-utils:9.2.1'
     implementation 'org.bouncycastle:bcpkix-jdk18on:1.84'
     implementation 'com.lmax:disruptor:4.0.0'
