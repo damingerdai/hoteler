@@ -93,7 +93,7 @@ jobs:
         java-version: [25]
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -118,7 +118,7 @@ jobs:
         java-version: [25]
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
