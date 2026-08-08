@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
 
@@ -84,3 +84,4 @@ jobs:
         run: |-
           kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.TAG_NAME }} -n hoteler-namespace
           kubectl rollout status deployment/hoteler-api -n hoteler-namespace --timeout=10m --request-timeout=10m
+

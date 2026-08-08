@@ -44,7 +44,7 @@ jobs:
           # Maps port 6379 on service container to the host
           - 6379:6379
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
       - name: Set up JDK
@@ -90,7 +90,7 @@ jobs:
     needs: [test]
     strategy:
       matrix:
-        java-version:  [25]
+        java-version: [25]
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v6.1.0
@@ -151,3 +151,4 @@ jobs:
           docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
       - name: Image digest for maven
         run: echo ${{ steps.build-docker-m.outputs.digest }}
+
