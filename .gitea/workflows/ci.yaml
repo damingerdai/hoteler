@@ -14,10 +14,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java-version: [ 25 ]
-        os: [ ubuntu-latest ]
+        java-version: [25]
+        os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout code
+        uses: actions/checkout@v7
+        env:
+          GIT_SSL_NO_VERIFY: "true"
       - name: Download JDK from Domestic Mirror
         run: |
           curl -L -o jdk-17.tar.gz https://mirrors.huaweicloud.com/openjdk/17.0.2/openjdk-17.0.2_linux-x64_bin.tar.gz
@@ -25,7 +28,7 @@ jobs:
       - name: Set up JDK from local archive
         uses: actions/setup-java@v5
         with:
-          distribution: 'jdkfile'
+          distribution: "jdkfile"
           jdkFile: jdk-17.tar.gz
           java-version: ${{ matrix.java-version }}
       - name: Configure Maven with China Mirrors
@@ -52,8 +55,9 @@ jobs:
             </mirrors>
           </settings>
           EOF
-        
+
       - name: Build root project
         run: |
           chmod +x ./mvnw
           ./mvnw clean install package -DskipTests
+
