@@ -2,7 +2,80 @@
 
 Changelog of hoteler.
 
-## v0.0.2 (2025-04-16)
+## refs/tags/v0.0.3 (2025-08-22)
+
+### Features
+
+-  remove hutool ([93ec2](https://github.com/damingerdai/hoteler/commit/93ec2389bf7ae90) damingerdai)  
+
+### Bug Fixes
+
+-  **deps**  update jsonwebtokenversion to v0.13.0 (#1287) ([ba711](https://github.com/damingerdai/hoteler/commit/ba71140633e18a7) renovate[bot])  
+-  **deps**  update jsonwebtoken.version to v0.13.0 (#1286) ([e6d17](https://github.com/damingerdai/hoteler/commit/e6d17cf5411ca7c) renovate[bot])  
+-  **deps**  update dependency commons-codec:commons-codec to v1.19.0 (#1279) ([d4646](https://github.com/damingerdai/hoteler/commit/d4646f8aad44a68) renovate[bot])  
+-  **deps**  update spring boot to v3.5.4 (#1277) ([1234c](https://github.com/damingerdai/hoteler/commit/1234c8580686b50) renovate[bot])  
+-  **deps**  update dependency io.micrometer:micrometer-registry-prometheus to v1.15.2 (#1274) ([74a4a](https://github.com/damingerdai/hoteler/commit/74a4a990e04dcb9) renovate[bot])  
+-  **deps**  update dependency org.mybatis.spring.boot:mybatis-spring-boot-starter to v3.0.5 (#1270) ([b918a](https://github.com/damingerdai/hoteler/commit/b918a8633e31c67) renovate[bot])  
+-  **deps**  update dependency org.apache.commons:commons-lang3 to v3.18.0 (#1269) ([59344](https://github.com/damingerdai/hoteler/commit/59344a4c2f6678c) renovate[bot])  
+-  **deps**  update flyway  from 11.8.2 to 11.9.2(#1250) ([f4a8b](https://github.com/damingerdai/hoteler/commit/f4a8bd93f7c5001) renovate[bot])  
+-  **deps**  update dependency org.postgresql:postgresql to v42.7.7 (#1260) ([98a86](https://github.com/damingerdai/hoteler/commit/98a861b6dff5da0) renovate[bot])  
+-  **deps**  update spring boot to v3.5.3 (#1261) ([b2504](https://github.com/damingerdai/hoteler/commit/b25046a54552d42) renovate[bot])  
+-  **deps**  update dependency org.postgresql:postgresql to v42.7.7 [security] (#1258) ([5c931](https://github.com/damingerdai/hoteler/commit/5c931cec78bbe88) renovate[bot])  
+-  **deps**  update dependency org.springdoc:springdoc-openapi-starter-webmvc-ui to v2.8.9 (#1257) ([35a38](https://github.com/damingerdai/hoteler/commit/35a382571902b77) renovate[bot])  
+-  **deps**  update dependency io.micrometer:micrometer-registry-prometheus to v1.15.1 (#1256) ([86b3d](https://github.com/damingerdai/hoteler/commit/86b3d05e2184ad5) renovate[bot])  
+-  **deps**  update dependency org.bouncycastle:bcpkix-jdk18on to v1.81 (#1251) ([73a71](https://github.com/damingerdai/hoteler/commit/73a711640ac9bcb) renovate[bot])  
+-  **deps**  update module github.com/jackc/pgx/v5 to v5.7.5 (#1244) ([5cbd2](https://github.com/damingerdai/hoteler/commit/5cbd23659e515c6) renovate[bot])  
+-  **deps**  update flyway to v11.8.2 (#1231) ([d77d3](https://github.com/damingerdai/hoteler/commit/d77d376cf9771a1) renovate[bot])  
+-  **deps**  update dependency org.springdoc:springdoc-openapi-starter-webmvc-ui to v2.8.8 (#1237) ([68b56](https://github.com/damingerdai/hoteler/commit/68b56c60765fdf6) renovate[bot])  
+-  **deps**  update dependency io.micrometer:micrometer-registry-prometheus to v1.15.0 (#1248) ([8956c](https://github.com/damingerdai/hoteler/commit/8956c5492a1aa56) renovate[bot])  
+-  **deps**  update dependency cn.hutool:hutool-crypto to v5.8.38 (#1241) ([7d420](https://github.com/damingerdai/hoteler/commit/7d420320c7f4d71) renovate[bot])  
+-  **deps**  update dependency org.postgresql:postgresql to v42.7.6 (#1242) ([70f31](https://github.com/damingerdai/hoteler/commit/70f3173be252f4c) renovate[bot])  
+-  **deps**  update module github.com/golang-migrate/migrate/v4 to v4.18.3 (#1243) ([de258](https://github.com/damingerdai/hoteler/commit/de258e371dd12d8) renovate[bot])  
+-  **deps**  update spring boot to v3.5.0 (#1232) ([b818e](https://github.com/damingerdai/hoteler/commit/b818e43319da43c) renovate[bot])  
+-  **deps**  update flyway to v11.7.2 (#1224) ([b420e](https://github.com/damingerdai/hoteler/commit/b420ef4163a9f76) renovate[bot])  
+-  **workflows**  force load Docker image in build-and-publish workflow ([ec22e](https://github.com/damingerdai/hoteler/commit/ec22e4926e93186) damingerdai)  
+
+### Dependency updates
+
+- update actions/checkout action to v5 (#1284) ([056f0](https://github.com/damingerdai/hoteler/commit/056f00483192290) renovate[bot])  
+- update redis docker tag to v8.2.1 (#1289) ([12ffa](https://github.com/damingerdai/hoteler/commit/12ffa544b7d8d21) renovate[bot])  
+- update dependency io_bazel_rules_go to v0.56.1 (#1278) ([160f1](https://github.com/damingerdai/hoteler/commit/160f1e0f621c0ed) renovate[bot])  
+- update dependency bazel_gazelle to v0.45.0 (#1281) ([d299c](https://github.com/damingerdai/hoteler/commit/d299c8f73962b49) renovate[bot])  
+- update dependency gradle to v9 (#1280) ([8a5a9](https://github.com/damingerdai/hoteler/commit/8a5a9cb65317224) renovate[bot])  
+- update redis docker tag to v8.2.0 (#1282) ([0bdab](https://github.com/damingerdai/hoteler/commit/0bdab88afdcf9e2) renovate[bot])  
+- update dependency se.bjurr.gitchangelog:git-changelog-maven-plugin to v2.2.11 (#1273) ([51e7c](https://github.com/damingerdai/hoteler/commit/51e7c3e18815002) renovate[bot])  
+- update dependency maven to v3.9.11 (#1264) ([f5d4f](https://github.com/damingerdai/hoteler/commit/f5d4f7f8c1b1265) renovate[bot])  
+- update dependency com.github.ben-manes.caffeine:caffeine to v3.2.2 (#1263) ([b5fb7](https://github.com/damingerdai/hoteler/commit/b5fb75954e02507) renovate[bot])  
+- update dependency org.springframework.security:spring-security-test to v6.5.2 (#1272) ([8ed17](https://github.com/damingerdai/hoteler/commit/8ed17675d85c4d9) renovate[bot])  
+- update dependency gradle to v8.14.3 (#1267) ([a66ff](https://github.com/damingerdai/hoteler/commit/a66ff65a606618b) renovate[bot])  
+- update redis docker tag to v8.0.3 (#1268) ([f9746](https://github.com/damingerdai/hoteler/commit/f97464bba40fd75) renovate[bot])  
+- update dependency bazel_gazelle to v0.44.0 (#1262) ([c9fa7](https://github.com/damingerdai/hoteler/commit/c9fa7a6a3f6c245) renovate[bot])  
+- update dependency org.springframework.security:spring-security-test to v6.5.1 (#1259) ([25206](https://github.com/damingerdai/hoteler/commit/2520615089274ac) renovate[bot])  
+- update dependency com.github.ben-manes.caffeine:caffeine to v3.2.1 (#1255) ([69c43](https://github.com/damingerdai/hoteler/commit/69c4391b0554b70) renovate[bot])  
+- update dependency io_bazel_rules_go to v0.55.1 (#1252) ([a64b6](https://github.com/damingerdai/hoteler/commit/a64b694491311f5) renovate[bot])  
+- update dependency maven to v3.9.10 (#1254) ([30551](https://github.com/damingerdai/hoteler/commit/30551690bd0fa33) renovate[bot])  
+- update dependency gradle to v8.14.2 (#1253) ([8119f](https://github.com/damingerdai/hoteler/commit/8119f568c3f873e) renovate[bot])  
+- update postgres docker tag to v17.5 (#1247) ([8131d](https://github.com/damingerdai/hoteler/commit/8131d05e9043c83) renovate[bot])  
+- update bazel-contrib/setup-bazel action to v0.15.0 (#1245) ([2be16](https://github.com/damingerdai/hoteler/commit/2be16e77d5775a8) renovate[bot])  
+- update dependency io_bazel_rules_go to v0.54.1 (#1239) ([933af](https://github.com/damingerdai/hoteler/commit/933af48dcf629c6) renovate[bot])  
+- update node.js to v22.16.0 (#1246) ([7bcd2](https://github.com/damingerdai/hoteler/commit/7bcd29add9473b9) renovate[bot])  
+- update redis docker tag to v8 (#1249) ([2eb8f](https://github.com/damingerdai/hoteler/commit/2eb8f731d29dff7) renovate[bot])  
+- update dependency org.springframework.security:spring-security-test to v6.5.0 (#1228) ([27837](https://github.com/damingerdai/hoteler/commit/278374435702ae9) renovate[bot])  
+- update redis docker tag to v7.4.4 (#1233) ([9c26b](https://github.com/damingerdai/hoteler/commit/9c26bf498513ce2) renovate[bot])  
+- update dependency gradle to v8.14.1 (#1234) ([cfda5](https://github.com/damingerdai/hoteler/commit/cfda515c8b75d0d) renovate[bot])  
+- update appleboy/scp-action action to v1 (#1236) ([56552](https://github.com/damingerdai/hoteler/commit/56552d63ecfa44c) renovate[bot])  
+- update appleboy/ssh-action action to v1.2.2 (#1235) ([623f4](https://github.com/damingerdai/hoteler/commit/623f432ab2f51e5) renovate[bot])  
+- update edoburu/pgbouncer docker tag to v1.24.1 (#1240) ([68e7e](https://github.com/damingerdai/hoteler/commit/68e7e5435d6009d) renovate[bot])  
+- update node.js to v22.15.0 (#1229) ([56bce](https://github.com/damingerdai/hoteler/commit/56bce1e406ea4d5) renovate[bot])  
+### Other changes
+
+**ci 新增一个步骤使用 shell 语法截取 SHA 前 7 位，并注入环境变量**
+
+
+[7e613](https://github.com/damingerdai/hoteler/commit/7e613f5de2b2983) damingerdai *2025-05-25 05:04:45*
+
+
+## refs/tags/v0.0.2 (2025-04-16)
 
 ### Bug Fixes
 
@@ -21,7 +94,7 @@ Changelog of hoteler.
 ### Other changes
 
 
-## v0.0.1 (2025-04-05)
+## refs/tags/v0.0.1 (2025-04-05)
 
 ### Breaking changes
 
