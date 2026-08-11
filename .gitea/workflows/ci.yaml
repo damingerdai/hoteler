@@ -85,6 +85,7 @@ jobs:
 
       - name: Configure Gradle with China Mirrors
         run: |
+          sed -i 's|https\\://services.gradle.org/distributions|https\\://mirrors.cloud.tencent.com/gradle|g' gradle/wrapper/gradle-wrapper.properties
           mkdir -p ~/.gradle
           cat > ~/.gradle/init.gradle << 'EOF'
           allprojects {
