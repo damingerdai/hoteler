@@ -233,9 +233,8 @@ echo ""
 echo "Generating changelog for ${TAG}..."
 
 git-cliff \
-    --unreleased \
     --tag "$TAG" \
-    --prepend "$CHANGELOG"
+    --output "$CHANGELOG"
 
 # ------------------------------------------------------------
 # Show changes
