@@ -23,7 +23,7 @@ plugins {
 }
 
 group = 'org.daming'
-version = '0.0.4'
+version = '0.0.5'
 def jsonwebtokenVersion = "0.13.0"
 
 java {

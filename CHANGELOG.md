@@ -1,4 +1,4 @@
-## [unreleased]
+## [0.0.5] - 2026-08-19
 
 ### 🚀 Features
 
@@ -39,6 +39,8 @@
 - Use actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 for build-gradle
 - Use china mirror in ci/cd
 - Update build and publish yaml
+- Prepare to git cliff
+- Use git-cliff
 ## [0.0.4] - 2026-05-25
 
 ### 🚀 Features
