@@ -255,32 +255,6 @@
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
             </plugin>
-
-            <!-- git changelog maven plugin -->
-            <plugin>
-                <groupId>se.bjurr.gitchangelog</groupId>
-                <artifactId>git-changelog-maven-plugin</artifactId>
-                <version>${changelog.version}</version>
-                <executions>
-                    <execution>
-                        <id>GenerateGitChangelogTemplateFromFileAndToken</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>git-changelog</goal>
-                        </goals>
-                        <configuration>
-                            <toRef>refs/heads/master</toRef>
-                            <readableTagName>-([^-]+?)$</readableTagName>
-                            <file>CHANGELOG.md</file>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.21.0</version>
-            </plugin>
         </plugins>
     </build>
     <repositories>
