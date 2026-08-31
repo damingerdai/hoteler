@@ -11,6 +11,12 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 0.0.5"
+        required: true
+        type: string
 
 jobs:
   build-and-push-docker-image:
@@ -29,9 +35,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/damingerdai/hoteler
+          images: ghcr.io/damingerdai/hoteler-api
           tags: |
             type=ref,event=tag
+            type=raw,value=${{ inputs.version }},enable=${{ github.event_name == 'workflow_dispatch' }}
             type=raw,value=latest
             type=sha,prefix=
         env:
@@ -66,21 +73,3 @@ jobs:
       - name: Output image tag
         run: echo "image_tag=$(echo ${{ steps.meta.outputs.tags }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
         id: output_tag
-
-  deploy-to-kubernetes:
-    needs: build-and-push-docker-image
-    name: Deploy to kubernetes
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate to k3s
-        uses: Azure/k8s-set-context@v5
-        with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
-      - name: Extract tag name
-        id: extract_tag
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-      - name: Deploy to k3s
-        run: |-
-          kubectl set image deployment/hoteler-api hoteler-api=ghcr.io/damingerdai/hoteler:${{ steps.extract_tag.outputs.TAG_NAME }} -n hoteler-namespace
-          kubectl rollout status deployment/hoteler-api -n hoteler-namespace --timeout=10m --request-timeout=10m
-
