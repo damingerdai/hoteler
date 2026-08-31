@@ -51,5 +51,5 @@ jobs:
             "oci://ghcr.io/${GHCR_OWNER}"
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GHCR_TOKEN: ${{ github.token }}
+          GHCR_TOKEN: ${{ secrets.GHCR_PAT }}
           GHCR_OWNER: ${{ github.repository_owner }}
