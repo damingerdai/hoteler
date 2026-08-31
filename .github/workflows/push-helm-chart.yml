@@ -25,7 +25,30 @@ jobs:
         uses: azure/setup-helm@v4.3.0
 
       - name: Push Helm chart
-        run: ./scripts/push-helm-chart.sh "${{ inputs.chart-version }}"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          chart_dir="deplyoments/helm"
+          package_dir="$(mktemp -d)"
+          trap 'rm -rf "${package_dir}"' EXIT
+
+          chart_version="${{ inputs.chart-version }}"
+          if [ -z "${chart_version}" ]; then
+            chart_version="$(awk '$1 == "version:" {gsub(/"/, "", $2); gsub(/\047/, "", $2); print $2; exit}' "${chart_dir}/Chart.yaml")"
+          fi
+
+          helm lint "${chart_dir}"
+          helm package "${chart_dir}" \
+            --version "${chart_version}" \
+            --destination "${package_dir}"
+
+          printf '%s' "${GHCR_TOKEN}" | helm registry login ghcr.io \
+            --username "${GITHUB_USERNAME}" \
+            --password-stdin
+
+          helm push "${package_dir}/hoteler-chart-${chart_version}.tgz" \
+            "oci://ghcr.io/${GHCR_OWNER}"
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ github.token }}

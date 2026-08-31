@@ -2,6 +2,11 @@ app:
   namespace: hoteler-namespace
   name: hoteler-api
   configMapName: hoteler-api-config
+  web:
+    name: hoteler-web
+    configMapName: hoteler-web-config
+    ingress:
+      host: hoteler.local
 
 replicaCount: 1
 
@@ -9,6 +14,10 @@ image:
   repository: ghcr.io/damingerdai/hoteler
   tag: "0.0.5"
   pullPolicy: IfNotPresent
+  web:
+    repository: ghcr.io/damingerdai/hoteler-web
+    tag: "0.0.5"
+    pullPolicy: IfNotPresent
 
 redis:
   host: redis
@@ -25,6 +34,8 @@ service:
   type: NodePort
   port: 8443
   nodePort: 30006
+  web:
+    nodePort: 30007
 
 hpa:
   replicaCount:
