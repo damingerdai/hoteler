@@ -34,6 +34,14 @@ make build
 ./hoteler migrate create sql-file-name
 ```
 
+查看数据库迁移脚本
+
+```shell
+./hoteler migrate list
+```
+
+在列表中使用方向键或 `j`/`k` 移动，使用 `q` 或 `Esc` 退出。
+
 运行测试：
 
 ```shell
