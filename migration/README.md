@@ -4,26 +4,38 @@ Hoteler的数据库迁移模块基于[migrate](https://github.com/golang-migrate
 
 ## 使用
 
+先编译：
+
+```shell
+make build
+```
+
 升级
 
 ```shell
-go build -o migrate migration.go && ./migrate(?.exe) up
+./hoteler migrate up
 ```
 
 降级
 
 ```shell
-go build -o migrate migration.go && ./migrate(?.exe) down
+./hoteler migrate down
 ```
 
 修复
 
 ```shell
-go build -o migrate migration.go && ./migrate(?.exe) force
+./hoteler migrate force <version>
 ```
 
 新建数据库迁移脚本
 
 ```shell
-go build -o migrate migration.go && ./migrate(?.exe) create sql-file-name
+./hoteler migrate create sql-file-name
+```
+
+运行测试：
+
+```shell
+make test
 ```

@@ -1,42 +1,22 @@
-# Go parameters
-GOCMD=go
-GOBUILD=$(GOCMD) build
-GOCLEAN=$(GOCMD) clean
-GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
-GORUN=${GOCMD} run
+APP := hoteler
+GO := go
+TEST ?= ./...
 
-TEST?=./...
-TEST_EXCLUDE=/mocks/
-GOFMT_FILES?=$$(find . -not -path "./vendor/*" -type f -name '*.go')
-export ENV_FILE_PATH := $(PWD)/.env
+.PHONY: all build clean run test fmt
 
-.PHONY: clean
+all: build
+
+build:
+	$(GO) build -o $(APP) .
+
 clean:
-	rm hoteler || :
-
-build: clean
-	go build -o hoteler main.go
+	rm -f -- $(APP)
 
 run: build
-	./hoteler
+	./$(APP)
+
+test:
+	$(GO) test $(TEST)
 
 fmt:
-	gofmt -w $(GOFMT_FILES)
-
-bazel-cmd = bazel
-# bazel-targets = $(shell bazel query "kind('go_binary', //cmd/...)" --output=label)
-# bazel-targets-names := $(foreach n,$(bazel-targets),$(n))
-
-bazel-clean:
-	bazel clean
-
-gazelle: bazel-clean
-	 bazel run //:gazelle
-gazelle-update-repos: bazel-clean
-	bazel run //:gazelle-update-repos
-
-bazel: bazel-clean
-	@$(foreach target,$(shell bazel query "kind('go_binary', //...)" --output=label),\
-		${bazel-cmd} build ${target} \
-	;)
+	gofmt -w $$(find . -type f -name '*.go' -not -path './vendor/*')
