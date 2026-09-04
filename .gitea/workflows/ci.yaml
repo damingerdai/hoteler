@@ -26,7 +26,7 @@ jobs:
           curl -L -o jdk-25.tar.gz https://mirrors.huaweicloud.com/openjdk/25.0.2/openjdk-25.0.2_linux-x64_bin.tar.gz
 
       - name: Set up JDK from local archive
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "jdkfile"
           jdkFile: jdk-25.tar.gz
@@ -77,7 +77,7 @@ jobs:
           curl -L -o jdk-25.tar.gz https://mirrors.huaweicloud.com/openjdk/25.0.2/openjdk-25.0.2_linux-x64_bin.tar.gz
 
       - name: Set up JDK from local archive
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "jdkfile"
           jdkFile: jdk-25.tar.gz
