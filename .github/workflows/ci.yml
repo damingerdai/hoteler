@@ -57,7 +57,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Run db migration
-        run: cd migration && go build -o migrate migration.go && ./migrate up
+        run: cd migration && go build -o migrate . && ./migrate up
         env:
           POSTGRES_HOST: localhost
           # POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
