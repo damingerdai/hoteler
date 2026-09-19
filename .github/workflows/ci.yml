@@ -7,17 +7,18 @@ on:
     branches: [master]
 
 env:
-  REGISTRY_NAME: github.com
+  REGISTRY_NAME: ghcr.io
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        java-version: [25, 26]
+        java-version: [25]
         go-version: ["1.27.0"]
         os: [ubuntu-latest]
-    # https://github.com/actions/example-services/blob/master/.github/workflows/postgres-service.yml
+
     services:
       postgres:
         image: postgres:18
@@ -31,8 +32,8 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps tcp port 5432 on service container to the host
           - 5432:5432
+
       redis:
         image: redis:8.10.0-alpine3.23
         options: >-
@@ -41,113 +42,141 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps port 6379 on service container to the host
           - 6379:6379
+
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
+
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: "zulu"
+          distribution: zulu
           java-version: ${{ matrix.java-version }}
-      - name: Setup go
+          cache: gradle
+
+      - name: Setup Go
         uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go-version }}
+
       - name: Run db migration
-        run: cd migration && go build -o migrate . && ./migrate up
+        working-directory: migration
+        run: |
+          go build -o migrate .
+          ./migrate up
         env:
           POSTGRES_HOST: localhost
-          # POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
           POSTGRES_PORT: 5432
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456
           POSTGRES_DB: postgres
           POSTGRES_SSLMODE: disable
-      - name: Cache Gradle packages
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+
       - name: Unit Test with Gradle
-        # run: ./gradlew flywayMigrate && ./gradlew build
         run: ./gradlew test -x checkstyleMain -x checkstyleTest
         env:
           CI: true
+
       - name: Unit Test with Maven
-        # run: ./gradlew flywayMigrate && ./gradlew build
-        run: ./mvnw test -Dcheckstyle.skip=true && ./mvnw surefire-report:report-only
+        run: ./mvnw test -Dcheckstyle.skip=true
         env:
           CI: true
+
+      - name: Generate Maven Surefire Report
+        if: always()
+        run: ./mvnw surefire-report:report-only
+        env:
+          CI: true
+
+  # Gradle build
   build:
     runs-on: ${{ matrix.os }}
     needs: [test]
+
     strategy:
       matrix:
-        java-version: [25]
+        java-version: [25, 27]
         os: [ubuntu-latest]
+
     steps:
       - uses: actions/checkout@v7.0.1
+
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: "zulu"
+          distribution: zulu
           java-version: ${{ matrix.java-version }}
-      - name: Cache Gradle packages
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          cache: gradle
+
       - name: Build with Gradle
         run: ./gradlew build -x test -x checkstyleMain -x checkstyleTest
+
+  # Maven build
   build-maven:
-    runs-on: ${{ matrix.os }}
-    needs: [build]
-    strategy:
-      matrix:
-        java-version: [25]
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
+    needs: [test]
+
     steps:
       - uses: actions/checkout@v7.0.1
+
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: "zulu"
-          java-version: ${{ matrix.java-version }}
-      - name: Cache Maven packages
-        uses: actions/cache@v6
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          distribution: zulu
+          java-version: "25"
+          cache: maven
+
       - name: Build with Maven
         run: ./mvnw package -Dmaven.test.skip=true -Dcheckstyle.skip=true
+
+  # Docker multi-stage build
   build-docker:
     runs-on: ubuntu-latest
-    needs: [build, build-maven]
+    needs:
+      - build
+      - build-maven
+
     steps:
-      - uses: actions/checkout@master
-      # Container build
-      - name: Build docker with gradle
+      - uses: actions/checkout@v7.0.1
+
+      - name: Build Docker image with Gradle
         id: build-docker-g
         run: |
-          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-g:${{ github.sha }} -f Dockerfile
-      - name: Image digest for gradle
-        run: echo ${{ steps.build-docker-g.outputs.digest }}
-      - name: Build docker with maven
+          IMAGE="${{ env.REGISTRY_NAME }}/damingerdai/hoteler-g:${{ github.sha }}"
+
+          docker build \
+            -t "$IMAGE" \
+            -f Dockerfile \
+            .
+
+          IMAGE_ID=$(docker image inspect "$IMAGE" --format='{{.Id}}')
+
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+          echo "image_id=$IMAGE_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Image ID for Gradle image
+        run: |
+          echo "Image: ${{ steps.build-docker-g.outputs.image }}"
+          echo "Image ID: ${{ steps.build-docker-g.outputs.image_id }}"
+
+      - name: Build Docker image with Maven
         id: build-docker-m
         run: |
-          docker build . -t ${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }} -f maven.Dockerfile
-      - name: Image digest for maven
-        run: echo ${{ steps.build-docker-m.outputs.digest }}
+          IMAGE="${{ env.REGISTRY_NAME }}/damingerdai/hoteler-m:${{ github.sha }}"
+
+          docker build \
+            -t "$IMAGE" \
+            -f maven.Dockerfile \
+            .
+
+          IMAGE_ID=$(docker image inspect "$IMAGE" --format='{{.Id}}')
+
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+          echo "image_id=$IMAGE_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Image ID for Maven image
+        run: |
+          echo "Image: ${{ steps.build-docker-m.outputs.image }}"
+          echo "Image ID: ${{ steps.build-docker-m.outputs.image_id }}"
