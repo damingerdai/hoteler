@@ -35,7 +35,7 @@ jobs:
           - 5432:5432
 
       redis:
-        image: redis:8.10.0-alpine3.23
+        image: redis:8.10.1-alpine3.23
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
