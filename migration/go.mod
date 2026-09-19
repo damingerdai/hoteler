@@ -4,7 +4,7 @@ go 1.27.0
 
 require (
 	charm.land/bubbletea/v2 v2.0.9
-	github.com/golang-migrate/migrate/v4 v4.19.1
+	github.com/golang-migrate/migrate/v4 v4.20.1
 	github.com/jackc/pgx/v5 v5.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.10.2
@@ -32,7 +32,7 @@ require (
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 )
 
 replace (
