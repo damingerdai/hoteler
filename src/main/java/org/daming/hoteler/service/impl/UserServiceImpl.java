@@ -111,15 +111,15 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
             throw this.errorService.createHotelerException(600012);
         }
         var isFirstUser = this.userMapper.count() == 0;
-        var id = snowflakeService.nextId();
-        user.setId(id);
+
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
-        this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        var userId = this.userMapper.create(user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        user.setId(userId);
         var roles = isFirstUser
                 ? List.of(this.roleService.getByName("admin"), this.roleService.getByName("users"))
                 : List.of(this.roleService.getByName("users"));
-        roles.forEach((role ->  this.userRoleMapper.create(id, role.getId())));
+        roles.forEach((role ->  this.userRoleMapper.create(userId, role.getId())));
     }
 
     @Override
@@ -127,7 +127,6 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
     public User create(CreateUserRequest createUserRequest) {
         Assert.notNull(createUserRequest,"params 'createUserRequest' is required");
         var user = new User()
-                .setId(this.snowflakeService.nextId())
                 .setUsername(createUserRequest.getUsername())
                 .setPassword(createUserRequest.getPassword())
                 .setPasswordType(createUserRequest.getPasswordType());
@@ -141,7 +140,8 @@ public class UserServiceImpl extends ApplicationObjectSupport implements IUserSe
 
         var passwordType = CommonUtils.isNotEmpty(user.getPasswordType()) ? user.getPasswordType() : "noop";
         var passwordService = this.getPasswordService(passwordType);
-        this.userMapper.create(user.getId(), user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        var userId = this.userMapper.create(user.getUsername(), passwordService.encodePassword(user.getPassword()), passwordType);
+        user.setId(userId);
         var roleNames = createUserRequest.getRoles();
         if (Objects.isNull(roleNames)) {
             roleNames = List.of();

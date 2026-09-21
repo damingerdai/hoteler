@@ -17,5 +17,5 @@ public interface IRoleService {
 
     Role getByName(String name) throws HotelerException;
 
-    List<Role> getRolesByUserId(long userId) throws HotelerException;
+    List<Role> getRolesByUserId(String userId) throws HotelerException;
 }

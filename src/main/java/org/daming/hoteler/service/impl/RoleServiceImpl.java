@@ -37,7 +37,7 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     // @Cacheable(cacheNames = { "user-role" }, key = "'user-role-'+ #root.methodName + #id")
-    public List<Role> getRolesByUserId(long userId) throws HotelerException {
+    public List<Role> getRolesByUserId(String userId) throws HotelerException {
         return this.roleDao.listRolesByUserId(userId);
     }
 

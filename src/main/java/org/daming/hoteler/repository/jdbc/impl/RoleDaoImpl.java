@@ -96,9 +96,9 @@ public class RoleDaoImpl extends AbstractBaseDao<Role> implements IRoleDao {
     }
 
     @Override
-    public List<Role> listRolesByUserId(long userId) throws HotelerException {
+    public List<Role> listRolesByUserId(String userId) throws HotelerException {
         var in = Instant.now();
-        var sql = "SELECT roles.id, name, description FROM roles JOIN user_roles ON user_roles.role_id = roles.id AND user_roles.user_id = ? WHERE roles.deleted_at IS NULL";
+        var sql = "SELECT roles.id, name, description FROM roles JOIN user_roles ON user_roles.role_id = roles.id AND user_roles.user_id = CAST(? AS uuid) WHERE roles.deleted_at IS NULL";
         var params = new Object[] { userId };
         try {
             return this.jdbcTemplate.query(sql,(rs, i) -> this.convertRoleFromResultSet(rs),  params);
