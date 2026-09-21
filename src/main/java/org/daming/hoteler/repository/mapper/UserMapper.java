@@ -39,8 +39,32 @@ public interface UserMapper {
     @Select("select id, username, password, password_type, failed_login_attempts, account_non_locked, lock_time from users where id = #{id} and deleted_at is null")
     User get(@Param("id") long id);
 
-    @Insert("insert into users (id, username, password, password_type, create_dt, create_user, update_dt, update_user) values (#{id}, #{username}, #{password}, #{password_type}::passwordtype, statement_timestamp(),'system', statement_timestamp(), 'system')")
-    void create(@Param("id") long id, @Param("username") String username, @Param("password") String password, @Param("password_type") String passwordType);
+    @Select("""
+    INSERT INTO users (
+        username,
+        password,
+        password_type,
+        create_dt,
+        create_user,
+        update_dt,
+        update_user
+    )
+    VALUES (
+        #{username},
+        #{password},
+        #{passwordType}::passwordtype,
+        statement_timestamp(),
+        'system',
+        statement_timestamp(),
+        'system'
+    )
+    RETURNING id
+    """)
+    String create(
+            @Param("username") String username,
+            @Param("password") String password,
+            @Param("passwordType") String passwordType
+    );
 
     @Select("select count(id) from users where deleted_at is null")
     int count();

@@ -10,6 +10,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserRoleMapper {
 
-    @Insert("INSERT INTO user_roles  (user_id, role_id, created_at, updated_at) VALUES (#{userId}, #{roleId}, statement_timestamp(), statement_timestamp()) RETURNING id")
-    Long create(long userId, long roleId);
+    @Insert("""
+            INSERT INTO user_roles (user_id, role_id, created_at, updated_at)
+            VALUES (CAST(#{userId} AS uuid), #{roleId}, statement_timestamp(), statement_timestamp())
+            RETURNING id
+     """)
+    Long create(String userId, long roleId);
 }
