@@ -60,7 +60,7 @@ public class UserDaoImpl implements IUserDao {
         try {
             return jdbcTemplate.query(sql, (rs, i) -> {
                 var user = new User()
-                        .setId(rs.getLong("id"))
+                        .setId(rs.getString("id"))
                         .setUsername(rs.getString("username"))
                         .setPassword(rs.getString("password"))
                         .setPasswordType(rs.getString("password_type"))
@@ -100,7 +100,7 @@ public class UserDaoImpl implements IUserDao {
     private static Optional<User> getUser(ResultSet rs) throws SQLException {
         while (rs.next()) {
             var user = new User()
-                    .setId(rs.getLong("id"))
+                    .setId(rs.getString("id"))
                     .setUsername(rs.getString("username"))
                     .setPassword(rs.getString("password"))
                     .setPasswordType(rs.getString("password_type"))

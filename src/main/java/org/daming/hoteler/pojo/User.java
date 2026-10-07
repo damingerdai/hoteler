@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -13,10 +12,7 @@ import java.util.StringJoiner;
 
 public class User implements UserDetails {
 
-
-    // 该注解是必须的， long类型前端会有精度损失
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private long id;
+    private String id;
 
     private String username;
 
@@ -36,11 +32,11 @@ public class User implements UserDetails {
 
     private List<Permission> permissions;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public User setId(long id) {
+    public User setId(String id) {
         this.id = id;
         return this;
     }
@@ -142,7 +138,7 @@ public class User implements UserDetails {
         super();
     }
 
-    public User(long id, String username, String password, List<Role> roles) {
+    public User(String id, String username, String password, List<Role> roles) {
         super();
         this.id = id;
         this.username = username;
@@ -150,7 +146,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public User(long id, String username, String password, String passwordType, int failedLoginAttempts, boolean accountNonLocked, LocalDateTime lockTime, List<Role> roles, List<Permission> permissions) {
+    public User(String id, String username, String password, String passwordType, int failedLoginAttempts, boolean accountNonLocked, LocalDateTime lockTime, List<Role> roles, List<Permission> permissions) {
         super();
         this.id = id;
         this.username = username;
@@ -163,7 +159,7 @@ public class User implements UserDetails {
         this.permissions = permissions;
     }
 
-    public User(long id, String username, String password, String passwordType, List<Role> roles, List<Permission> permissions) {
+    public User(String id, String username, String password, String passwordType, List<Role> roles, List<Permission> permissions) {
         super();
         this.id = id;
         this.username = username;
