@@ -1,0 +1,8 @@
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/damingerdai/hoteler-api:v0.0.5 \
+  -t ghcr.io/damingerdai/hoteler-api:0.0.5 \
+  -t ghcr.io/damingerdai/hoteler-api:9b4295f \
+  -t ghcr.io/damingerdai/hoteler-api:9b4295f524bdff882ac5455ad38070eec0b906eb \
+  -t ghcr.io/damingerdai/hoteler-api:latest \
+  --push .

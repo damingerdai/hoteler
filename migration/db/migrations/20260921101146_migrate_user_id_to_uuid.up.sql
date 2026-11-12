@@ -2,7 +2,7 @@ BEGIN;
 
 
 CREATE TABLE users_new (
-       id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+       id UUID PRIMARY KEY DEFAULT uuidv7(),
        username character varying(100) NOT NULL,
        password character varying(100) NOT NULL,
        create_dt timestamp without time zone NOT NULL,
@@ -23,13 +23,13 @@ INSERT INTO users_new (
     failed_login_attempts, account_non_locked, lock_time, old_id_bigint
 )
 SELECT
-    uuid_generate_v7(), username, password, create_dt, create_user,
+    uuidv7(), username, password, create_dt, create_user,
     update_dt, update_user, password_type, deleted_at,
     failed_login_attempts, account_non_locked, lock_time, id
 FROM users;
 
 CREATE TABLE user_roles_new (
-                                id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+                                id UUID PRIMARY KEY DEFAULT uuidv7(),
                                 user_id UUID NOT NULL,
                                 role_id bigint NOT NULL,
                                 created_at timestamp with time zone NOT NULL,
