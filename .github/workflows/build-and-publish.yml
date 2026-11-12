@@ -171,62 +171,82 @@ jobs:
           gh release create "${ARGS[@]}"
 
   publish-image:
-      needs: release
-      runs-on: ubuntu-latest
-      permissions:
-          contents: read
-          packages: write
-      steps:
-          - name: Checkout release tag
-            uses: actions/checkout@v7.0.1
-            with:
-                ref: ${{ needs.release.outputs.tag }}
+    name: Publish ${{ matrix.image }}
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: hoteler-api
+            dockerfile: Dockerfile
+          - image: hoteler
+            dockerfile: full.Dockerfile
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout release tag and pinned submodules
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ needs.release.outputs.tag }}
+          submodules: recursive
+          token: ${{ secrets.RELEASE_TOKEN }}
+          persist-credentials: false
 
-          - name: Generate image tags
-            id: image
-            env:
-                REPOSITORY_OWNER: ${{ github.repository_owner }}
-                RELEASE_TAG: ${{ needs.release.outputs.tag }}
-            run: |
-                set -euo pipefail
-                IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/hoteler-api"
-                SHA="$(git rev-parse HEAD)"
-                echo "sha=$SHA" >> "$GITHUB_OUTPUT"
-                {
-                    echo 'tags<<EOF'
-                    echo "$IMAGE:$RELEASE_TAG"
-                    echo "$IMAGE:$SHA"
-                    if [[ "$RELEASE_TAG" != *-* ]]; then
-                        echo "$IMAGE:latest"
-                    fi
-                    echo 'EOF'
-                } >> "$GITHUB_OUTPUT"
+      - name: Verify frontend submodule
+        if: matrix.image == 'hoteler'
+        run: |
+          test -s src/main/angular/package.json
+          test -s src/main/angular/package-lock.json
+          git submodule status --recursive
 
-          - name: Set up QEMU
-            uses: docker/setup-qemu-action@v4
+      - name: Generate image tags
+        id: image
+        env:
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          IMAGE_NAME: ${{ matrix.image }}
+          RELEASE_TAG: ${{ needs.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/$IMAGE_NAME"
+          SHA="$(git rev-parse HEAD)"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          {
+            echo 'tags<<EOF'
+            echo "$IMAGE:$RELEASE_TAG"
+            echo "$IMAGE:$SHA"
+            if [[ "$RELEASE_TAG" != *-* ]]; then
+              echo "$IMAGE:latest"
+            fi
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
-          - name: Set up Docker Buildx
-            uses: docker/setup-buildx-action@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
 
-          - name: Log in to GitHub Container Registry
-            uses: docker/login-action@v4
-            with:
-                registry: ghcr.io
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-          - name: Build and push image
-            uses: docker/build-push-action@v7
-            with:
-                context: .
-                file: Dockerfile
-                push: true
-                platforms: linux/amd64,linux/arm64
-                provenance: true
-                tags: ${{ steps.image.outputs.tags }}
-                labels: |
-                    org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-                    org.opencontainers.image.revision=${{ steps.image.outputs.sha }}
-                    org.opencontainers.image.version=${{ needs.release.outputs.tag }}
-                cache-from: type=gha
-                cache-to: type=gha,mode=max
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          provenance: true
+          tags: ${{ steps.image.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ steps.image.outputs.sha }}
+            org.opencontainers.image.version=${{ needs.release.outputs.tag }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
