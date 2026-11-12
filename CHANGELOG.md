@@ -1,3 +1,37 @@
+## [0.0.6-beta.0] - 2026-11-12
+
+### 🚀 Features
+
+- *(migration)* Add interactive migration script list
+- Migrate user id to uuid (#1431)
+
+### 🐛 Bug Fixes
+
+- *(ci)* Use GHCR token for helm publishing
+- *(ci)* Build migration module
+- *(deps)* Update module github.com/golang-migrate/migrate/v4 to v4.20.1 (#1429)
+- *(deps)* Update flyway to v13.11.1 (#1413)
+- *(deps)* Update spring boot to v4.1.2 (#1418)
+- *(deps)* Update dependency io.micrometer:micrometer-registry-prometheus to v1.17.2 (#1416)
+- *(migration)* Use uuidv7 instead of uuid_generate_v7
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Bump helm chart version to v0.0.5
+- Add manual helm chart publish workflow
+- Publish helm chart directly from workflow
+- Add helm docs
+- Publish hoteler api image on tags
+- Tag dev image with full commit id
+- *(migration)* Remove scripts folder
+- Update github ci pipline
+- Update github ci db migration pipline
+- Automate release versioning and image publishing
+
+### 💼 Other
+
+- Bump go 1.27
+- Update makefile and remove migration go
 ## [0.0.5] - 2026-08-19
 
 ### 🚀 Features
@@ -41,6 +75,7 @@
 - Update build and publish yaml
 - Prepare to git cliff
 - Use git-cliff
+- *(release)* V0.0.5
 ## [0.0.4] - 2026-05-25
 
 ### 🚀 Features
@@ -88,14 +123,6 @@
 - *(deps)* Update dependency io.micrometer:micrometer-registry-prometheus to v1.16.5 (#1372)
 - *(deps)* Update spring boot to v4.0.6 (#1367)
 
-### 💼 Other
-
-- *(migration)* Bump go 1.25.0
-- Add ailyun registery
-- Migrate openjdk:25-slim to azul/zulu-openjdk:25.0.1-jdk (#1346)
-- 修复helm中不符合标准的地方 (#1347)
-- Disable checkstyle by default in maven and gradle
-
 ### 📚 Documentation
 
 - New artchitecutre docs
@@ -116,6 +143,14 @@
 - Upgrade gradle 9.5.0
 - Bump gradle wrapper 9.5.0
 - *(release)* V0.0.4
+
+### 💼 Other
+
+- *(migration)* Bump go 1.25.0
+- Add ailyun registery
+- Migrate openjdk:25-slim to azul/zulu-openjdk:25.0.1-jdk (#1346)
+- 修复helm中不符合标准的地方 (#1347)
+- Disable checkstyle by default in maven and gradle
 ## [0.0.3] - 2025-08-22
 
 ### 🚀 Features
@@ -149,11 +184,6 @@
 - *(deps)* Update jsonwebtoken.version to v0.13.0 (#1286)
 - *(deps)* Update jsonwebtokenversion to v0.13.0 (#1287)
 
-### 💼 Other
-
-- *(migration)* Bump go 1.24.2
-- Migrate https://mirror.ghproxy.com to https://ghproxy.link
-
 ### 🚜 Refactor
 
 - *(room.service)* Update list method to support optional room status
@@ -185,6 +215,11 @@
 - Remove spring.profile.active params
 - Build linx amd64 docker image shell scripts
 - Release v0.0.3
+
+### 💼 Other
+
+- *(migration)* Bump go 1.24.2
+- Migrate https://mirror.ghproxy.com to https://ghproxy.link
 ## [0.0.2] - 2025-04-16
 
 ### 🐛 Bug Fixes
@@ -194,17 +229,17 @@
 - *(deps)* Update flyway to v11.7.0 (#1223)
 - *(deps)* Update dependency io.micrometer:micrometer-registry-prometheus to v1.14.6 (#1225)
 
-### 💼 Other
-
-- *(docker)* Upgrade base image to openjdk:24-slim and remove unnecessary `ls` command
-- *(maven)* Add Aliyun Maven repositories for faster dependency resolution
-- *(script)* Add multi-platform support to Docker build command
-
 ### ⚙️ Miscellaneous Tasks
 
 - Remove push branchs for build-and-push-docker-image
 - 删除多余的打印语句
 - *(release)* V0.0.2
+
+### 💼 Other
+
+- *(docker)* Upgrade base image to openjdk:24-slim and remove unnecessary `ls` command
+- *(maven)* Add Aliyun Maven repositories for faster dependency resolution
+- *(script)* Add multi-platform support to Docker build command
 ## [0.0.1] - 2025-04-05
 
 ### 🚀 Features
@@ -504,6 +539,179 @@
 - *(deps)* Update module github.com/jackc/pgx/v5 to v5.7.4 (#1210)
 - *(deps)* Update dependency org.springdoc:springdoc-openapi-starter-webmvc-ui to v2.8.6 (#1211)
 - *(deps)* Update flyway to v11.5.0 (#1214)
+
+### 📚 Documentation
+
+- Add roadmap docs
+- Small change for graphql use
+- Db migrate docs
+- Add 'how to use' dooc
+- Docker-compose仅启动db数据库
+- 更新正确的启动数据库脚本
+- 添加基于golang进行db migrate的文档说明
+- 添加前端页面的截图效果
+- *(migration)* 添加migrate的readme文件
+- 添加架构图
+- Add jetbrains loglo
+
+### 🚜 Refactor
+
+- Rename 'dao' package to 'repository'
+- 美化lambal表达式代码
+- 重写房间状态更新任务的逻辑
+- 由于jdbctemplate存在过期方法，重写UserDaoImpl的实现
+- List user api完成excetion捕获
+- ControllerInterceptor#getMethodArgs内部使用StringBuilder去替代StringBuffer
+- 将users-rooms重名为customer-checkin-record (#166)
+- 重命名CustomerCheckinRecord的api
+- 重构'使用自定义的错误替代原先用户未发现的错误提示'
+- 抽象出统一的database实例
+- Migrate和seed共用同一个DatasourceExecutor
+- UserDaoImpl使用构造函数注入的方式注入JdbcTemplate
+- Migrate v2命令中create重构完成
+- Dao层代码添加完善的异常日志记录体系
+- Remove `WebSecurityConfigurerAdapter` and use a `SecurityFilterChain` bean to configure `HttpSecurity` or a `WebSecurityCustomizer` bean to configure `WebSecurity` (#289)
+- 使用时间点作为flyway的版本号 (#357)
+- 使用Math.max获取长度的最大值
+- 不再直接使用secret.key，而是使用ISecretPropService调用 (#434)
+- Use array stream to convert pattern to RequestMatcher
+- UserService 将不再直接使用roleDao而是使用roleService
+- 获取用户api内部中获取userId不在使用包装类型
+- 迁移SecurityFilterChain到最新使用方式
+- 删除spring security的inogre写法
+- 使用var语法重构YamlPropertySourceFactory
+- AuthenticationFilter转正
+- 删除room status statistics
+- 将docker-compose中hoteler所需要配置文件直接放在项目根目录
+- 优化usermapper list的sql
+- Rename src/main/resources/spring-logback.xml -> src/main/resources/logback-spring.xml
+- 使用ping task定期访问redis和pg的状态
+- 将customer_checkin_record重命名为orders (#1172)
+
+### 🎨 Styling
+
+- Format application properties
+- 将create user接口返回结果泛型化
+- 删除多余的import的语句
+- Format build.gradle and pom.xml file
+
+### 🧪 Testing
+
+- Make 'SnowflakeIdWorker#nextId' unit test pass
+- Uni test list users dao
+- Unit test singe user dao
+- Unit test list user service
+- Add unit test for jwt util
+- *(service:token)* Token service in spring bean
+- Support transaction in unit test
+- 修复test中的bug
+- 修复ICustomerStatServiceTest不通过的错误
+- 补充Md5PasswordService解密密码单元测试
+- 修复ICustomerStatServiceTest的测试用例
+- 修复Md5PasswordServiceTest的测试用例
+- 修复DESPasswordServiceTest的测试用例
+- 修复Base64PasswordServiceTest的测试用例
+- Replace @MockitoBean with @MockitoSpyBean and update test configuration
+- Update test configuration in DESPasswordServiceTest
+- Update test configuration in DESPasswordServiceTest
+- Update test configuration and mock annotations in ICustomerStatServiceTest
+
+### ⚙️ Miscellaneous Tasks
+
+- *(flywaydb)* Support run flyway plugin
+- *(github:pr)* Add pull request template
+- *(web)* Angular ui as a sub module
+- Ignore angular ui change
+- 删除不必要的打印语句
+- *(bot)* Add dependabot
+- 添加github action的ci/cd
+- Workflow -> workflows
+- 针对windows做清除gradle的单独处理
+- 使用‘rm -Force -Recurse’删除gradle缓存
+- 取消清除缓存的step
+- *(dependabot)* 添加dependabot对gradle的支持
+- 添加对jdk16和gradle7的支持(#26)
+- Github action添加pg数据库的测试，同时优化github action的触发逻辑 (#52)
+- 删除部分代码
+- Remove blank line
+- 修复usercontroller里的泛型问题
+- *(github action)* Build job不在执行unit test
+- Github action ci support migration system based on go (#74)
+- 支持maven编译
+- 使用本地maven编译
+- Maven编译暂时不支持windows
+- Ignore bin foloder for vscode
+- Add banner
+- Github action删除使用jdk11和jdk16 (#130)
+- 更新db的migration模块
+- Verify POSTGRES connection name resolution
+- Postgres基于vm而不是container (#149)
+- 更新openapi部分配置
+- Ignore 'hoteler' binary
+- 自动退出nohup命令
+- 将cmd从internal包移动到pkg包下
+- *(migration)* Bump go 1.18 (#231)
+- Add java 18 support (#236)
+- 当master分支有更新的时候将自动构建docker镜像并推送到github容器仓库 (#251)
+- 'damigerdai' -> 'damingerdai'
+- 添加部署到k3s的setup
+- 单独设置deploy-to-kubernetes的job
+- Add build docker CI/CD (#356)
+- 只要源代码改变和更新依赖才需要推送镜像 (#358)
+- Bump jdk 19 and drop the support for jdk18 (#427)
+- 更新到actions/checkout@v3.1.0 (#433)
+- Save bazel cache in GitHub Actions (#485)
+- Add jdk 20 support and remove the support for jdk19 (#577)
+- 默认数据库使用postgres
+- Add redis container in test job
+- Bump go from 1.20 to 1.21
+- Add jdk 21 support and drop jdk 20 support (#738)
+- 在ci环境下动态开启数据库单元测试 (#767)
+- *(gradle)* Update plugin org.flywaydb.flyway to v10.2.0 (#812)
+- Actions/checkout support submodules (#850)
+- 更新deploy-to-kubernetes的name为Deploy to kubernetes
+- 添加两个post processor
+- 撤销maven_install_json
+- CI/CD支持java 22 (#955)
+- Remove version in docker-compose yaml file
+- Remove hoteler-web submodule
+- 删除hoteler的submodule (#1021)
+- Hoteler web submodule (#1022)
+- Fix typo error to make sure ignore hoteler-web submodule git commit status
+- 设置hoteler的容器名字
+- 更新docker-compose文件配置
+- *(migration)* Bump go 1.22.4
+- *(migration)* Bump go 1.22.5
+- Pgbouncer使用session模式
+- 升级pg版本并测试flyway正常工作
+- 支持linux/amd64,linux/arm64和这两个架构的镜像构建
+- 删除RedisTask中定时ping任务
+- 升级java 23和go 1.23.5
+- 整理WebSecurityConfig，删除无用的代码
+- Add checkstyle support
+- ./gradlew test -x checkstyleMain -x checkstyleTest
+- Add submodule update step in GitHub Actions workflow
+- Skip Checkstyle during Maven build in GitHub Actions workflow
+- Skip Checkstyle during Maven package stage in Dockerfile
+- Remove git submodule update --init --recursive
+- 使用git tag替代commit id作为docker tag
+- Add changelog plugin
+- Add auto release plugin
+- Update changelog shell scripts
+- Create release shell script to add git tag and create changelog file
+- *(release)* Prepare version 0.0.1
+- *(release)* V0.0.1
+- Add v0.0.1 changelog
+- Update release docker ci/cd
+
+### 🛡️ Security
+
+- 升级至spring boot 3 (#195)
+
+### ◀️ Revert
+
+- 默认redistemplate恢复使用ByteArrayRedisSerializer
+- Roback hoteler-web repo
 
 ### 💼 Other
 
@@ -888,176 +1096,3 @@
 - 使用gradle wrapper构建镜像 (#1216)
 - 使用maven wrapper构建镜像 (#1217)
 - Add flywaydb postgresql gradle plugin support in buildscript
-
-### 🚜 Refactor
-
-- Rename 'dao' package to 'repository'
-- 美化lambal表达式代码
-- 重写房间状态更新任务的逻辑
-- 由于jdbctemplate存在过期方法，重写UserDaoImpl的实现
-- List user api完成excetion捕获
-- ControllerInterceptor#getMethodArgs内部使用StringBuilder去替代StringBuffer
-- 将users-rooms重名为customer-checkin-record (#166)
-- 重命名CustomerCheckinRecord的api
-- 重构'使用自定义的错误替代原先用户未发现的错误提示'
-- 抽象出统一的database实例
-- Migrate和seed共用同一个DatasourceExecutor
-- UserDaoImpl使用构造函数注入的方式注入JdbcTemplate
-- Migrate v2命令中create重构完成
-- Dao层代码添加完善的异常日志记录体系
-- Remove `WebSecurityConfigurerAdapter` and use a `SecurityFilterChain` bean to configure `HttpSecurity` or a `WebSecurityCustomizer` bean to configure `WebSecurity` (#289)
-- 使用时间点作为flyway的版本号 (#357)
-- 使用Math.max获取长度的最大值
-- 不再直接使用secret.key，而是使用ISecretPropService调用 (#434)
-- Use array stream to convert pattern to RequestMatcher
-- UserService 将不再直接使用roleDao而是使用roleService
-- 获取用户api内部中获取userId不在使用包装类型
-- 迁移SecurityFilterChain到最新使用方式
-- 删除spring security的inogre写法
-- 使用var语法重构YamlPropertySourceFactory
-- AuthenticationFilter转正
-- 删除room status statistics
-- 将docker-compose中hoteler所需要配置文件直接放在项目根目录
-- 优化usermapper list的sql
-- Rename src/main/resources/spring-logback.xml -> src/main/resources/logback-spring.xml
-- 使用ping task定期访问redis和pg的状态
-- 将customer_checkin_record重命名为orders (#1172)
-
-### 📚 Documentation
-
-- Add roadmap docs
-- Small change for graphql use
-- Db migrate docs
-- Add 'how to use' dooc
-- Docker-compose仅启动db数据库
-- 更新正确的启动数据库脚本
-- 添加基于golang进行db migrate的文档说明
-- 添加前端页面的截图效果
-- *(migration)* 添加migrate的readme文件
-- 添加架构图
-- Add jetbrains loglo
-
-### 🎨 Styling
-
-- Format application properties
-- 将create user接口返回结果泛型化
-- 删除多余的import的语句
-- Format build.gradle and pom.xml file
-
-### 🧪 Testing
-
-- Make 'SnowflakeIdWorker#nextId' unit test pass
-- Uni test list users dao
-- Unit test singe user dao
-- Unit test list user service
-- Add unit test for jwt util
-- *(service:token)* Token service in spring bean
-- Support transaction in unit test
-- 修复test中的bug
-- 修复ICustomerStatServiceTest不通过的错误
-- 补充Md5PasswordService解密密码单元测试
-- 修复ICustomerStatServiceTest的测试用例
-- 修复Md5PasswordServiceTest的测试用例
-- 修复DESPasswordServiceTest的测试用例
-- 修复Base64PasswordServiceTest的测试用例
-- Replace @MockitoBean with @MockitoSpyBean and update test configuration
-- Update test configuration in DESPasswordServiceTest
-- Update test configuration in DESPasswordServiceTest
-- Update test configuration and mock annotations in ICustomerStatServiceTest
-
-### ⚙️ Miscellaneous Tasks
-
-- *(flywaydb)* Support run flyway plugin
-- *(github:pr)* Add pull request template
-- *(web)* Angular ui as a sub module
-- Ignore angular ui change
-- 删除不必要的打印语句
-- *(bot)* Add dependabot
-- 添加github action的ci/cd
-- Workflow -> workflows
-- 针对windows做清除gradle的单独处理
-- 使用‘rm -Force -Recurse’删除gradle缓存
-- 取消清除缓存的step
-- *(dependabot)* 添加dependabot对gradle的支持
-- 添加对jdk16和gradle7的支持(#26)
-- Github action添加pg数据库的测试，同时优化github action的触发逻辑 (#52)
-- 删除部分代码
-- Remove blank line
-- 修复usercontroller里的泛型问题
-- *(github action)* Build job不在执行unit test
-- Github action ci support migration system based on go (#74)
-- 支持maven编译
-- 使用本地maven编译
-- Maven编译暂时不支持windows
-- Ignore bin foloder for vscode
-- Add banner
-- Github action删除使用jdk11和jdk16 (#130)
-- 更新db的migration模块
-- Verify POSTGRES connection name resolution
-- Postgres基于vm而不是container (#149)
-- 更新openapi部分配置
-- Ignore 'hoteler' binary
-- 自动退出nohup命令
-- 将cmd从internal包移动到pkg包下
-- *(migration)* Bump go 1.18 (#231)
-- Add java 18 support (#236)
-- 当master分支有更新的时候将自动构建docker镜像并推送到github容器仓库 (#251)
-- 'damigerdai' -> 'damingerdai'
-- 添加部署到k3s的setup
-- 单独设置deploy-to-kubernetes的job
-- Add build docker CI/CD (#356)
-- 只要源代码改变和更新依赖才需要推送镜像 (#358)
-- Bump jdk 19 and drop the support for jdk18 (#427)
-- 更新到actions/checkout@v3.1.0 (#433)
-- Save bazel cache in GitHub Actions (#485)
-- Add jdk 20 support and remove the support for jdk19 (#577)
-- 默认数据库使用postgres
-- Add redis container in test job
-- Bump go from 1.20 to 1.21
-- Add jdk 21 support and drop jdk 20 support (#738)
-- 在ci环境下动态开启数据库单元测试 (#767)
-- *(gradle)* Update plugin org.flywaydb.flyway to v10.2.0 (#812)
-- Actions/checkout support submodules (#850)
-- 更新deploy-to-kubernetes的name为Deploy to kubernetes
-- 添加两个post processor
-- 撤销maven_install_json
-- CI/CD支持java 22 (#955)
-- Remove version in docker-compose yaml file
-- Remove hoteler-web submodule
-- 删除hoteler的submodule (#1021)
-- Hoteler web submodule (#1022)
-- Fix typo error to make sure ignore hoteler-web submodule git commit status
-- 设置hoteler的容器名字
-- 更新docker-compose文件配置
-- *(migration)* Bump go 1.22.4
-- *(migration)* Bump go 1.22.5
-- Pgbouncer使用session模式
-- 升级pg版本并测试flyway正常工作
-- 支持linux/amd64,linux/arm64和这两个架构的镜像构建
-- 删除RedisTask中定时ping任务
-- 升级java 23和go 1.23.5
-- 整理WebSecurityConfig，删除无用的代码
-- Add checkstyle support
-- ./gradlew test -x checkstyleMain -x checkstyleTest
-- Add submodule update step in GitHub Actions workflow
-- Skip Checkstyle during Maven build in GitHub Actions workflow
-- Skip Checkstyle during Maven package stage in Dockerfile
-- Remove git submodule update --init --recursive
-- 使用git tag替代commit id作为docker tag
-- Add changelog plugin
-- Add auto release plugin
-- Update changelog shell scripts
-- Create release shell script to add git tag and create changelog file
-- *(release)* Prepare version 0.0.1
-- *(release)* V0.0.1
-- Add v0.0.1 changelog
-- Update release docker ci/cd
-
-### 🛡️ Security
-
-- 升级至spring boot 3 (#195)
-
-### ◀️ Revert
-
-- 默认redistemplate恢复使用ByteArrayRedisSerializer
-- Roback hoteler-web repo
