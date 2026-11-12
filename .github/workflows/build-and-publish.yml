@@ -1,75 +1,232 @@
-name: Build and Publish
+name: Release and Publish
 
-#on:
-#  push:
-#    branches: [ master ]
-#    paths:
-#      - 'src/**'
-#      - 'pom.xml'
-#      - 'build.gradle'
 on:
-  push:
-    tags:
-      - v*
   workflow_dispatch:
     inputs:
-      version:
-        description: "Release version, for example 0.0.5"
+      increment:
+        description: Version increment
         required: true
-        type: string
+        type: choice
+        default: prerelease
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+      preid:
+        description: Prerelease identifier (ignored for stable releases)
+        required: true
+        type: choice
+        default: beta
+        options:
+          - alpha
+          - beta
+          - rc
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-and-publish
+  cancel-in-progress: false
 
 jobs:
-  build-and-push-docker-image:
-    name: Build Docker image and push to repositories
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123456
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:8.10.1-alpine3.23
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
     steps:
-      - name: Checkout code
+      - name: Require master branch
+        env:
+          WORKFLOW_REF: ${{ github.ref }}
+        run: |
+          if [[ "$WORKFLOW_REF" != 'refs/heads/master' ]]; then
+            echo '::error::Select master in the Run workflow branch selector.'
+            exit 1
+          fi
+
+      - name: Checkout master
         uses: actions/checkout@v7.0.1
         with:
+          ref: master
+          fetch-depth: 0
           submodules: recursive
+          token: ${{ secrets.RELEASE_TOKEN }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v6
         with:
-          images: ghcr.io/damingerdai/hoteler-api
-          tags: |
-            type=ref,event=tag
-            type=raw,value=${{ inputs.version }},enable=${{ github.event_name == 'workflow_dispatch' }}
-            type=raw,value=latest
-            type=sha,prefix=
+          distribution: zulu
+          java-version: 25
+          cache: gradle
+
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: "1.27.0"
+
+      - name: Run db migration
+        working-directory: migration
+        run: |
+          go build -o hoteler .
+          ./hoteler migrate up
         env:
-          DOCKER_METADATA_SHORT_SHA_LENGTH: 7
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v4
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123456
+          POSTGRES_DB: postgres
+          POSTGRES_SSLMODE: disable
 
-      - name: Login to Github Packages
-        uses: docker/login-action@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.1.0
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
+          node-version: '26'
 
-      - name: Build image and push to GitHub Container Registry
-        uses: docker/build-push-action@v7
-        id: docker_build
-        with:
-          context: .
-          tags: ${{ steps.meta.outputs.tags }}
-          # push: ${{ github.ref == 'refs/heads/master' }}
-          push: true
-          # load: true
-          platforms: linux/amd64,linux/arm64
-          provenance: true
+      - name: Test release helper
+        run: node --test scripts/test-release.mjs
+
+      - name: Prepare release version
+        id: version
         env:
-          DOCKER_METADATA_SHORT_SHA_LENGTH: 40
+          INCREMENT: ${{ inputs.increment }}
+          PREID: ${{ inputs.preid }}
+        run: node scripts/prepare-release.mjs --increment "$INCREMENT" --preid "$PREID"
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Output image tag
-        run: echo "image_tag=$(echo ${{ steps.meta.outputs.tags }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-        id: output_tag
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff@2.14.2
+
+      - name: Generate changelog and release notes
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git-cliff --unreleased --tag "$RELEASE_TAG" --strip header --output "$RUNNER_TEMP/release-notes.md"
+          git-cliff --tag "$RELEASE_TAG" --output CHANGELOG.md
+          test -s "$RUNNER_TEMP/release-notes.md"
+          test -s CHANGELOG.md
+          git diff --check
+
+      - name: Validate release version build
+        run: ./gradlew build --no-daemon -x checkstyleMain -x checkstyleTest
+        env:
+          CI: true
+
+      - name: Commit and push release atomically
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add build.gradle pom.xml CHANGELOG.md
+          git diff --cached --check
+          git commit -m "chore(release): $RELEASE_TAG"
+          git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+          git push --atomic origin HEAD:refs/heads/master "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          NOTES_FILE="$RUNNER_TEMP/release-notes.md"
+          ARGS=("$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --notes-file "$NOTES_FILE")
+          if [[ "$RELEASE_TAG" == *-* ]]; then
+            ARGS+=(--prerelease)
+          fi
+          gh release create "${ARGS[@]}"
+
+  publish-image:
+      needs: release
+      runs-on: ubuntu-latest
+      permissions:
+          contents: read
+          packages: write
+      steps:
+          - name: Checkout release tag
+            uses: actions/checkout@v7.0.1
+            with:
+                ref: ${{ needs.release.outputs.tag }}
+
+          - name: Generate image tags
+            id: image
+            env:
+                REPOSITORY_OWNER: ${{ github.repository_owner }}
+                RELEASE_TAG: ${{ needs.release.outputs.tag }}
+            run: |
+                set -euo pipefail
+                IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/hoteler-api"
+                SHA="$(git rev-parse HEAD)"
+                echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+                {
+                    echo 'tags<<EOF'
+                    echo "$IMAGE:$RELEASE_TAG"
+                    echo "$IMAGE:$SHA"
+                    if [[ "$RELEASE_TAG" != *-* ]]; then
+                        echo "$IMAGE:latest"
+                    fi
+                    echo 'EOF'
+                } >> "$GITHUB_OUTPUT"
+
+          - name: Set up QEMU
+            uses: docker/setup-qemu-action@v4
+
+          - name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v4
+
+          - name: Log in to GitHub Container Registry
+            uses: docker/login-action@v4
+            with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Build and push image
+            uses: docker/build-push-action@v7
+            with:
+                context: .
+                file: Dockerfile
+                push: true
+                platforms: linux/amd64,linux/arm64
+                provenance: true
+                tags: ${{ steps.image.outputs.tags }}
+                labels: |
+                    org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+                    org.opencontainers.image.revision=${{ steps.image.outputs.sha }}
+                    org.opencontainers.image.version=${{ needs.release.outputs.tag }}
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
