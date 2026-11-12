@@ -207,6 +207,10 @@ jobs:
         with:
           ref: ${{ needs.release.outputs.tag }}
           submodules: recursive
+<<<<<<< HEAD
+=======
+          token: ${{ secrets.RELEASE_TOKEN }}
+>>>>>>> d59366a (ci: publish API and full application images)
           persist-credentials: false
 
       - name: Verify frontend submodule
