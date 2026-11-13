@@ -26,22 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/stat")
 public class StatController {
 
-    private IRoomStatusStatService roomStatusStatService;
+    private final IRoomStatusStatService roomStatusStatService;
 
-    private ICustomerStatService customerStatService;
+    private final ICustomerStatService customerStatService;
 
     @Operation(summary = "获取房间数量统计", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping(path = "rooms/nums")
     public DataResponse<RoomNumsStat> getRoomNumStat() {
         var roomNumsStat = this.roomStatusStatService.countRoomNumStatistics();
-        return new DataResponse(roomNumsStat);
+        return new DataResponse<>(roomNumsStat);
     }
 
     @Operation(summary = "获取客户数量统计", security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping(path = "customers/counts")
     public DataResponse<PastWeekCustomerCountStat> getPastWeekCustomersCounts() {
         var pastWeekCustomerCountStat = this.customerStatService.countPastWeekCustomerCountStat();
-        return new DataResponse(pastWeekCustomerCountStat);
+        return new DataResponse<>(pastWeekCustomerCountStat);
     }
 
     public StatController(IRoomStatusStatService roomStatusStatService, ICustomerStatService customerStatService) {
