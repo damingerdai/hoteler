@@ -30,11 +30,11 @@ public class RateLimiterAspect {
 
     private static final HotelerLogger logger = LoggerManager.getApiLogger();
 
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
-    private RedisScript<Long> limitScript;
+    private final RedisScript<Long> limitScript;
 
-    private IErrorService errorService;
+    private final IErrorService errorService;
 
     @Before("@annotation(rateLimiter)")
     public void doBefore(JoinPoint point, RateLimiter rateLimiter) throws Throwable {
