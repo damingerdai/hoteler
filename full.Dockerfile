@@ -1,4 +1,4 @@
-FROM node:24.22.2 AS front-build
+FROM node:24.22.3 AS front-build
 
 WORKDIR /app
 COPY src/main/angular/package.json src/main/angular/package-lock.json ./
