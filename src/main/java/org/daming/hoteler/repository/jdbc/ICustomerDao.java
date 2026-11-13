@@ -36,6 +36,13 @@ public interface ICustomerDao {
     List<Customer> list() throws HotelerException;
 
     /**
+     * 获取所有的用户
+     * @return 用户信息集合
+     * @throws HotelerException hoteler错误
+     */
+    List<Customer> list(boolean isAdmin) throws HotelerException;
+
+    /**
      * 删除指定的customer
      * @param id customer的id
      * @throws HotelerException hoteler错误

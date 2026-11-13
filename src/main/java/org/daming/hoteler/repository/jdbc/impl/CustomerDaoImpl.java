@@ -28,7 +28,7 @@ import java.util.Map;
 @Repository
 public class CustomerDaoImpl implements ICustomerDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private IErrorService errorService;
 
@@ -62,7 +62,12 @@ public class CustomerDaoImpl implements ICustomerDao {
         try {
             return this.jdbcTemplate.query(sql, (rs) -> {
                 while (rs.next()) {
-                    return new Customer().setId(rs.getLong("id")).setName(rs.getString("name")).setGender(this.getGender(rs.getString("gender"))).setCardId(rs.getString("card_id")).setPhone(rs.getLong("phone"));
+                    return new Customer()
+                            .setId(rs.getLong("id"))
+                            .setName(rs.getString("name"))
+                            .setGender(this.getGender(rs.getString("gender")))
+                            .setCardId(rs.getString("card_id"))
+                            .setPhone(rs.getString("phone"));
                 }
                 return null;
             }, params);
@@ -76,10 +81,36 @@ public class CustomerDaoImpl implements ICustomerDao {
 
     @Override
     public List<Customer> list() throws HotelerException {
+        return this.list(false);
+    }
+
+    @Override
+    public List<Customer> list(boolean isAdmin) throws HotelerException {
         var in = Instant.now();
-        var sql = "select id, name, gender, card_id, phone from customers where deleted_at is null";
+        var sql = """
+            select
+                id,
+                name,
+                gender,
+                card_id,
+                CASE
+                     WHEN ? THEN phone
+                     ELSE LEFT(phone, 3) || '****' || RIGHT(phone, 4)
+                END AS phone
+            from customers
+            where deleted_at is null
+        """;
         try {
-            return this.jdbcTemplate.query(sql, (rs,i) -> new Customer().setId(rs.getLong("id")).setName(rs.getString("name")).setGender(this.getGender(rs.getString("gender"))).setCardId(rs.getString("card_id")).setPhone(rs.getLong("phone")));
+            return this.jdbcTemplate.query(
+                    sql,
+                    (rs, i) -> new Customer()
+                            .setId(rs.getLong("id"))
+                            .setName(rs.getString("name"))
+                            .setGender(this.getGender(rs.getString("gender")))
+                            .setCardId(rs.getString("card_id"))
+                            .setPhone(rs.getString("phone")),
+                    isAdmin
+            );
         } catch (Exception ex) {
             SqlLoggerUtil.logSqlException(sql, null, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);

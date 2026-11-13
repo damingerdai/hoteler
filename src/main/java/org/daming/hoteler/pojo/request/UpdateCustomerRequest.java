@@ -25,7 +25,7 @@ public class UpdateCustomerRequest implements Serializable {
 
     private String cardId;
 
-    private long phone;
+    private String phone;
 
     public long getId() {
         return id;
@@ -59,11 +59,11 @@ public class UpdateCustomerRequest implements Serializable {
         this.cardId = cardId;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

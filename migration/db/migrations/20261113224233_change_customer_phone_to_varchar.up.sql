@@ -1,0 +1,3 @@
+ALTER TABLE customers
+    ALTER COLUMN phone TYPE VARCHAR(20)
+    USING phone::VARCHAR(20);

@@ -130,15 +130,16 @@ public class CustomerServiceImpl implements ICustomerService {
         try {
             var user = ThreadLocalContextHolder.get().getUser();
             var isAdmin = Objects.nonNull(user) && user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
-            var customers = this.customerDao.list()
-                    .stream()
-                    .peek(customer -> {
-                        var cardId = StringUtils.trimAllWhitespace(customer.getCardId());
-                        if (cardId.length() == 64) {
-                            cardId = this.unCryptoCardId(cardId);
-                        }
-                        customer.setCardId(isAdmin ? cardId : DesensitizationUtil.idCardNum(cardId, 3, 4));
-                    }).toList();
+            var customers = this.customerDao.list(isAdmin);
+            customers.forEach(customer -> {
+                var cardId = StringUtils.trimAllWhitespace(customer.getCardId());
+                if (cardId.length() == 64) {
+                    cardId = this.unCryptoCardId(cardId);
+                }
+                customer.setCardId(
+                        isAdmin ? cardId : DesensitizationUtil.idCardNum(cardId, 3, 4)
+                );
+            });
             return customers;
         } catch (HotelerException he) {
             LoggerManager.getCommonLogger().error("fail to list customer", he);

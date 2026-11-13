@@ -46,7 +46,11 @@ public class CustomerController {
     )
     @PostMapping("customer")
     public CommonResponse create(@RequestBody CreateCustomerRequest request) {
-        var customer = new Customer().setName(request.getName()).setGender(request.getGender()).setCardId(request.getCardId()).setPhone(request.getPhone());
+        var customer = new Customer()
+                .setName(request.getName())
+                .setGender(request.getGender())
+                .setCardId(request.getCardId())
+                .setPhone(request.getPhone());
         var id =  this.customerService.create(customer);
         return new DataResponse<>(id);
     }
