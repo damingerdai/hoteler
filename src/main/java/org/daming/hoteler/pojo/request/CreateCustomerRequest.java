@@ -24,7 +24,7 @@ public class CreateCustomerRequest implements Serializable {
 
     private String cardId;
 
-    private long phone;
+    private String phone;
 
     public String getName() {
         return name;
@@ -50,15 +50,15 @@ public class CreateCustomerRequest implements Serializable {
         this.cardId = cardId;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public CreateCustomerRequest(String name, Gender gender, String cardId, long phone) {
+    public CreateCustomerRequest(String name, Gender gender, String cardId, String phone) {
         super();
         this.name = name;
         this.gender = gender;

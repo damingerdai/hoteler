@@ -25,7 +25,7 @@ public class Customer implements Serializable {
 
     private String cardId;
 
-    private long phone;
+    private String phone;
 
     public long getId() {
         return id;
@@ -63,16 +63,16 @@ public class Customer implements Serializable {
         return this;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public Customer setPhone(long phone) {
+    public Customer setPhone(String phone) {
         this.phone = phone;
         return this;
     }
 
-    public Customer(long id, String name, Gender gender, String cardId, long phone) {
+    public Customer(long id, String name, Gender gender, String cardId, String phone) {
         super();
         this.id = id;
         this.name = name;
