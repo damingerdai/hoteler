@@ -6,15 +6,17 @@ RUN HUSKY=0 CYPRESS_INSTALL_BINARY=0 npm ci --legacy-peer-deps
 COPY src/main/angular /app
 RUN npm run build
 
-FROM maven:3.10.0-amazoncorretto-21-debian AS back-build
+FROM azul/zulu-openjdk:25.0.5.0.3-jdk AS back-build
 
 WORKDIR /app
-COPY pom.xml /app
-RUN mvn dependency:go-offline -B
-COPY src /app/src
+COPY .mvn .mvn
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline -B
+COPY src ./src
 COPY --from=front-build /app/dist/hoteler/browser /app/src/main/resources/static
 COPY --from=front-build /app/dist/hoteler/browser/index.html /app/src/main/resources/static/error/404.html
-RUN mvn package -Dmaven.test.skip=true
+RUN ./mvnw package -Dmaven.test.skip=true
 
 FROM azul/zulu-openjdk:25.0.5.0.3-jdk
 WORKDIR /app

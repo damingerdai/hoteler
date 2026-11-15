@@ -34,3 +34,5 @@ src/main/resources/static/
 ### Others ###
 logs/
 bazel-*/
+node_modules/
+dist/
