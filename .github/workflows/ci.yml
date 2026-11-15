@@ -140,6 +140,14 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Verify Angular submodule
+        run: |
+          git submodule status
+          git -C src/main/angular rev-parse HEAD
+          ls -la src/main/angular/
+          test -f src/main/angular/package.json
+          test -f src/main/angular/package-lock.json
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
