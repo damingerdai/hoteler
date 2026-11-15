@@ -81,6 +81,7 @@ jobs:
           ref: master
           fetch-depth: 0
           submodules: recursive
+          token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Update frontend to latest version tag
         working-directory: src/main/angular
