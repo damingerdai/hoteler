@@ -144,6 +144,7 @@ jobs:
         run: |
           git submodule sync --recursive
           git submodule update --init --recursive
+          git submodule update --remote --recursive
           git submodule status
           git -C src/main/angular rev-parse HEAD
           ls -la src/main/angular/
