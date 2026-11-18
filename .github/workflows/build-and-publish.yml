@@ -81,7 +81,22 @@ jobs:
           ref: master
           fetch-depth: 0
           submodules: recursive
-          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Update frontend to latest version tag
+        working-directory: src/main/angular
+        run: |
+          set -euo pipefail
+          git fetch origin --tags
+          # Sort by version, placing prereleases before the corresponding stable tag.
+          TAGS="$(git -c versionsort.suffix=- tag --sort=-version:refname --list 'v[0-9]*')"
+          FRONTEND_TAG="$(printf '%s\n' "$TAGS" | sed -n '/^v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\(-[0-9A-Za-z.-]*\)\{0,1\}$/ { p; q; }')"
+          if [[ -z "$FRONTEND_TAG" ]]; then
+            echo '::error::No frontend version tag found.'
+            exit 1
+          fi
+          git checkout --detach "refs/tags/$FRONTEND_TAG"
+          git submodule update --init --recursive
+          echo "Frontend version: $FRONTEND_TAG" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update frontend to latest version tag
         working-directory: src/main/angular
