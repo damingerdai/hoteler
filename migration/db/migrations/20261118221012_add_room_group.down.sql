@@ -1,0 +1,7 @@
+ALTER TABLE rooms
+    DROP CONSTRAINT IF EXISTS fk_rooms_group;
+
+ALTER TABLE rooms
+     DROP COLUMN IF EXISTS group_id;
+
+DROP TABLE IF EXISTS room_group;
