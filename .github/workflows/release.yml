@@ -235,9 +235,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          test -s src/main/angular/package.json
-          test -s src/main/angular/package-lock.json
-          git submodule status --recursive
+          git submodule sync --recursive
+          git submodule update --init --recursive
+          git submodule update --remote --recursive
+          git submodule status
+          git -C src/main/angular rev-parse HEAD
+          ls -la src/main/angular/
+          test -f src/main/angular/package.json
+          test -f src/main/angular/package-lock.json
 
       - name: Generate image tags
         id: image
