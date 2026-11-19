@@ -35,11 +35,18 @@ concurrency:
 
 jobs:
   release:
+    name: Release
+    if: >-
+      github.actor == github.repository_owner &&
+      github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
+
     outputs:
       tag: ${{ steps.version.outputs.tag }}
+
     services:
       postgres:
         image: postgres:18
@@ -66,53 +73,13 @@ jobs:
           - 6379:6379
 
     steps:
-      - name: Require master branch
-        env:
-          WORKFLOW_REF: ${{ github.ref }}
-        run: |
-          if [[ "$WORKFLOW_REF" != 'refs/heads/master' ]]; then
-            echo '::error::Select master in the Run workflow branch selector.'
-            exit 1
-          fi
-
       - name: Checkout master
         uses: actions/checkout@v7.0.1
         with:
           ref: master
+          token: ${{ secrets.RELEASE_TOKEN }}
           fetch-depth: 0
           submodules: recursive
-
-      - name: Update frontend to latest version tag
-        working-directory: src/main/angular
-        run: |
-          set -euo pipefail
-          git fetch origin --tags
-          # Sort by version, placing prereleases before the corresponding stable tag.
-          TAGS="$(git -c versionsort.suffix=- tag --sort=-version:refname --list 'v[0-9]*')"
-          FRONTEND_TAG="$(printf '%s\n' "$TAGS" | sed -n '/^v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\(-[0-9A-Za-z.-]*\)\{0,1\}$/ { p; q; }')"
-          if [[ -z "$FRONTEND_TAG" ]]; then
-            echo '::error::No frontend version tag found.'
-            exit 1
-          fi
-          git checkout --detach "refs/tags/$FRONTEND_TAG"
-          git submodule update --init --recursive
-          echo "Frontend version: $FRONTEND_TAG" >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Update frontend to latest version tag
-        working-directory: src/main/angular
-        run: |
-          set -euo pipefail
-          git fetch origin --tags
-          # Sort by version, placing prereleases before the corresponding stable tag.
-          TAGS="$(git -c versionsort.suffix=- tag --sort=-version:refname --list 'v[0-9]*')"
-          FRONTEND_TAG="$(printf '%s\n' "$TAGS" | sed -n '/^v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\(-[0-9A-Za-z.-]*\)\{0,1\}$/ { p; q; }')"
-          if [[ -z "$FRONTEND_TAG" ]]; then
-            echo '::error::No frontend version tag found.'
-            exit 1
-          fi
-          git checkout --detach "refs/tags/$FRONTEND_TAG"
-          git submodule update --init --recursive
-          echo "Frontend version: $FRONTEND_TAG" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up JDK
         uses: actions/setup-java@v6
@@ -124,7 +91,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v7
         with:
-          go-version: "1.27.4"
+          go-version: '1.27.4'
 
       - name: Run db migration
         working-directory: migration
@@ -152,7 +119,10 @@ jobs:
         env:
           INCREMENT: ${{ inputs.increment }}
           PREID: ${{ inputs.preid }}
-        run: node scripts/prepare-release.mjs --increment "$INCREMENT" --preid "$PREID"
+        run: |
+          node scripts/prepare-release.mjs \
+            --increment "$INCREMENT" \
+            --preid "$PREID"
 
       - name: Install git-cliff
         uses: taiki-e/install-action@v2
@@ -164,14 +134,28 @@ jobs:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
           set -euo pipefail
-          git-cliff --unreleased --tag "$RELEASE_TAG" --strip header --output "$RUNNER_TEMP/release-notes.md"
-          git-cliff --tag "$RELEASE_TAG" --output CHANGELOG.md
+
+          git-cliff \
+            --unreleased \
+            --tag "$RELEASE_TAG" \
+            --strip header \
+            --output "$RUNNER_TEMP/release-notes.md"
+
+          git-cliff \
+            --tag "$RELEASE_TAG" \
+            --output CHANGELOG.md
+
           test -s "$RUNNER_TEMP/release-notes.md"
           test -s CHANGELOG.md
+
           git diff --check
 
       - name: Validate release version build
-        run: ./gradlew build --no-daemon -x checkstyleMain -x checkstyleTest
+        run: |
+          ./gradlew build \
+            --no-daemon \
+            -x checkstyleMain \
+            -x checkstyleTest
         env:
           CI: true
 
@@ -180,13 +164,23 @@ jobs:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
           set -euo pipefail
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add build.gradle pom.xml CHANGELOG.md src/main/angular
+
+          git add build.gradle pom.xml CHANGELOG.md
+
           git diff --cached --check
+          git diff --cached --stat
+
           git commit -m "chore(release): $RELEASE_TAG"
-          git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
-          git push --atomic origin HEAD:refs/heads/master "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+
+          git tag -a "$RELEASE_TAG" \
+            -m "Release $RELEASE_TAG"
+
+          git push --atomic origin \
+            HEAD:refs/heads/master \
+            "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
 
       - name: Create GitHub Release
         env:
@@ -194,17 +188,27 @@ jobs:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
           set -euo pipefail
+
           NOTES_FILE="$RUNNER_TEMP/release-notes.md"
-          ARGS=("$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --notes-file "$NOTES_FILE")
+
+          ARGS=(
+            "$RELEASE_TAG"
+            --verify-tag
+            --title "$RELEASE_TAG"
+            --notes-file "$NOTES_FILE"
+          )
+
           if [[ "$RELEASE_TAG" == *-* ]]; then
             ARGS+=(--prerelease)
           fi
+
           gh release create "${ARGS[@]}"
 
   publish-image:
     name: Publish ${{ matrix.image }}
     needs: release
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
@@ -213,9 +217,11 @@ jobs:
             dockerfile: Dockerfile
           - image: hoteler
             dockerfile: full.Dockerfile
+
     permissions:
       contents: read
       packages: write
+
     steps:
       - name: Checkout release tag and pinned submodules
         uses: actions/checkout@v7.0.1
@@ -227,6 +233,8 @@ jobs:
       - name: Verify frontend submodule
         if: matrix.image == 'hoteler'
         run: |
+          set -euo pipefail
+
           test -s src/main/angular/package.json
           test -s src/main/angular/package-lock.json
           git submodule status --recursive
@@ -239,16 +247,21 @@ jobs:
           RELEASE_TAG: ${{ needs.release.outputs.tag }}
         run: |
           set -euo pipefail
+
           IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/$IMAGE_NAME"
           SHA="$(git rev-parse HEAD)"
+
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
           {
             echo 'tags<<EOF'
             echo "$IMAGE:$RELEASE_TAG"
             echo "$IMAGE:$SHA"
+
             if [[ "$RELEASE_TAG" != *-* ]]; then
               echo "$IMAGE:latest"
             fi
+
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
