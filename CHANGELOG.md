@@ -1,3 +1,46 @@
+## [0.0.6] - 2026-11-19
+
+### 🚀 Features
+
+- Store customer phones as strings and mask non-admin listings (#1449)
+- 新增room_group表并为rooms表添加group_id字段 (#1456)
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update dependency org.yaml:snakeyaml to v2.7 (#1422)
+- *(deps)* Update dependency org.bouncycastle:bcpkix-jdk18on to v1.87 (#1428)
+- *(deps)* Update dependency org.springdoc:springdoc-openapi-starter-webmvc-ui to v3.2.0 (#1427)
+- *(deps)* Update module github.com/jackc/pgx/v5 to v5.13.0 (#1430)
+- *(deps)* Update module charm.land/bubbletea/v2 to v2.1.1 (#1443)
+- *(deps)* Update dependency org.postgresql:postgresql to v42.7.14 (#1433)
+- *(deps)* Update dependency commons-codec:commons-codec to v1.23.0 (#1440)
+- *(deps)* Update flyway to v13.12.2 (#1442)
+- *(deps)* Update dependency org.apache.commons:commons-lang3 to v3.22.0 (#1441)
+- *(deps)* Update module charm.land/bubbletea/v2 to v2.1.2 (#1454)
+
+### 🚜 Refactor
+
+- *(task)* Optimize UnlockUserTask schedule interval and error handling
+- Make stat controller dependencies final
+
+### ⚙️ Miscellaneous Tasks
+
+- 1.txt -> scripts/build.txt
+- Publish API and full application images
+- Release with latest frontend tag and GitHub token
+- Add ping rate limiter support
+- Add token: ${{ secrets.RELEASE_TOKEN }} in checkout
+- Optimize CI workflow with parallel tests and Docker builds
+- Add verify angular submodule step
+- Sync, update and verify Angular submodule before Docker build
+- Update remote submodule in ci/cd
+- Publish API and full application images
+- Release with latest frontend tag and GitHub token
+- 1.txt -> scripts/build.txt
+- Publish API and full application images
+- Release with latest frontend tag and GitHub token
+- Fix conflict from gitea repo
+- Resolve release push restrictions and preserve frontend submodule
 ## [0.0.6-beta.0] - 2026-11-12
 
 ### 🚀 Features
@@ -27,6 +70,7 @@
 - Update github ci pipline
 - Update github ci db migration pipline
 - Automate release versioning and image publishing
+- *(release)* V0.0.6-beta.0
 
 ### 💼 Other
 
