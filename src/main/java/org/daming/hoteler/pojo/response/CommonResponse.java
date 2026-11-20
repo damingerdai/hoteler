@@ -8,9 +8,7 @@ import java.io.Serializable;
  * @author gming001
  * @create 2021-02-03 17:31
  **/
-public class CommonResponse implements Serializable {
-
-    private static final long serialVersionUID = 2069729986373230583L;
+public class CommonResponse {
 
     private static final int SUCCESS_STATUS = 200;
 

@@ -10,8 +10,6 @@ import java.util.StringJoiner;
  **/
 public class DataResponse<T> extends CommonResponse {
 
-    private static final long serialVersionUID = -7597687245611176517L;
-
     private T data;
 
     public T getData() {
@@ -32,5 +30,10 @@ public class DataResponse<T> extends CommonResponse {
         return new StringJoiner(", ", DataResponse.class.getSimpleName() + "[", "]")
                 .add("data=" + data)
                 .toString();
+    }
+
+    public static <T> DataResponse<T> ok(T data) {
+        var response = new DataResponse<>(data);
+        return response;
     }
 }

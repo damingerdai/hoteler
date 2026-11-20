@@ -1,10 +1,12 @@
 package org.daming.hoteler.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -27,6 +29,8 @@ public class Room implements Serializable {
     private RoomStatus status;
 
     private double price;
+
+    private String groupId;
 
     public long getId() {
         return id;
@@ -64,24 +68,47 @@ public class Room implements Serializable {
         return this;
     }
 
-    public Room(long id, String roomname, RoomStatus status, double price) {
-        super();
-        this.id = id;
-        this.roomname = roomname;
-        this.status = status;
-        this.price = price;
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public Room setGroupId(String groupId) {
+        this.groupId = groupId;
+        return this;
     }
 
     public Room() {
         super();
     }
 
+    public Room(long id, String roomname, RoomStatus status, double price, String groupId) {
+        super();
+        this.id = id;
+        this.roomname = roomname;
+        this.status = status;
+        this.price = price;
+        this.groupId = groupId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Room room)) return false;
+        return id == room.id && Double.compare(price, room.price) == 0 && Objects.equals(roomname, room.roomname) && status == room.status && Objects.equals(groupId, room.groupId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, roomname, status, price, groupId);
+    }
+
     @Override
     public String toString() {
-        return new StringJoiner(", ", Room.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("roomname='" + roomname + "'")
-                .add("status=" + status)
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("roomname", roomname)
+                .append("status", status)
+                .append("price", price)
+                .append("groupId", groupId)
                 .toString();
     }
 }
