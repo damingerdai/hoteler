@@ -1,3 +1,15 @@
+## [0.0.7] - 2026-11-21
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update flyway to v13.13.0 (#1460)
+- Update dependency io.micrometer:micrometer-registry-prometheus to v1.18.0 (#1459)
+- *(deps)* Update spring boot to v4.2.0 (#1462)
+- Prevent SQL injection in order list query (#1466)
+
+### ⚙️ Miscellaneous Tasks
+
+- Initialize and update frontend submodule before image build
 ## [0.0.6] - 2026-11-19
 
 ### 🚀 Features
@@ -41,6 +53,7 @@
 - Release with latest frontend tag and GitHub token
 - Fix conflict from gitea repo
 - Resolve release push restrictions and preserve frontend submodule
+- *(release)* V0.0.6
 ## [0.0.6-beta.0] - 2026-11-12
 
 ### 🚀 Features
