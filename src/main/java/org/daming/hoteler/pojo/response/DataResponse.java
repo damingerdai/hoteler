@@ -1,5 +1,6 @@
 package org.daming.hoteler.pojo.response;
 
+import java.io.Serial;
 import java.util.StringJoiner;
 
 /**
@@ -9,6 +10,9 @@ import java.util.StringJoiner;
  * @create 2021-02-09 18:21
  **/
 public class DataResponse<T> extends CommonResponse {
+
+    @Serial
+    private static final long serialVersionUID = -7597687245611176517L;
 
     private T data;
 
