@@ -28,6 +28,12 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  key: secret-key
           resources:
             requests:
               cpu: "200m"

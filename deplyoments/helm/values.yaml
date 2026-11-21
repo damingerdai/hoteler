@@ -19,6 +19,15 @@ image:
     tag: "0.0.5"
     pullPolicy: IfNotPresent
 
+secret:
+  # 自动创建的 Secret 名称（secret.existingSecret 为空时使用）
+  name: hoteler-api-secret
+  # JWT/HMAC 签名密钥。留空时首次安装自动生成随机值，升级时自动复用；
+  # 如需固定值（例如与已有部署保持一致），在此设置或使用 existingSecret。
+  key: ""
+  # 复用已有的 Secret（需包含 secret-key 键）。设置后不再创建 Secret。
+  existingSecret: ""
+
 redis:
   host: redis
   port: 6379

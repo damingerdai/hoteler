@@ -83,7 +83,15 @@ datasource:
   url: jdbc:postgresql://postgres:5432/postgres
   username: <postgres-user>
   password: <postgres-password>
+
+secret:
+  # 留空时首次安装自动生成随机签名密钥，升级时自动复用
+  key: ""
+  # 或者复用已有 Secret（需包含 secret-key 键），设置后不再创建 Secret
+  existingSecret: ""
 ```
+
+签名密钥用于签发 JWT 和校验用户令牌，修改后已签发的令牌会失效，用户需要重新登录；如需固定密钥，请显式设置 `secret.key` 或使用 `secret.existingSecret`。
 
 使用自定义配置安装：
 

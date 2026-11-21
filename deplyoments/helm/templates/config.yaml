@@ -57,8 +57,6 @@ data:
     mybatis:
       configuration:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    secret:
-      key: damingerdai
     logger:
       level: info
     springdoc:
