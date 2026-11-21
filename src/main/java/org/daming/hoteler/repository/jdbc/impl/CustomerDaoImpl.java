@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * customer dao impl
@@ -55,12 +56,12 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
-    public Customer get(long id) throws HotelerException {
+    public Optional<Customer> get(long id) throws HotelerException {
         var in = Instant.now();
         var sql = "select id, name, gender, card_id, phone from customers where id = ? and deleted_at is null limit 1";
         var params = new Object[] { id };
         try {
-            return this.jdbcTemplate.query(sql, (rs) -> {
+            var customer = this.jdbcTemplate.query(sql, (rs) -> {
                 while (rs.next()) {
                     return new Customer()
                             .setId(rs.getLong("id"))
@@ -71,6 +72,7 @@ public class CustomerDaoImpl implements ICustomerDao {
                 }
                 return null;
             }, params);
+            return Optional.ofNullable(customer);
         } catch (Exception ex) {
             SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);

@@ -3,6 +3,7 @@ package org.daming.hoteler.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.StringJoiner;
 
@@ -14,6 +15,7 @@ import java.util.StringJoiner;
  **/
 public class Room implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5964557657365714040L;
 
     // 该注解是必须的， long类型前端会有精度损失

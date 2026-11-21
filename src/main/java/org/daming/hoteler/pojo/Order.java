@@ -2,6 +2,7 @@ package org.daming.hoteler.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
@@ -14,6 +15,7 @@ import java.util.StringJoiner;
  **/
 public class Order implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -314732081658919026L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)

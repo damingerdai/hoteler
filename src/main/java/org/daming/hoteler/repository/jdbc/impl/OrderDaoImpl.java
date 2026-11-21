@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -156,17 +157,32 @@ public class OrderDaoImpl implements IOrderDao {
 
     @Override
     public List<Order> list(Pageable pageable, Sortable sortable) throws HotelerException {
-        var sql = " select id, customer_id, room_id, begin_date, end_date from orders where deleted_at is null ";
-        if (Objects.nonNull(pageable)) {
-            sql += " limit  " + pageable.toLimit() +  " offset " + pageable.toOffset();
-        }
+        var sqlBuilder = new StringBuilder(
+                "select id, customer_id, room_id, begin_date, end_date from orders where deleted_at is null"
+        );
         if (Objects.nonNull(sortable)) {
-            sql += " order by " + sortable.getOrderBy() + " " + sortable.getOrderDir();
+            String orderBy = resolveOrderByColumn(sortable.getOrderBy()); // 白名单映射，防注入
+            String orderDir = "DESC".equalsIgnoreCase(sortable.getOrderDir()) ? "DESC" : "ASC";
+            sqlBuilder.append(" order by ").append(orderBy).append(" ").append(orderDir);
         }
+
+        if (Objects.nonNull(pageable)) {
+            sqlBuilder.append(" limit ? offset ?");
+        }
+
+        String sql = sqlBuilder.toString();
         try {
+            if (Objects.nonNull(pageable)) {
+                return this.jdbcTemplate.query(
+                        sql,
+                        (rs, i) -> getOrder(rs),
+                        pageable.toLimit(),
+                        pageable.toOffset()
+                );
+            }
             return this.jdbcTemplate.query(sql, (rs, i) -> getOrder(rs));
         } catch (Exception ex) {
-            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order'', err: " + ex.getMessage(), ex);
+            LoggerManager.getJdbcLogger().error(() -> "fail to list 'order', err: " + ex.getMessage(), ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
         }
     }
@@ -202,6 +218,30 @@ public class OrderDaoImpl implements IOrderDao {
                 .setRoomId(rs.getLong("room_id"))
                 .setBeginDate(rs.getTimestamp("begin_date").toLocalDateTime())
                 .setEndDate(rs.getTimestamp("end_date").toLocalDateTime());
+    }
+
+    private String resolveOrderByColumn(String rawOrderBy) {
+        Map<String, String> order_by_column = Map.ofEntries(
+                Map.entry("id", "id"),
+                Map.entry("customerId", "customer_id"),
+                Map.entry("customer_id", "customer_id"),
+                Map.entry("roomId", "room_id"),
+                Map.entry("room_id", "room_id"),
+                Map.entry("beginDate", "begin_date"),
+                Map.entry("begin_date", "begin_date"),
+                Map.entry("endDate", "end_date"),
+                Map.entry("end_date", "end_date"),
+                Map.entry("createDt", "create_dt"),
+                Map.entry("create_dt", "create_dt")
+        );
+        if (rawOrderBy == null || rawOrderBy.isBlank()) {
+            return "id"; // 默认排序列
+        }
+        String column = order_by_column.get(rawOrderBy.trim());
+        if (column == null) {
+            throw new IllegalArgumentException("Unsupported order by column: " + rawOrderBy);
+        }
+        return column;
     }
 
     public OrderDaoImpl(JdbcTemplate jdbcTemplate) {

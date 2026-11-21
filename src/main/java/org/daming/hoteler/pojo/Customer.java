@@ -3,6 +3,7 @@ package org.daming.hoteler.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.daming.hoteler.pojo.enums.Gender;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.StringJoiner;
 
@@ -14,6 +15,7 @@ import java.util.StringJoiner;
  **/
 public class Customer implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -6886394623640158367L;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)

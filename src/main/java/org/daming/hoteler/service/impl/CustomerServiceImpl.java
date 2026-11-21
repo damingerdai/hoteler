@@ -106,7 +106,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Cacheable(cacheNames = {"customer", "customerList"}, key = "#id")//如果缓存存在，直接读取缓存值；如果缓存不存在，则调用目标方法，并将结果放入缓存
     public Customer get(long id) throws HotelerException {
         try {
-            var customer = this.customerDao.get(id);
+            var customerOptional = this.customerDao.get(id);
+            if (customerOptional.isEmpty()) {
+                return null;
+            }
+            var customer = customerOptional.get();
             var user = ThreadLocalContextHolder.get().getUser();
             var isAdmin = user.getRoles().stream().map(Role::getName).anyMatch("admin"::equals);
             var cardId = StringUtils.trimAllWhitespace(customer.getCardId());
