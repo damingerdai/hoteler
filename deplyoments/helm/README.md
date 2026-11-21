@@ -87,11 +87,14 @@ datasource:
 secret:
   # 留空时首次安装自动生成随机签名密钥，升级时自动复用
   key: ""
-  # 或者复用已有 Secret（需包含 secret-key 键），设置后不再创建 Secret
+  # 或者复用已有 Secret，设置后不再创建 Secret。
+  # Secret 需包含 secret-key、redis-password、datasource-password 三个键。
   existingSecret: ""
 ```
 
 签名密钥用于签发 JWT 和校验用户令牌，修改后已签发的令牌会失效，用户需要重新登录；如需固定密钥，请显式设置 `secret.key` 或使用 `secret.existingSecret`。
+
+数据库和 Redis 密码不会写入 ConfigMap，而是保存到 Secret（默认名称 `hoteler-api-secret`，可用 `secret.name` 修改），再以 `SPRING_DATASOURCE_PASSWORD`、`SPRING_DATA_REDIS_PASSWORD` 环境变量注入。生产环境建议通过 `--set`、私有 values 文件或 `secret.existingSecret` 提供密码。
 
 使用自定义配置安装：
 

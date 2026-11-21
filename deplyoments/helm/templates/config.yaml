@@ -19,13 +19,11 @@ data:
           host: {{ .Values.redis.host }}
           port: {{ .Values.redis.port }}
           database: {{ .Values.redis.database }}
-          password: {{ .Values.redis.password }}
           ssl:
             enabled: {{ .Values.redis.ssl | default false }}
       datasource:
         url: {{ .Values.datasource.url }}
         username: {{ .Values.datasource.username }}
-        password: {{ .Values.datasource.password }}
         driver-class-name: org.postgresql.Driver
       flyway:
         enabled: false

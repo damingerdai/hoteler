@@ -32,12 +32,15 @@ redis:
   host: redis
   port: 6379
   database: 0
-  password: 12345
+  # 密码不会写入 ConfigMap，而是通过 Secret 以环境变量注入。
+  # 请用 --set、私有 values 文件或 secret.existingSecret 提供，不要提交真实密码。
+  password: "12345"
 
 datasource:
   url: jdbc:postgresql://postgres:5432/postgres
   username: postgres
-  password: 123456
+  # 同上，密码通过 Secret 注入
+  password: "123456"
 
 service:
   type: NodePort

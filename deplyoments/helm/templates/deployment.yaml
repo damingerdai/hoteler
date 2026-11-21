@@ -34,6 +34,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
                   key: secret-key
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  key: redis-password
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  key: datasource-password
           resources:
             requests:
               cpu: "200m"
