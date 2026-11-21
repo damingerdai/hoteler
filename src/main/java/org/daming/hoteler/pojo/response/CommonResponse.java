@@ -1,15 +1,17 @@
 package org.daming.hoteler.pojo.response;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * common reponse
+ * common response
  *
  * @author gming001
  * @create 2021-02-03 17:31
  **/
-public class CommonResponse implements Serializable {
+public class CommonResponse implements Serializable{
 
+    @Serial
     private static final long serialVersionUID = 2069729986373230583L;
 
     private static final int SUCCESS_STATUS = 200;

@@ -1,0 +1,1 @@
+ALTER TABLE room_groups ALTER COLUMN id SET DEFAULT uuidv7();
