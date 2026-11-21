@@ -97,7 +97,7 @@ public class OrderController {
             var orders = this.orderService.list(request);
             return new ListPageResponse<>(orders, count);
         } catch (Exception ex) {
-            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex);
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, new Object[]{ ex.getMessage() }, ex);
         }
     }
 

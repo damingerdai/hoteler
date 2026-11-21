@@ -4,6 +4,7 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * customer dao
@@ -26,7 +27,7 @@ public interface ICustomerDao {
      * @return 用户信息
      * @throws HotelerException hoteler错误
      */
-    Customer get(long id) throws HotelerException;
+    Optional<Customer> get(long id) throws HotelerException;
 
     /**
      * 获取所有的用户

@@ -3,6 +3,8 @@ package org.daming.hoteler.service.impl;
 import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.pojo.Order;
 import org.daming.hoteler.pojo.HotelerMessage;
+import org.daming.hoteler.pojo.Pageable;
+import org.daming.hoteler.pojo.Sortable;
 import org.daming.hoteler.pojo.enums.HotelerEvent;
 import org.daming.hoteler.pojo.enums.RoomStatus;
 import org.daming.hoteler.pojo.request.OrderListRequest;
@@ -134,7 +136,14 @@ public class OrderServiceImpl implements IOrderService {
         if (Objects.nonNull(request.getSort())) {
             request.setSort("create_dt");
         }
-        var orders = this.orderDao.list(request);
+        var pageable = new Pageable(
+                Objects.requireNonNullElse(request.getPage(), 1),
+                Objects.requireNonNullElse(request.getPageSize(), 10)
+        );
+        var sortable = new Sortable();
+        sortable.setOrderBy(Objects.requireNonNullElse(request.getSort(), "create_dt"));
+        sortable.setOrderDir(Objects.requireNonNullElse(request.getSortType(), "desc"));
+        var orders = this.orderDao.list(pageable, sortable);
         return orders.stream().map(order -> {
             var orderVo = new OrderVO();
             orderVo.setId(order.getId());
