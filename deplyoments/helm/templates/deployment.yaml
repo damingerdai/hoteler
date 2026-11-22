@@ -15,6 +15,9 @@ spec:
       labels:
         app: {{ .Values.app.name }}
       name: {{ .Values.app.name }}
+      annotations:
+        checksum/config: {{ include "hoteler.configChecksum" . }}
+        checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -76,10 +79,13 @@ spec:
       labels:
         app: {{ .Values.app.web.name }}
       name: {{ .Values.app.web.name }}
+      annotations:
+        checksum/config: {{ include "hoteler.configChecksum" . }}
+        checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
       containers:
         - name: {{ .Values.app.web.name }}
-          image: {{ .Values.image.web.repository }}:{{ .Values.image.web.tag | default .Chart.AppVersion}}
+          image: "{{ .Values.image.web.repository }}:{{ .Values.image.web.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.web.pullPolicy }}
           ports:
             - containerPort: 80

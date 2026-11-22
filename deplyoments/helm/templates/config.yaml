@@ -16,14 +16,14 @@ data:
           enabled: true
       data:
         redis:
-          host: {{ .Values.redis.host }}
+          host: {{ .Values.redis.host | quote }}
           port: {{ .Values.redis.port }}
           database: {{ .Values.redis.database }}
           ssl:
             enabled: {{ .Values.redis.ssl | default false }}
       datasource:
-        url: {{ .Values.datasource.url }}
-        username: {{ .Values.datasource.username }}
+        url: {{ .Values.datasource.url | quote }}
+        username: {{ .Values.datasource.username | quote }}
         driver-class-name: org.postgresql.Driver
       flyway:
         enabled: false
@@ -68,4 +68,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Values.app.web.configMapName }}
 data:
-  backend_url: http://{{ .Values.app.name }}:{{ .Values.service.port }}
+  backend_url: {{ printf "http://%s:%v" .Values.app.name .Values.service.port | quote }}
