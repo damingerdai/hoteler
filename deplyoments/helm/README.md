@@ -133,6 +133,18 @@ helm upgrade hoteler \
   --set image.web.tag=0.0.5
 ```
 
+## 水平扩容（可选）
+
+HPA 默认关闭。开启时需要集群已安装 metrics-server，并根据实际情况调大 `replicaCount.max`；开启后 Deployment 不再设置 `replicas`，副本数完全由 HPA 管理：
+
+```yaml
+hpa:
+  enabled: true
+  replicaCount:
+    min: 1
+    max: 3
+```
+
 ## 安装前检查模板
 
 查看最终生成的 Kubernetes YAML：

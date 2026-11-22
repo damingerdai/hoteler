@@ -50,6 +50,9 @@ service:
     nodePort: 30007
 
 hpa:
+  # 默认关闭。开启后 Deployment 不再设置 replicas，由 HPA 管理副本数；
+  # 集群需要安装 metrics-server，并根据需要调大 replicaCount.max。
+  enabled: false
   replicaCount:
     max: 1
     min: 1
