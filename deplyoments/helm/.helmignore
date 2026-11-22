@@ -21,3 +21,9 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Local configuration and generated packages must not enter published charts.
+my-values*.yaml
+my-values*.yml
+*.tgz
+TODO.md

@@ -8,7 +8,7 @@ set -euo pipefail
 #   GHCR_TOKEN=<github_pat> GITHUB_USERNAME=<github_user> \
 #     ./scripts/push-helm-chart.sh
 #
-# Override the chart version when needed:
+# An optional version must match Chart.yaml:
 #   GHCR_TOKEN=<github_pat> GITHUB_USERNAME=<github_user> \
 #     ./scripts/push-helm-chart.sh 0.0.6
 #
@@ -50,10 +50,15 @@ if [ -z "${TOKEN}" ]; then
     exit 1
 fi
 
-# Use the chart version from Chart.yaml unless an explicit version is supplied.
-CHART_VERSION="${1:-$(awk '$1 == "version:" {gsub(/"/, "", $2); gsub(/\047/, "", $2); print $2; exit}' "${CHART_DIR}/Chart.yaml")}"
+# Use Chart.yaml as the single source of truth for the package version.
+CHART_VERSION="$(awk '$1 == "version:" {gsub(/"/, "", $2); gsub(/\047/, "", $2); print $2; exit}' "${CHART_DIR}/Chart.yaml")"
 if [ -z "${CHART_VERSION}" ]; then
     echo "Could not determine chart version from ${CHART_DIR}/Chart.yaml"
+    exit 1
+fi
+
+if [ -n "${1:-}" ] && [ "$1" != "${CHART_VERSION}" ]; then
+    echo "Requested version $1 does not match Chart.yaml version ${CHART_VERSION}; bump Chart.yaml first." >&2
     exit 1
 fi
 
@@ -86,4 +91,4 @@ TARGET="oci://${REGISTRY}/${OWNER}"
 echo "Pushing ${PACKAGE_FILE} to ${TARGET}..."
 helm push "${PACKAGE_FILE}" "${TARGET}"
 
-echo "Helm chart pushed successfully: ${TARGET}/$(basename "${PACKAGE_FILE}" .tgz)"
+echo "Helm chart pushed successfully: ${TARGET}/${CHART_NAME} --version ${CHART_VERSION}"

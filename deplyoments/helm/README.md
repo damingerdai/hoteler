@@ -70,10 +70,10 @@ cp values.yaml my-values.yaml
 ```yaml
 image:
   repository: ghcr.io/damingerdai/hoteler-api
-  tag: "0.0.7"
+  tag: "v0.0.7"
   web:
     repository: ghcr.io/damingerdai/hoteler-web
-    tag: "0.0.7"
+    tag: "v0.0.7"
 
 redis:
   host: redis
@@ -85,6 +85,15 @@ datasource:
   url: jdbc:postgresql://postgres:5432/postgres
   username: <postgres-user>
   password: <postgres-password>
+
+# 私有镜像的拉取凭据，需提前在安装 namespace 中创建。
+imagePullSecrets:
+  - name: ghcr-pull
+
+# 全新数据库启用迁移；默认关闭，避免升级时自动修改已有数据库。
+flyway:
+  enabled: true
+  baselineOnMigrate: false
 
 secret:
   # 留空时首次安装自动生成随机签名密钥，升级时自动复用
@@ -109,7 +118,22 @@ helm install hoteler \
   --values my-values.yaml
 ```
 
-不要将包含真实密码的 values 文件提交到 Git 仓库。
+不要将包含真实密码的 values 文件提交到 Git 仓库。将私有 values 文件保存在 chart 目录之外；`.helmignore` 额外排除了 `my-values*.yaml` / `my-values*.yml`，防止文档示例文件被打包。
+
+Helm 的 registry 登录仅用于下载 chart，不会给 Kubernetes 提供镜像拉取凭据。安装前在目标 namespace 创建 `ghcr-pull`（使用具有 `read:packages` 权限的凭据）：
+
+```bash
+kubectl create namespace hoteler-namespace
+kubectl create secret docker-registry ghcr-pull \
+  --namespace hoteler-namespace \
+  --docker-server=ghcr.io \
+  --docker-username="$GITHUB_USERNAME" \
+  --docker-password="$GHCR_TOKEN"
+```
+
+如果 namespace 已存在，跳过创建步骤。`imagePullSecrets` 会同时作用于 api 和 web Pod。
+
+全新数据库需设置 `flyway.enabled=true`，由应用启动时执行内置迁移。已有数据库请先核对 Flyway 历史和备份，再决定是否启用；`baselineOnMigrate` 默认关闭，不会自动为非空数据库建立基线。
 
 ## 升级
 
@@ -131,8 +155,8 @@ helm upgrade hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
   --version 0.0.6 \
   --namespace hoteler-namespace \
-  --set image.tag=0.0.7 \
-  --set image.web.tag=0.0.7
+  --set image.tag=v0.0.7 \
+  --set image.web.tag=v0.0.7
 ```
 
 ## 水平扩容（可选）
@@ -183,6 +207,17 @@ helm uninstall hoteler \
 kubectl delete namespace hoteler-namespace
 ```
 
+## 本地打包验证
+
+在仓库根目录执行（需要 Helm 和 Node.js 18+）：
+
+```bash
+node --test scripts/test-helm.mjs
+helm package deplyoments/helm --destination /tmp
+```
+
+测试覆盖默认配置、私有镜像凭据、Flyway 开关、镜像版本回退、打包文件排除，以及发布版本不匹配时拒绝上传。发布 workflow 在上传前执行相同测试。
+
 ## 发布新版本
 
 先更新 `Chart.yaml` 中的 `version`（必要时同步 `appVersion` 和本 README 的安装示例），然后在 GitHub Actions 中打开 **Actions → Push Helm chart → Run workflow** 手动发布。输入框可留空（自动读取 Chart.yaml）；如果填写，必须与 `Chart.yaml` 中的版本一致，否则 workflow 会失败。
@@ -192,7 +227,7 @@ kubectl delete namespace hoteler-namespace
 ```bash
 helm upgrade --install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.7 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --values my-values.yaml
 ```

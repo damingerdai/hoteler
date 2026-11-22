@@ -21,6 +21,10 @@ spec:
         checksum/config: {{ include "hoteler.configChecksum" . }}
         checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "hoteler.api.fullname" . }}
           {{- with .Values.securityContext }}
@@ -105,6 +109,10 @@ spec:
         checksum/config: {{ include "hoteler.configChecksum" . }}
         checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "hoteler.web.fullname" . }}
           image: "{{ .Values.image.web.repository }}:{{ .Values.image.web.tag | default .Chart.AppVersion }}"

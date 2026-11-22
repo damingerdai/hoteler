@@ -13,12 +13,22 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/damingerdai/hoteler-api
-  tag: "0.0.7"
+  tag: "v0.0.7"
   pullPolicy: IfNotPresent
   web:
     repository: ghcr.io/damingerdai/hoteler-web
-    tag: "0.0.7"
+    tag: "v0.0.7"
     pullPolicy: IfNotPresent
+
+# 同一 namespace 中已有的 kubernetes.io/dockerconfigjson Secret，应用于 api 和 web。
+imagePullSecrets: []
+# 例如：
+#   - name: ghcr-pull
+
+# 新数据库可启用 Flyway；已有数据库需先确认迁移历史。
+flyway:
+  enabled: false
+  baselineOnMigrate: false
 
 secret:
   # 自动创建的 Secret 名称后缀，最终名称为 <release 名>-<后缀>

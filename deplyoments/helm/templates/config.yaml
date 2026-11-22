@@ -26,8 +26,8 @@ data:
         username: {{ .Values.datasource.username | quote }}
         driver-class-name: org.postgresql.Driver
       flyway:
-        enabled: false
-        baseline-on-migrate: true
+        enabled: {{ .Values.flyway.enabled }}
+        baseline-on-migrate: {{ .Values.flyway.baselineOnMigrate }}
       main:
         allow-bean-definition-overriding: true
       quartz:
