@@ -22,7 +22,8 @@ public class OpenApiConfig {
                 .info(info())
                 .components(components())
                 // 让所有接口默认都带上“小锁”图标
-                .addSecurityItem(new SecurityRequirement().addList("OAuth2Password").addList("bearer-key"))
+                .addSecurityItem(new SecurityRequirement().addList("OAuth2Password"))
+                .addSecurityItem(new SecurityRequirement().addList("bearer-key"))
                 .externalDocs(externalDocumentation());
     }
 

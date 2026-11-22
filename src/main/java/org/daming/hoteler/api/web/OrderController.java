@@ -69,7 +69,7 @@ public class OrderController {
     }
 
     @Operation(summary = "删除用户入住记录", security = { @SecurityRequirement(name = "bearer-key") })
-    @DeleteMapping("order/:id")
+    @DeleteMapping("order/{id}")
     public CommonResponse delete(@PathVariable("id") String userRoomId) {
         try {
             var id = Long.parseLong(userRoomId);

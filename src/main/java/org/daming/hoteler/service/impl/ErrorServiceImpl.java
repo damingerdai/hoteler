@@ -8,6 +8,8 @@ import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.service.IErrorService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 /**
  * ErrorService
  *
@@ -34,6 +36,19 @@ public class ErrorServiceImpl implements IErrorService {
     public HotelerException createHotelerException(int code, Throwable cause) {
         var message = this.errorCodeService.getMessage(code);
         return ExceptionBuilder.buildException(code, message, cause);
+    }
+
+    @Override
+    public HotelerException createHotelerException(int code, Object... param) {
+        Throwable cause = null;
+        Object[] params = param;
+
+        if (param != null && param.length > 0 && param[param.length - 1] instanceof Throwable lastThrowable) {
+            cause = lastThrowable;
+            params = Arrays.copyOf(param, param.length - 1);
+        }
+
+        return createHotelerException(code, params, cause);
     }
 
     @Override

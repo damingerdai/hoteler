@@ -2,6 +2,8 @@ package org.daming.hoteler.pojo.response;
 
 import org.daming.hoteler.pojo.ApiError;
 
+import java.io.Serial;
+
 /**
  * error reponse
  *
@@ -10,6 +12,7 @@ import org.daming.hoteler.pojo.ApiError;
  **/
 public class ErrorResponse extends CommonResponse {
 
+    @Serial
     private static final long serialVersionUID = -8004008325771258589L;
 
     private ApiError error;
