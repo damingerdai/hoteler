@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.app.web.name }}
+  name: {{ include "hoteler.web.fullname" . }}
 spec:
   rules:
     - host: {{ .Values.app.web.ingress.host }}
@@ -12,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.app.web.name }}
+                name: {{ include "hoteler.web.fullname" . }}
                 port:
                   number: 80

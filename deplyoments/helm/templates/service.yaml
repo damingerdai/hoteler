@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ include "hoteler.api.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.app.name }}
+    app: {{ include "hoteler.api.fullname" . }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,15 +15,15 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
-    app: {{ .Values.app.name }}
+    app: {{ include "hoteler.api.fullname" . }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.app.web.name }}
+  name: {{ include "hoteler.web.fullname" . }}
   labels:
-    app:  {{ .Values.app.web.name }}
+    app:  {{ include "hoteler.web.fullname" . }}
 spec:
   ports:
     - port: 80
@@ -31,4 +31,4 @@ spec:
       nodePort: {{ .Values.service.web.nodePort }}
   type: NodePort
   selector:
-    app: {{ .Values.app.web.name }}
+    app: {{ include "hoteler.web.fullname" . }}

@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ include "hoteler.api.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.app.name }}
+    app: {{ include "hoteler.api.fullname" . }}
 spec:
   {{- if not .Values.hpa.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      app: {{ include "hoteler.api.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
-      name: {{ .Values.app.name }}
+        app: {{ include "hoteler.api.fullname" . }}
+      name: {{ include "hoteler.api.fullname" . }}
       annotations:
         checksum/config: {{ include "hoteler.configChecksum" . }}
         checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "hoteler.api.fullname" . }}
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
@@ -37,17 +37,17 @@ spec:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  name: {{ .Values.secret.existingSecret | default (include "hoteler.secretName" .) }}
                   key: secret-key
             - name: SPRING_DATA_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  name: {{ .Values.secret.existingSecret | default (include "hoteler.secretName" .) }}
                   key: redis-password
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.existingSecret | default .Values.secret.name }}
+                  name: {{ .Values.secret.existingSecret | default (include "hoteler.secretName" .) }}
                   key: datasource-password
           startupProbe:
             httpGet:
@@ -81,32 +81,32 @@ spec:
               name: config
       volumes:
         - configMap:
-            name: {{ .Values.app.configMapName }}
+            name: {{ include "hoteler.api.configName" . }}
           name: config
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ .Values.app.web.name }}
+  name: {{ include "hoteler.web.fullname" . }}
   labels:
-    app:  {{ .Values.app.web.name }}
+    app:  {{ include "hoteler.web.fullname" . }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.app.web.name }}
+      app: {{ include "hoteler.web.fullname" . }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.web.name }}
-      name: {{ .Values.app.web.name }}
+        app: {{ include "hoteler.web.fullname" . }}
+      name: {{ include "hoteler.web.fullname" . }}
       annotations:
         checksum/config: {{ include "hoteler.configChecksum" . }}
         checksum/secret: {{ include "hoteler.secretChecksum" . }}
     spec:
       containers:
-        - name: {{ .Values.app.web.name }}
+        - name: {{ include "hoteler.web.fullname" . }}
           image: "{{ .Values.image.web.repository }}:{{ .Values.image.web.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.web.pullPolicy }}
           ports:
@@ -136,5 +136,5 @@ spec:
             - name: BACKEND_URL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.app.web.configMapName }}
+                  name: {{ include "hoteler.web.configName" . }}
                   key: backend_url

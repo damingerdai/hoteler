@@ -2,17 +2,17 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.app.name }}-hpa
+  name: {{ include "hoteler.api.fullname" . }}-hpa
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.app.name }}-hpa
+    app: {{ include "hoteler.api.fullname" . }}-hpa
 spec:
   maxReplicas: {{ .Values.hpa.replicaCount.max }}
   minReplicas: {{ .Values.hpa.replicaCount.min }}
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{  .Values.app.name }}
+    name: {{ include "hoteler.api.fullname" . }}
   metrics:
     - type: Resource
       resource:

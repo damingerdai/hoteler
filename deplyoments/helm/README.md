@@ -55,6 +55,8 @@ kubectl get svc \
 
 默认情况下，后端 Service 使用 NodePort `30006`，前端 Service 使用 NodePort `30007`。
 
+资源名称格式为 `<release 名>-<名称后缀>`。使用 `helm install hoteler ...` 时默认得到 `hoteler-api`、`hoteler-web`、`hoteler-api-config` 等；换成其他 release 名（例如 `staging`）会得到 `staging-api`、`staging-web`，因此可以在同一个 namespace 中安装多套环境。名称后缀可通过 `app.name`、`app.web.name`、`app.configMapName`、`app.web.configMapName`、`secret.name` 修改。
+
 ## 使用自定义配置安装
 
 复制一份配置文件并按实际环境修改：

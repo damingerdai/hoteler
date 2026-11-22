@@ -1,10 +1,11 @@
 app:
+  # 资源名后缀，最终名称为 <release 名>-<后缀>
   namespace: hoteler-namespace
-  name: hoteler-api
-  configMapName: hoteler-api-config
+  name: api
+  configMapName: api-config
   web:
-    name: hoteler-web
-    configMapName: hoteler-web-config
+    name: web
+    configMapName: web-config
     ingress:
       host: hoteler.local
 
@@ -20,8 +21,8 @@ image:
     pullPolicy: IfNotPresent
 
 secret:
-  # 自动创建的 Secret 名称（secret.existingSecret 为空时使用）
-  name: hoteler-api-secret
+  # 自动创建的 Secret 名称后缀，最终名称为 <release 名>-<后缀>
+  name: api-secret
   # JWT/HMAC 签名密钥。留空时首次安装自动生成随机值，升级时自动复用；
   # 如需固定值（例如与已有部署保持一致），在此设置或使用 existingSecret。
   key: ""
