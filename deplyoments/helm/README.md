@@ -34,7 +34,7 @@ echo "$GHCR_TOKEN" | helm registry login ghcr.io \
 ```bash
 helm install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --create-namespace
 ```
@@ -69,11 +69,11 @@ cp values.yaml my-values.yaml
 
 ```yaml
 image:
-  repository: ghcr.io/damingerdai/hoteler
-  tag: "0.0.5"
+  repository: ghcr.io/damingerdai/hoteler-api
+  tag: "0.0.7"
   web:
     repository: ghcr.io/damingerdai/hoteler-web
-    tag: "0.0.5"
+    tag: "0.0.7"
 
 redis:
   host: redis
@@ -103,7 +103,7 @@ secret:
 ```bash
 helm install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --create-namespace \
   --values my-values.yaml
@@ -118,7 +118,7 @@ helm install hoteler \
 ```bash
 helm upgrade --install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --create-namespace \
   --values my-values.yaml
@@ -129,10 +129,10 @@ helm upgrade --install hoteler \
 ```bash
 helm upgrade hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
-  --set image.tag=0.0.5 \
-  --set image.web.tag=0.0.5
+  --set image.tag=0.0.7 \
+  --set image.web.tag=0.0.7
 ```
 
 ## 水平扩容（可选）
@@ -154,7 +154,7 @@ hpa:
 ```bash
 helm template hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --values my-values.yaml
 ```
@@ -164,7 +164,7 @@ helm template hoteler \
 ```bash
 helm upgrade --install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.5 \
+  --version 0.0.6 \
   --namespace hoteler-namespace \
   --values my-values.yaml \
   --dry-run
@@ -185,14 +185,14 @@ kubectl delete namespace hoteler-namespace
 
 ## 发布新版本
 
-在 GitHub Actions 中打开 **Actions → Push Helm chart → Run workflow**，填写 chart 版本后手动发布。
+先更新 `Chart.yaml` 中的 `version`（必要时同步 `appVersion` 和本 README 的安装示例），然后在 GitHub Actions 中打开 **Actions → Push Helm chart → Run workflow** 手动发布。输入框可留空（自动读取 Chart.yaml）；如果填写，必须与 `Chart.yaml` 中的版本一致，否则 workflow 会失败。
 
 发布成功后，将版本号替换为新版本即可安装，例如：
 
 ```bash
 helm upgrade --install hoteler \
   oci://ghcr.io/damingerdai/hoteler-chart \
-  --version 0.0.6 \
+  --version 0.0.7 \
   --namespace hoteler-namespace \
   --values my-values.yaml
 ```
