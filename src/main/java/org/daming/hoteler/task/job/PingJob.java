@@ -8,6 +8,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -21,12 +22,20 @@ public class PingJob extends QuartzJobBean implements Job {
     @Value("${server.port}")
     private int port;
 
+    private final RestClient restClient;
+
+    public PingJob() {
+        this.restClient = RestClient.create();
+    }
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         LoggerManager.getJobLogger().info("ping job");
-        var restTemplate = new RestTemplate();
         var fooResourceUrl = String.format("http://localhost:%d/ping", port);
-        var response = restTemplate.getForEntity(fooResourceUrl, String.class);
-        LoggerManager.getJobLogger().info("ping job -> status code {}, body: {]", response.getStatusCode(), response.getBody());
+        var response = restClient.get()
+                .uri(fooResourceUrl)
+                .retrieve()
+                .toEntity(String.class);
+        LoggerManager.getJobLogger().info("ping job -> status code {}, body: {}", response.getStatusCode(), response.getBody());
     }
 }
