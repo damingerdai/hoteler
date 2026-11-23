@@ -12,6 +12,7 @@ import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.pojo.request.CreateRoomGroupRequest;
+import org.daming.hoteler.pojo.request.UpdateRoomGroupRequest;
 import org.daming.hoteler.pojo.response.DataResponse;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IRoomGroupService;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,8 +69,51 @@ public class RoomGroupController {
             return DataResponse.ok(group);
         } catch (Exception ex) {
             LoggerManager.getApiLogger().error("fail to create room group", ex);
-            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex.getMessage(), ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex.getMessage(), ex);
         }
+    }
+
+    @Operation(
+            summary = "更新房型分组",
+            description = "根据房型分组 ID 更新分组信息，操作人取自当前登录上下文"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "更新成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DataResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "请求参数校验失败",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "未登录或登录态已失效",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "房型分组不存在",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    @PutMapping("/{groupId}")
+    public DataResponse update(@PathVariable("groupId") String groupId, @Valid @RequestBody UpdateRoomGroupRequest request) {
+        try {
+            var context = ThreadLocalContextHolder.get();
+            var currentUser = context.getUser();
+            var group = this.roomGroupService.update(groupId, request, currentUser.getId());
+            return DataResponse.ok(group);
+        } catch (Exception ex) {
+            LoggerManager.getApiLogger().error("fail to update room group", ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex.getMessage(), ex);
+        }
+
     }
 
     @Operation(
