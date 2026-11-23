@@ -1,12 +1,12 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url "https://jitpack.io" }
+        // maven { url "https://jitpack.io" }
         maven { url 'https://repo.spring.io/milestone' }
         maven { url 'https://repo.spring.io/snapshot' }
-        mavenCentral()
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'https://plugins.gradle.org/m2/' }
+        mavenCentral()
+        // maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath("org.postgresql:postgresql:42.7.14")
@@ -35,11 +35,11 @@ repositories {
     mavenLocal()
     maven { url 'https://repo.spring.io/milestone' }
     maven { url 'https://repo.spring.io/snapshot' }
-    mavenCentral()
     maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
     maven { url 'https://maven.aliyun.com/repository/public' }
     maven { url 'https://maven.aliyun.com/repository/google' }
     maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    mavenCentral()
 }
 
 dependencies {
