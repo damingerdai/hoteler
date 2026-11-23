@@ -100,7 +100,7 @@ public class RoomGroupDaoImpl extends AbstractBaseDao<RoomGroup> implements IRoo
         var sql = """
             UPDATE room_groups
             SET deleted_at = now(),  update_dt = now(), update_user = ?
-            WHERE id = ? AND deleted_at IS NULL
+            WHERE id = ?::uuid AND deleted_at IS NULL
         """;
         var defaultOperator = Objects.requireNonNullElse(operator, DEFAULT_OPERATOR);
         var params = new Object[] { defaultOperator, groupId };
@@ -153,7 +153,7 @@ public class RoomGroupDaoImpl extends AbstractBaseDao<RoomGroup> implements IRoo
                 create_dt, create_user, update_dt, update_user, deleted_at
             FROM
                 room_groups
-            WHERE id = ? AND deleted_at IS NULL
+            WHERE id = ?::uuid AND deleted_at IS NULL
             LIMIT 1
         """;
         var params = new Object[] { groupId };
