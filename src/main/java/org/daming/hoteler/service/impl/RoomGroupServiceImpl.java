@@ -4,6 +4,7 @@ import org.daming.hoteler.base.exceptions.HotelerException;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.ErrorCodeConstants;
 import org.daming.hoteler.constants.RoomGroupErrorCodeConstants;
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.RoomGroup;
 import org.daming.hoteler.pojo.RoomGroupDashboardRow;
 import org.daming.hoteler.pojo.RoomGroupWithCountRow;
@@ -111,6 +112,16 @@ public class RoomGroupServiceImpl implements IRoomGroupService {
     @Override
     public List<RoomGroupWithCountRow> list(RoomGroupType type, Boolean active) {
         return this.roomGroupDao.listWithRoomCount(type, active);
+    }
+
+    @Override
+    public List<RoomGroupWithCountRow> list(RoomGroupType type, Boolean active, Pageable pageable) {
+        return this.roomGroupDao.listWithRoomCount(type, active, pageable);
+    }
+
+    @Override
+    public int count(RoomGroupType type, Boolean active) {
+        return this.roomGroupDao.countWithRoomCount(type, active);
     }
 
     @Override

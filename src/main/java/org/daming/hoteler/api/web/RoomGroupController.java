@@ -1,6 +1,7 @@
 package org.daming.hoteler.api.web;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,9 +12,14 @@ import jakarta.validation.Valid;
 import org.daming.hoteler.base.context.ThreadLocalContextHolder;
 import org.daming.hoteler.base.logger.LoggerManager;
 import org.daming.hoteler.constants.ErrorCodeConstants;
+import org.daming.hoteler.pojo.Pageable;
+import org.daming.hoteler.pojo.RoomGroup;
+import org.daming.hoteler.pojo.RoomGroupWithCountRow;
+import org.daming.hoteler.pojo.enums.RoomGroupType;
 import org.daming.hoteler.pojo.request.CreateRoomGroupRequest;
 import org.daming.hoteler.pojo.request.UpdateRoomGroupRequest;
 import org.daming.hoteler.pojo.response.DataResponse;
+import org.daming.hoteler.pojo.response.ListPageResponse;
 import org.daming.hoteler.service.IErrorService;
 import org.daming.hoteler.service.IRoomGroupService;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +29,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/room-groups")
@@ -152,6 +161,59 @@ public class RoomGroupController {
             return DataResponse.ok(group);
         } catch (Exception ex) {
             LoggerManager.getApiLogger().error("fail to get room group", ex);
+            throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex.getMessage(), ex);
+        }
+    }
+
+
+    @Operation(
+            summary = "分页查询房型分组列表",
+            description = "支持按页码、每页条数、房型分组类型及启用状态筛选房型分组"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "查询成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ListPageResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "查询参数不合法",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "未登录或登录态已失效",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    @GetMapping("")
+    public ListPageResponse<RoomGroupWithCountRow> list(
+            @Parameter(description = "页码，从 1 开始", example = "1")
+            @RequestParam(name = "page", required = false) Integer page,
+            @Parameter(description = "每页记录数", example = "10")
+            @RequestParam(name = "pageSize", required = false) Integer pageSize,
+            @Parameter(
+                    description = "房型分组类型（支持 FLOOR/floor、ZONE/zone）",
+                    schema = @Schema(implementation = RoomGroupType.class),
+                    example = "FLOOR"
+            )
+            @RequestParam(name = "type", required = false) RoomGroupType roomGroupType,
+            @Parameter(description = "是否启用", example = "true")
+            @RequestParam(name = "active", required = false) Boolean active
+    ) {
+        try {
+            var pageable = new Pageable();
+            pageable.setPageNo(Objects.requireNonNullElse(page, 1));
+            pageable.setPageSize(Objects.requireNonNullElse(pageSize, 10));
+            var groups = this.roomGroupService.list(roomGroupType, active, pageable);
+            var count = this.roomGroupService.count(roomGroupType, active);
+            return new ListPageResponse<RoomGroupWithCountRow>(groups, count);
+        } catch (Exception ex) {
+            LoggerManager.getApiLogger().error("fail to list room group", ex);
             throw errorService.createHotelerException(ErrorCodeConstants.SYSTEM_ERROR_CODEE, ex.getMessage(), ex);
         }
     }

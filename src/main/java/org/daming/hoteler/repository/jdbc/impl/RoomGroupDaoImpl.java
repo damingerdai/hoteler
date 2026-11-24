@@ -2,6 +2,7 @@ package org.daming.hoteler.repository.jdbc.impl;
 
 import org.daming.hoteler.base.logger.SqlLoggerUtil;
 import org.daming.hoteler.constants.ErrorCodeConstants;
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.RoomGroup;
 import org.daming.hoteler.pojo.RoomGroupDashboardRow;
 import org.daming.hoteler.pojo.RoomGroupWithCountRow;
@@ -221,6 +222,74 @@ public class RoomGroupDaoImpl extends AbstractBaseDao<RoomGroup> implements IRoo
                 row.setRoomCount(rs.getLong("room_count"));
                 return row;
             }, params);
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params, ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
+        }
+    }
+
+    @Override
+    public List<RoomGroupWithCountRow> listWithRoomCount(RoomGroupType type, Boolean active, Pageable pageable) {
+        var in = Instant.now();
+        var sqlBuilder = new StringBuilder("SELECT rg.*, COUNT(r.id) AS room_count ");
+        sqlBuilder.append(" FROM room_groups rg ");
+        sqlBuilder.append(" LEFT JOIN rooms r ON r.group_id = rg.id ");
+        sqlBuilder.append(" AND r.deleted_at IS NULL ");
+        sqlBuilder.append(" AND r.status <> 2 ");
+        sqlBuilder.append(" WHERE rg.deleted_at IS NULL ");
+        List<Object> args = new ArrayList<>();
+        appendFilter(sqlBuilder, args, type, active, "rg.");
+        sqlBuilder.append(" GROUP BY rg.id, rg.type, rg.code, rg.name, rg.sort_order, rg.active, " +
+                "         rg.create_dt, rg.create_user, rg.update_dt, rg.update_user, rg.deleted_at ");
+        sqlBuilder.append(" ORDER BY rg.sort_order ASC, rg.code ASC ");
+
+        if (pageable != null && pageable.getPageNo() != null && pageable.getPageSize() != null
+                && pageable.getPageNo() > 0 && pageable.getPageSize() > 0) {
+            sqlBuilder.append(" LIMIT ? OFFSET ? ");
+            args.add(pageable.toLimit());
+            args.add(pageable.toOffset());
+        }
+
+        var sql = sqlBuilder.toString();
+        var params = args.toArray();
+        try {
+            return this.getJdbcTemplate().query(sql, (rs, i) -> {
+                var row = new RoomGroupWithCountRow();
+                row.setId(rs.getString("id"));
+                row.setType(rs.getString("type"));
+                row.setCode(rs.getString("code"));
+                row.setName(rs.getString("name"));
+                row.setSortOrder(rs.getInt("sort_order"));
+                row.setActive(rs.getBoolean("active"));
+                row.setCreateDt(toLocalDateTime(rs.getTimestamp("create_dt")));
+                row.setCreateUser(rs.getString("create_user"));
+                row.setUpdateDt(toLocalDateTime(rs.getTimestamp("update_dt")));
+                row.setUpdateUser(rs.getString("update_user"));
+                row.setDeletedAt(toLocalDateTime(rs.getTimestamp("deleted_at")));
+                row.setRoomCount(rs.getLong("room_count"));
+                return row;
+            }, params);
+        } catch (Exception ex) {
+            SqlLoggerUtil.logSqlException(sql, params, ex);
+            throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
+        } finally {
+            SqlLoggerUtil.logSql(sql, params, Duration.between(in, Instant.now()));
+        }
+    }
+
+    @Override
+    public int countWithRoomCount(RoomGroupType type, Boolean active) {
+        var in = Instant.now();
+        var sqlBuilder = new StringBuilder("SELECT COUNT(*) FROM room_groups rg WHERE rg.deleted_at IS NULL");
+        List<Object> args = new ArrayList<>();
+        appendFilter(sqlBuilder, args, type, active, "rg.");
+        var sql = sqlBuilder.toString();
+        var params = args.toArray();
+        try {
+            var count = this.getJdbcTemplate().queryForObject(sql, Integer.class, params);
+            return Objects.requireNonNullElse(count, 0);
         } catch (Exception ex) {
             SqlLoggerUtil.logSqlException(sql, params, ex);
             throw this.errorService.createHotelerException(ErrorCodeConstants.SQL_ERROR_CODE, new Object[] { sql }, ex);
