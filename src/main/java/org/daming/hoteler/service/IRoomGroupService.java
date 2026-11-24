@@ -1,6 +1,7 @@
 package org.daming.hoteler.service;
 
 import org.daming.hoteler.base.exceptions.HotelerException;
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.RoomGroup;
 import org.daming.hoteler.pojo.RoomGroupDashboardRow;
 import org.daming.hoteler.pojo.RoomGroupWithCountRow;
@@ -49,6 +50,17 @@ public interface IRoomGroupService {
      * @param active 可为 null
      */
     List<RoomGroupWithCountRow> list(RoomGroupType type, Boolean active);
+
+    /**
+     * 列表查询，带"活跃房间数"。
+     *
+     * @param type   可为 null
+     * @param active 可为 null
+     * @param pageable 不可为null
+     */
+    List<RoomGroupWithCountRow> list(RoomGroupType type, Boolean active, Pageable pageable);
+
+    int count(RoomGroupType type, Boolean active);
 
     /**
      * 把房间分配到分组；groupId 为 null 时表示移除分组。

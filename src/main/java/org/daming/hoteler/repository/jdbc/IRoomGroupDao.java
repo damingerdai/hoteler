@@ -1,5 +1,6 @@
 package org.daming.hoteler.repository.jdbc;
 
+import org.daming.hoteler.pojo.Pageable;
 import org.daming.hoteler.pojo.RoomGroup;
 import org.daming.hoteler.pojo.RoomGroupDashboardRow;
 import org.daming.hoteler.pojo.RoomGroupWithCountRow;
@@ -97,6 +98,19 @@ public interface IRoomGroupDao {
      * @return 行对象列表（含 {@code roomCount}）
      */
     List<RoomGroupWithCountRow> listWithRoomCount(RoomGroupType type, Boolean active);
+
+    /**
+     * 查询分组列表并附带"活跃房间数"（active rooms count）。
+     * 用于 {@code GET /api/v1/room-groups} 的响应。
+     *
+     * @param type   类型过滤，可为 {@code null}
+     * @param active 启用状态过滤，可为 {@code null}
+     * @param pageable 分页信息，可为 {@code null}
+     * @return 行对象列表（含 {@code roomCount}）
+     */
+    List<RoomGroupWithCountRow> listWithRoomCount(RoomGroupType type, Boolean active, Pageable pageable);
+
+    int countWithRoomCount(RoomGroupType type, Boolean active);
 
     /**
      * 分组 dashboard 聚合查询。
