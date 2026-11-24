@@ -72,7 +72,8 @@ public class RoomGroupServiceImpl implements IRoomGroupService {
 
     @Override
     public RoomGroup update(String groupId, UpdateRoomGroupRequest request, String operator) throws HotelerException {
-        var group = this.roomGroupDao.get(groupId).orElseThrow(() -> this.errorService.createHotelerException(RoomGroupErrorCodeConstants.ROOM_GROUP_ERROR_NOT_FOUND_CODE));
+        var group = this.roomGroupDao.get(groupId)
+                .orElseThrow(() -> this.errorService.createHotelerException(RoomGroupErrorCodeConstants.ROOM_GROUP_ERROR_NOT_FOUND_CODE));
         if (request.getName() != null) {
             if (request.getName().isBlank()) {
                 throw this.errorService.createHotelerException(ErrorCodeConstants.BAD_REQUEST_ERROR_CODEE, "name must not be blank");
